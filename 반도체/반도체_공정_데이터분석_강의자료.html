@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔬 반도체 공정 데이터 분석 강의자료</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0d1117;
+    --bg2:      #161b22;
+    --bg3:      #21262d;
+    --border:   #30363d;
+    --text:     #e6edf3;
+    --text-dim: #8b949e;
+    --green:    #3fb950;
+    --blue:     #58a6ff;
+    --orange:   #f0883e;
+    --red:      #f85149;
+    --purple:   #bc8cff;
+    --yellow:   #d29922;
+    --teal:     #39d353;
+    --accent:   #238636;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── 헤더 ── */
+  header {
+    background: linear-gradient(135deg, #0d1117 0%, #1a2332 50%, #0d2137 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(63,185,80,.15) 0%, transparent 70%);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 30%;
+    width: 250px; height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(88,166,255,.10) 0%, transparent 70%);
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(63,185,80,.15);
+    border: 1px solid rgba(63,185,80,.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px; font-weight: 500; color: var(--green);
+    margin-bottom: 20px; letter-spacing: .5px;
+  }
+  h1 {
+    font-family: 'Bebas Neue', 'Noto Sans KR', sans-serif;
+    font-size: clamp(36px, 5vw, 62px);
+    letter-spacing: 2px;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #e6edf3, #58a6ff, #3fb950);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+  }
+  .header-sub {
+    font-size: 17px; color: var(--text-dim); max-width: 580px;
+    margin-bottom: 30px;
+  }
+  .header-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    letter-spacing: .3px;
+  }
+  .tag-py  { background: rgba(88,166,255,.15);  color: var(--blue);   border: 1px solid rgba(88,166,255,.3);  }
+  .tag-ml  { background: rgba(63,185,80,.15);   color: var(--green);  border: 1px solid rgba(63,185,80,.3);   }
+  .tag-viz { background: rgba(240,136,62,.15);  color: var(--orange); border: 1px solid rgba(240,136,62,.3);  }
+  .tag-lvl { background: rgba(188,140,255,.15); color: var(--purple); border: 1px solid rgba(188,140,255,.3); }
+
+  /* ── 레이아웃 ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── 사이드바 TOC ── */
+  .layout { display: flex; gap: 32px; padding: 48px 24px; max-width: 1200px; margin: 0 auto; }
+  .toc {
+    width: 220px; flex-shrink: 0;
+    position: sticky; top: 20px; align-self: flex-start;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; height: fit-content;
+  }
+  .toc-title {
+    font-size: 11px; font-weight: 700; color: var(--text-dim);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .toc a {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--text-dim); text-decoration: none;
+    font-size: 13px; padding: 5px 0;
+    border-left: 2px solid transparent; padding-left: 10px; margin-left: -10px;
+    transition: all .2s;
+  }
+  .toc a:hover { color: var(--blue); border-left-color: var(--blue); }
+  .toc .step-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--bg3); display: inline-flex; align-items: center;
+    justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0;
+  }
+  .content { flex: 1; min-width: 0; }
+
+  /* ── 섹션 ── */
+  .section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .section::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%;
+  }
+  .section.step1::before { background: var(--blue); }
+  .section.step2::before { background: var(--green); }
+  .section.step3::before { background: var(--orange); }
+  .section.step4::before { background: var(--purple); }
+  .section.step5::before { background: var(--teal); }
+  .section.step6::before { background: var(--red); }
+  .section.step7::before { background: var(--yellow); }
+
+  .section-header {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 22px;
+  }
+  .step-badge {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .s1 { background: rgba(88,166,255,.15); }
+  .s2 { background: rgba(63,185,80,.15); }
+  .s3 { background: rgba(240,136,62,.15); }
+  .s4 { background: rgba(188,140,255,.15); }
+  .s5 { background: rgba(57,211,83,.15); }
+  .s6 { background: rgba(248,81,73,.15); }
+  .s7 { background: rgba(210,153,34,.15); }
+
+  .section-title {
+    font-size: 20px; font-weight: 700;
+  }
+  .section-desc {
+    font-size: 14px; color: var(--text-dim); margin-top: 2px;
+  }
+
+  /* ── 코드 블록 ── */
+  .code-wrap { margin: 18px 0; border-radius: 10px; overflow: hidden; }
+  .code-header {
+    background: var(--bg3);
+    border: 1px solid var(--border); border-bottom: none;
+    padding: 8px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-radius: 10px 10px 0 0;
+  }
+  .code-lang {
+    font-size: 11px; font-weight: 600; color: var(--text-dim);
+    letter-spacing: .5px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .code-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); }
+  .code-copy {
+    font-size: 11px; color: var(--text-dim); cursor: pointer;
+    background: none; border: none; font-family: inherit;
+    padding: 2px 8px; border-radius: 4px; transition: all .2s;
+  }
+  .code-copy:hover { background: var(--border); color: var(--text); }
+  pre {
+    background: #0d1117;
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.65;
+  }
+  .kw  { color: #ff7b72; }        /* keyword */
+  .fn  { color: #d2a8ff; }        /* function */
+  .st  { color: #a5d6ff; }        /* string */
+  .cm  { color: #8b949e; }        /* comment */
+  .nm  { color: #79c0ff; }        /* number */
+  .cl  { color: #ffa657; }        /* class */
+  .op  { color: #ff7b72; }        /* operator */
+
+  /* ── 테이블 ── */
+  .tbl-wrap { overflow-x: auto; margin: 16px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead th {
+    background: var(--bg3); color: var(--text);
+    padding: 10px 14px; text-align: left;
+    border-bottom: 2px solid var(--border);
+    font-weight: 600; font-size: 13px;
+  }
+  tbody td {
+    padding: 9px 14px; border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+  tbody tr:hover td { background: rgba(255,255,255,.03); }
+  tbody td:first-child { font-weight: 600; color: var(--text); }
+
+  /* ── 카드 그리드 ── */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 18px 0; }
+  .card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px;
+  }
+  .card-icon { font-size: 24px; margin-bottom: 10px; }
+  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .card-desc { font-size: 13px; color: var(--text-dim); }
+
+  /* ── 콜아웃 ── */
+  .callout {
+    border-radius: 8px; padding: 14px 18px;
+    margin: 16px 0; display: flex; gap: 12px; align-items: flex-start;
+    font-size: 14px;
+  }
+  .callout-tip   { background: rgba(63,185,80,.08);  border: 1px solid rgba(63,185,80,.25);  }
+  .callout-info  { background: rgba(88,166,255,.08); border: 1px solid rgba(88,166,255,.25); }
+  .callout-warn  { background: rgba(240,136,62,.08); border: 1px solid rgba(240,136,62,.25); }
+  .callout-icon  { font-size: 18px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+  .callout-body  { flex: 1; }
+  .callout-body strong { display: block; margin-bottom: 4px; font-size: 13px; }
+  .callout-tip  .callout-body strong { color: var(--green); }
+  .callout-info .callout-body strong { color: var(--blue);  }
+  .callout-warn .callout-body strong { color: var(--orange); }
+
+  /* ── 플로우 차트 ── */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+  .flow-step {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 16px; font-size: 13px;
+    font-weight: 600; display: flex; align-items: center; gap: 8px;
+  }
+  .flow-arrow { color: var(--text-dim); font-size: 18px; }
+
+  /* ── 배지 ── */
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 700; letter-spacing: .3px;
+  }
+  .badge-green  { background: rgba(63,185,80,.2);   color: var(--green); }
+  .badge-blue   { background: rgba(88,166,255,.2);  color: var(--blue);  }
+  .badge-orange { background: rgba(240,136,62,.2);  color: var(--orange);}
+  .badge-red    { background: rgba(248,81,73,.2);   color: var(--red);   }
+
+  /* ── 혼동행렬 시각화 ── */
+  .cm-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+    width: 260px; margin: 16px auto;
+  }
+  .cm-cell {
+    padding: 16px; border-radius: 8px; text-align: center;
+    font-size: 12px; line-height: 1.5;
+  }
+  .cm-tp { background: rgba(63,185,80,.2);  border: 2px solid var(--green); }
+  .cm-tn { background: rgba(88,166,255,.2); border: 2px solid var(--blue);  }
+  .cm-fp { background: rgba(240,136,62,.1); border: 1px dashed var(--orange); }
+  .cm-fn { background: rgba(248,81,73,.1);  border: 1px dashed var(--red);   }
+  .cm-val { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+
+  /* ── 인사이트 블록 ── */
+  .insight-list { list-style: none; margin: 14px 0; }
+  .insight-list li {
+    padding: 10px 16px; margin-bottom: 8px;
+    background: var(--bg3); border-radius: 8px; border-left: 3px solid var(--blue);
+    font-size: 14px;
+  }
+  .insight-list li .num { color: var(--blue); font-weight: 700; margin-right: 8px; }
+
+  /* ── 요약 섹션 ── */
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .summary-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px;
+  }
+  .summary-card h4 { font-size: 14px; color: var(--text-dim); margin-bottom: 10px; }
+  .summary-card .fn-list { list-style: none; }
+  .summary-card .fn-list li {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--blue);
+    padding: 3px 0; border-bottom: 1px solid var(--border);
+  }
+  .summary-card .fn-list li:last-child { border-bottom: none; }
+
+  /* ── 푸터 ── */
+  footer {
+    text-align: center; padding: 40px;
+    color: var(--text-dim); font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; }
+    .toc { width: 100%; position: static; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    header { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-badge">📡 실습 강의자료 · 2024</div>
+    <h1>반도체 공정<br>데이터 분석</h1>
+    <p class="header-sub">Pandas로 시작하는 데이터 분석 A to Z — 탐색부터 머신러닝 모델까지</p>
+    <div class="header-tags">
+      <span class="tag tag-py">Python 3.x</span>
+      <span class="tag tag-ml">Pandas · Scikit-learn</span>
+      <span class="tag tag-viz">Matplotlib · Seaborn</span>
+      <span class="tag tag-lvl">입문 ~ 중급</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ LAYOUT ══════════════════════════════════════════════════ -->
+<div class="layout">
+
+  <!-- 사이드바 TOC -->
+  <nav class="toc">
+    <div class="toc-title">목차</div>
+    <a href="#step1"><span class="step-num">1</span>라이브러리</a>
+    <a href="#step2"><span class="step-num">2</span>데이터 탐색</a>
+    <a href="#step3"><span class="step-num">3</span>결측값 처리</a>
+    <a href="#step4"><span class="step-num">4</span>EDA 분석</a>
+    <a href="#step5"><span class="step-num">5</span>전처리</a>
+    <a href="#step6"><span class="step-num">6</span>모델 학습</a>
+    <a href="#step7"><span class="step-num">7</span>모델 평가</a>
+    <a href="#summary"><span class="step-num">✓</span>정리</a>
+  </nav>
+
+  <!-- 메인 콘텐츠 -->
+  <div class="content">
+
+    <!-- ─── 데이터 소개 ─────────────────────────────────────── -->
+    <div class="section" style="border-left: 4px solid var(--teal);">
+      <h2 style="font-size:18px; margin-bottom:16px;">📊 분석 데이터 소개</h2>
+      <div class="flow">
+        <div class="flow-step">🏭 반도체 공정</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">📡 센서 측정 (200건)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">🤖 합격/불합격 예측</div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>컬럼명</th><th>의미</th><th>단위</th><th>역할</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>측정시간</td><td>센서 측정 시각</td><td>-</td><td>시계열 인덱스</td></tr>
+            <tr><td>온도_섭씨</td><td>공정 챔버 내부 온도</td><td>°C</td><td>입력 특성</td></tr>
+            <tr><td>압력_Pa</td><td>챔버 내부 압력</td><td>Pa</td><td>입력 특성</td></tr>
+            <tr><td>가스유량_slm</td><td>공정 가스 유량</td><td>slm</td><td>입력 특성</td></tr>
+            <tr><td>전력_W</td><td>인가 전력</td><td>W</td><td>입력 특성</td></tr>
+            <tr><td>진공도_mTorr</td><td>진공도</td><td>mTorr</td><td>입력 특성</td></tr>
+            <tr><td>두께_nm</td><td>증착된 박막 두께</td><td>nm</td><td>입력 특성</td></tr>
+            <tr><td>습도_pct</td><td>공정실 습도</td><td>%</td><td>입력 특성</td></tr>
+            <tr><td>진동_mm_s</td><td>장비 진동 강도</td><td>mm/s</td><td>입력 특성</td></tr>
+            <tr><td>처리시간_sec</td><td>공정 처리 시간</td><td>초</td><td>입력 특성</td></tr>
+            <tr><td>냉각수온도_섭씨</td><td>냉각수 온도</td><td>°C</td><td>입력 특성</td></tr>
+            <tr><td style="color:var(--green)">합격여부</td><td>1=합격 / -1=불합격</td><td>-</td><td>🎯 예측 타겟</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>불균형 데이터 주의!</strong>
+          합격 180건(90%) vs 불합격 20건(10%) — 정확도(Accuracy)만으로는 모델 성능을 올바르게 평가하기 어렵습니다. Recall, F1-Score를 함께 봐야 합니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 1 ─────────────────────────────────────────── -->
+    <div class="section step1" id="step1">
+      <div class="section-header">
+        <div class="step-badge s1">📦</div>
+        <div>
+          <div class="section-title">1단계 · 라이브러리 불러오기</div>
+          <div class="section-desc">import — 분석 도구를 먼저 준비합니다</div>
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🐼</div>
+          <div class="card-title">pandas</div>
+          <div class="card-desc">표(DataFrame) 형태로 데이터를 다루는 핵심 라이브러리</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔢</div>
+          <div class="card-title">numpy</div>
+          <div class="card-desc">수학·배열 계산에 특화된 고속 연산 라이브러리</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📈</div>
+          <div class="card-title">matplotlib</div>
+          <div class="card-desc">파이썬 기본 그래프 시각화 라이브러리</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <div class="card-title">seaborn</div>
+          <div class="card-desc">통계 기반의 고품질 시각화 라이브러리</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🤖</div>
+          <div class="card-title">scikit-learn</div>
+          <div class="card-desc">머신러닝 모델 구축·평가를 위한 통합 라이브러리</div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang"><span class="code-dot"></span>Python</span>
+          <button class="code-copy" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><span class="kw">import</span> pandas <span class="kw">as</span> <span class="cl">pd</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> <span class="cl">np</span>
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> <span class="cl">plt</span>
+<span class="kw">import</span> seaborn <span class="kw">as</span> <span class="cl">sns</span>
+
+<span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler
+<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
+<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LogisticRegression
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> classification_report, confusion_matrix
+
+<span class="cm"># 그래프 기본 설정</span>
+plt.rcParams[<span class="st">'font.family'</span>] = <span class="st">'NanumGothic'</span>   <span class="cm"># 한글 폰트</span>
+plt.rcParams[<span class="st">'axes.unicode_minus'</span>] = <span class="nm">False</span>       <span class="cm"># 마이너스 기호</span></pre>
+      </div>
+    </div>
+
+    <!-- ─── STEP 2 ─────────────────────────────────────────── -->
+    <div class="section step2" id="step2">
+      <div class="section-header">
+        <div class="step-badge s2">🔍</div>
+        <div>
+          <div class="section-title">2단계 · 데이터 불러오기 & 기본 탐색</div>
+          <div class="section-desc">데이터를 읽고, 구조와 통계를 파악합니다</div>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>함수</th><th>역할</th><th>예시</th></tr></thead>
+          <tbody>
+            <tr><td>read_csv()</td><td>CSV 파일을 DataFrame으로 읽기</td><td><code style="color:var(--blue);font-family:monospace">pd.read_csv('파일.csv')</code></td></tr>
+            <tr><td>head(n)</td><td>위에서 n행 보기 (기본 5)</td><td><code style="color:var(--blue);font-family:monospace">df.head()</code></td></tr>
+            <tr><td>tail(n)</td><td>아래에서 n행 보기 (기본 5)</td><td><code style="color:var(--blue);font-family:monospace">df.tail(3)</code></td></tr>
+            <tr><td>info()</td><td>컬럼 타입 & 결측값 수</td><td><code style="color:var(--blue);font-family:monospace">df.info()</code></td></tr>
+            <tr><td>describe()</td><td>기술 통계 (평균, 표준편차 등)</td><td><code style="color:var(--blue);font-family:monospace">df.describe()</code></td></tr>
+            <tr><td>value_counts()</td><td>각 값의 등장 횟수</td><td><code style="color:var(--blue);font-family:monospace">df['컬럼'].value_counts()</code></td></tr>
+            <tr><td>shape</td><td>데이터 크기 (행, 열)</td><td><code style="color:var(--blue);font-family:monospace">df.shape</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang"><span class="code-dot"></span>Python</span>
+          <button class="code-copy" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre>df = pd.<span class="fn">read_csv</span>(<span class="st">'반도체_공정_샘플.csv'</span>)
+
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"데이터 크기: {df.shape[0]}행 × {df.shape[1]}열"</span>)
+df.<span class="fn">head</span>()          <span class="cm"># 첫 5행 미리보기</span>
+df.<span class="fn">info</span>()          <span class="cm"># 타입 & 결측값</span>
+df.<span class="fn">describe</span>().<span class="fn">round</span>(<span class="nm">2</span>)  <span class="cm"># 기술 통계</span>
+df[<span class="st">'합격여부'</span>].<span class="fn">value_counts</span>()  <span class="cm"># 합격/불합격 분포</span></pre>
+      </div>
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>describe()에서 count가 200보다 작으면?</strong>
+          해당 컬럼에 결측값이 있다는 신호입니다! 3단계에서 처리해야 합니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 3 ─────────────────────────────────────────── -->
+    <div class="section step3" id="step3">
+      <div class="section-header">
+        <div class="step-badge s3">🧹</div>
+        <div>
+          <div class="section-title">3단계 · 결측값(Missing Value) 처리</div>
+          <div class="section-desc">비어있는 데이터를 채우거나 제거합니다</div>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>처리 방법</th><th>코드</th><th>언제 사용?</th></tr></thead>
+          <tbody>
+            <tr><td>평균으로 채우기</td><td><code style="color:var(--blue);font-family:monospace">fillna(df['col'].mean())</code></td><td>정규분포에 가까울 때</td></tr>
+            <tr><td>중앙값으로 채우기</td><td><code style="color:var(--blue);font-family:monospace">fillna(df['col'].median())</code></td><td>이상치가 많을 때</td></tr>
+            <tr><td>최빈값으로 채우기</td><td><code style="color:var(--blue);font-family:monospace">fillna(df['col'].mode()[0])</code></td><td>범주형 데이터</td></tr>
+            <tr><td>행 삭제</td><td><code style="color:var(--blue);font-family:monospace">dropna()</code></td><td>결측 비율이 매우 낮을 때</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang"><span class="code-dot"></span>Python</span>
+          <button class="code-copy" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><span class="cm"># 결측값 확인</span>
+<span class="fn">print</span>(df.<span class="fn">isnull</span>().<span class="fn">sum</span>())
+
+<span class="cm"># 수치형 컬럼만 선택 후 평균으로 채우기</span>
+numeric_cols = df.<span class="fn">select_dtypes</span>(include=<span class="st">'number'</span>).columns.<span class="fn">tolist</span>()
+numeric_cols.<span class="fn">remove</span>(<span class="st">'합격여부'</span>)   <span class="cm"># ⚠️ 타겟은 절대 채우지 말 것!</span>
+
+df[numeric_cols] = df[numeric_cols].<span class="fn">fillna</span>(df[numeric_cols].<span class="fn">mean</span>())
+
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"처리 후 결측값: {df.isnull().sum().sum()}개"</span>)</pre>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>타겟 변수(합격여부)는 절대 결측값을 채우면 안 됩니다!</strong>
+          예측 대상 값을 임의로 채우면 모델 학습 결과 자체가 오염됩니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 4 ─────────────────────────────────────────── -->
+    <div class="section step4" id="step4">
+      <div class="section-header">
+        <div class="step-badge s4">📊</div>
+        <div>
+          <div class="section-title">4단계 · 탐색적 데이터 분석 (EDA)</div>
+          <div class="section-desc">데이터 패턴, 분포, 변수 간 관계를 파악합니다</div>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>시각화 종류</th><th>목적</th><th>핵심 함수</th></tr></thead>
+          <tbody>
+            <tr><td>히스토그램</td><td>데이터 분포 파악</td><td><code style="color:var(--blue);font-family:monospace">plt.hist() / sns.histplot()</code></td></tr>
+            <tr><td>박스플롯</td><td>중앙값, 사분위수, 이상치</td><td><code style="color:var(--blue);font-family:monospace">sns.boxplot()</code></td></tr>
+            <tr><td>바이올린 플롯</td><td>분포 모양 + 박스플롯</td><td><code style="color:var(--blue);font-family:monospace">sns.violinplot()</code></td></tr>
+            <tr><td>상관관계 히트맵</td><td>변수 간 상관계수</td><td><code style="color:var(--blue);font-family:monospace">sns.heatmap(df.corr())</code></td></tr>
+            <tr><td>산점도 행렬</td><td>2변수 조합 전체 관계</td><td><code style="color:var(--blue);font-family:monospace">sns.pairplot()</code></td></tr>
+            <tr><td>시계열 그래프</td><td>시간에 따른 변화</td><td><code style="color:var(--blue);font-family:monospace">plt.plot()</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang"><span class="code-dot"></span>Python – 그룹별 평균 비교</span>
+          <button class="code-copy" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><span class="cm"># groupby: 특정 기준으로 묶어 집계</span>
+group_mean = df.<span class="fn">groupby</span>(<span class="st">'합격여부'</span>)[numeric_cols].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="nm">2</span>)
+<span class="fn">print</span>(group_mean.T)   <span class="cm"># 전치해서 보기 편하게</span></pre>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang"><span class="code-dot"></span>Python – 상관관계 히트맵</span>
+          <button class="code-copy" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre>corr = df[numeric_cols + [<span class="st">'합격여부'</span>]].<span class="fn">corr</span>()
+
+plt.<span class="fn">figure</span>(figsize=(<span class="nm">12</span>, <span class="nm">9</span>))
+sns.<span class="fn">heatmap</span>(corr, annot=<span class="nm">True</span>, fmt=<span class="st">'.2f'</span>,
+            cmap=<span class="st">'RdYlGn'</span>, center=<span class="nm">0</span>,
+            linewidths=<span class="nm">0.5</span>)
+plt.<span class="fn">title</span>(<span class="st">'변수 간 상관관계 히트맵'</span>)
+plt.<span class="fn">show</span>()</pre>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>상관계수 해석 기준</strong>
+          |r| ≥ 0.7 : 강한 상관 &nbsp;|&nbsp; 0.3 ≤ |r| &lt; 0.7 : 중간 상관 &nbsp;|&nbsp; |r| &lt; 0.3 : 약한 상관
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 5 ─────────────────────────────────────────── -->
+    <div class="section step5" id="step5">
+      <div class="section-header">
+        <div class="step-badge s5">⚙️</div>
+        <div>
+          <div class="section-title">5단계 · 데이터 전처리 & 분리</div>
+          <div class="section-desc">모델에 데이터를 넣기 전 정제합니다</div>
+        </div>
+      </div>
+
+      <div class="flow" style="flex-direction:column; align-items:flex-start; gap:12px;">
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div class="flow-step">📋 전체 데이터<br><small style="color:var(--text-dim)">200행</small></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" style="border-color:var(--blue)">🎓 학습 데이터(80%)<br><small style="color:var(--text-dim)">160행</small></div>
+          <div style="font-size:11px; color:var(--text-dim)">모델 학습에 사용</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding-left:130px;">
+          <div class="flow-arrow" style="transform:rotate(90deg)">↓</div>
+          <div class="flow-step" style="border-color:var(--orange)">🧪 테스트 데이터(20%)<br><small style="color:var(--text-dim)">40행</small></div>
+          <div style="font-size:11px; color:var(--text-dim)">성능 평가에 사용</div>
+        </div>
+      </div>
+
+      <div class="code-wrap" style="margin-top:20px;">
+        <div class="code-header">
+          <span class="code-lang"><span class="code-dot"></span>Python – 데이터 분리 & 스케일링</span>
+          <button class="code-copy" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre>X = df[numeric_cols].<span class="fn">copy</span>()
+y = (df[<span class="st">'합격여부'</span>] == <span class="nm">1</span>).<span class="fn">astype</span>(<span class="cl">int</span>)  <span class="cm"># 1=합격, 0=불합격</span>
+
+<span class="cm"># 학습/테스트 분리</span>
+X_train, X_test, y_train, y_test = <span class="fn">train_test_split</span>(
+    X, y,
+    test_size=<span class="nm">0.2</span>,       <span class="cm"># 20% 테스트용</span>
+    random_state=<span class="nm">42</span>,    <span class="cm"># 재현성 시드</span>
+    stratify=y          <span class="cm"># 합격/불합격 비율 유지</span>
+)
+
+<span class="cm"># 스케일링 (단위 통일)</span>
+scaler = <span class="fn">StandardScaler</span>()
+X_train_scaled = scaler.<span class="fn">fit_transform</span>(X_train)  <span class="cm"># 학습 + 변환</span>
+X_test_scaled  = scaler.<span class="fn">transform</span>(X_test)        <span class="cm"># 변환만!</span></pre>
+      </div>
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>테스트 데이터에 fit()을 하면 안 됩니다!</strong>
+          테스트 데이터로 fit()하면 미래 데이터의 정보가 모델에 유출됩니다 (데이터 누출, Data Leakage). 반드시 학습 데이터로만 fit하고, 테스트 데이터는 transform만 해야 합니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── STEP 6 ─────────────────────────────────────────── -->
+    <div class="section step6" id="step6">
+      <div class="section-header">
+        <div class="step-badge s6">🤖</div>
+        <div>
+          <div class="section-title">6단계 · 머신러닝 모델 학습</div>
+          <div class="section-desc">두 가지 모델을 학습하고 비교합니다</div>
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card" style="border-top: 3px solid var(--blue);">
+          <div class="card-icon">📈</div>
+          <div class="card-title">로지스틱 회귀</div>
+          <div class="card-desc">통계 기반 선형 분류 모델. 빠르고 해석이 쉬움. 선형 경계일 때 적합.</div>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--green);">
+          <div class="card-icon">🌲</div>
+          <div class="card-title">랜덤 포레스트</div>
+          <div class="card-desc">수백 개의 결정 트리가 투표. 비선형 패턴 학습 가능. 이상치에 강함.</div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang"><span class="code-dot"></span>Python – 모델 학습</span>
+          <button class="code-copy" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><span class="cm"># 로지스틱 회귀</span>
+lr_model = <span class="fn">LogisticRegression</span>(random_state=<span class="nm">42</span>, max_iter=<span class="nm">1000</span>)
+lr_model.<span class="fn">fit</span>(X_train_scaled, y_train)
+
+<span class="cm"># 랜덤 포레스트</span>
+rf_model = <span class="fn">RandomForestClassifier</span>(
+    n_estimators=<span class="nm">100</span>,   <span class="cm"># 결정 트리 100개</span>
+    max_depth=<span class="nm">5</span>,        <span class="cm"># 각 트리 최대 깊이</span>
+    random_state=<span class="nm">42</span>
+)
+rf_model.<span class="fn">fit</span>(X_train_scaled, y_train)
+
+<span class="cm"># 예측</span>
+y_pred = rf_model.<span class="fn">predict</span>(X_test_scaled)</pre>
+      </div>
+    </div>
+
+    <!-- ─── STEP 7 ─────────────────────────────────────────── -->
+    <div class="section step7" id="step7">
+      <div class="section-header">
+        <div class="step-badge s7">🎯</div>
+        <div>
+          <div class="section-title">7단계 · 모델 평가</div>
+          <div class="section-desc">혼동행렬, ROC-AUC, 특성 중요도로 모델을 분석합니다</div>
+        </div>
+      </div>
+
+      <!-- 혼동행렬 설명 -->
+      <h3 style="font-size:15px; margin-bottom:12px; color:var(--text-dim);">📌 혼동행렬(Confusion Matrix) 읽는 법</h3>
+      <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
+        <div class="cm-grid">
+          <div class="cm-cell cm-tn">
+            <div class="cm-val" style="color:var(--blue)">TN</div>
+            <div>불합격 → 불합격<br>✅ 정확</div>
+          </div>
+          <div class="cm-cell cm-fp">
+            <div class="cm-val" style="color:var(--orange)">FP</div>
+            <div>불합격 → 합격<br>⚠️ 틀린 경보</div>
+          </div>
+          <div class="cm-cell cm-fn">
+            <div class="cm-val" style="color:var(--red)">FN</div>
+            <div>합격 → 불합격<br>❌ 누락</div>
+          </div>
+          <div class="cm-cell cm-tp">
+            <div class="cm-val" style="color:var(--green)">TP</div>
+            <div>합격 → 합격<br>✅ 정확</div>
+          </div>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>지표</th><th>공식</th><th>의미</th></tr></thead>
+              <tbody>
+                <tr><td>Accuracy</td><td><code style="font-family:monospace">(TP+TN) / 전체</code></td><td>전체 정확도</td></tr>
+                <tr><td>Precision</td><td><code style="font-family:monospace">TP / (TP+FP)</code></td><td>불합격 예측의 정확성</td></tr>
+                <tr><td>Recall</td><td><code style="font-family:monospace">TP / (TP+FN)</code></td><td>실제 불합격 탐지율</td></tr>
+                <tr><td>F1-Score</td><td><code style="font-family:monospace">2 × P×R / (P+R)</code></td><td>Precision·Recall 조화</td></tr>
+                <tr><td>AUC</td><td>ROC 곡선 아래 면적</td><td>1에 가까울수록 좋음</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-wrap" style="margin-top:20px;">
+        <div class="code-header">
+          <span class="code-lang"><span class="code-dot"></span>Python – 모델 평가</span>
+          <button class="code-copy" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><span class="cm"># 혼동행렬</span>
+cm = <span class="fn">confusion_matrix</span>(y_test, y_pred)
+sns.<span class="fn">heatmap</span>(cm, annot=<span class="nm">True</span>, fmt=<span class="st">'d'</span>, cmap=<span class="st">'Blues'</span>)
+
+<span class="cm"># 상세 성능 리포트</span>
+<span class="fn">print</span>(<span class="fn">classification_report</span>(y_test, y_pred,
+      target_names=[<span class="st">'불합격(0)'</span>, <span class="st">'합격(1)'</span>]))
+
+<span class="cm"># 특성 중요도</span>
+importances = pd.<span class="fn">Series</span>(
+    rf_model.feature_importances_,
+    index=numeric_cols
+).<span class="fn">sort_values</span>(ascending=<span class="nm">False</span>)
+<span class="fn">print</span>(importances)</pre>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>반도체 공정에서는 Recall이 중요합니다!</strong>
+          불합격 제품을 합격으로 예측하면(FN) 불량품이 출하됩니다. 이는 Precision이 낮은 것보다 훨씬 심각한 문제입니다. 따라서 이 도메인에서는 Recall을 최대화하는 방향으로 모델을 조정해야 합니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 핵심 인사이트 ──────────────────────────────────── -->
+    <div class="section" id="insights" style="border-left: 4px solid var(--purple);">
+      <h2 style="font-size:18px; margin-bottom:16px;">🔬 분석 핵심 인사이트</h2>
+      <ul class="insight-list">
+        <li><span class="num">01</span><strong>온도·전력·진공도·두께</strong>가 합격 여부를 결정하는 주요 변수로 확인됩니다.</li>
+        <li><span class="num">02</span>불합격 제품은 평균적으로 <strong>온도가 높고 (303.8 vs 300.4°C)</strong>, <strong>두께가 두꺼운 (104.6 vs 100.0nm)</strong> 경향이 있습니다.</li>
+        <li><span class="num">03</span>합격률 90% vs 불합격 10%의 <strong>불균형 데이터</strong>에서는 정확도(Accuracy)만 보면 안 됩니다.</li>
+        <li><span class="num">04</span><strong>랜덤 포레스트</strong>가 로지스틱 회귀보다 불균형 데이터에 더 강인한 성능을 보입니다.</li>
+        <li><span class="num">05</span>시계열 분석에서 후기(4월)에 불합격 건수가 집중되며, 공정 이상 징후가 관찰됩니다.</li>
+      </ul>
+    </div>
+
+    <!-- ─── 정리 ───────────────────────────────────────────── -->
+    <div class="section" id="summary" style="border-left: 4px solid var(--teal);">
+      <h2 style="font-size:18px; margin-bottom:20px;">✅ 수업 정리 — 핵심 함수 레퍼런스</h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <h4>📂 데이터 탐색</h4>
+          <ul class="fn-list">
+            <li>pd.read_csv()</li>
+            <li>df.head() / tail()</li>
+            <li>df.info()</li>
+            <li>df.describe()</li>
+            <li>df['col'].value_counts()</li>
+            <li>df.shape / df.dtypes</li>
+          </ul>
+        </div>
+        <div class="summary-card">
+          <h4>🧹 전처리</h4>
+          <ul class="fn-list">
+            <li>df.isnull().sum()</li>
+            <li>df.fillna(value)</li>
+            <li>df.dropna()</li>
+            <li>train_test_split()</li>
+            <li>StandardScaler()</li>
+            <li>scaler.fit_transform()</li>
+          </ul>
+        </div>
+        <div class="summary-card">
+          <h4>📊 시각화</h4>
+          <ul class="fn-list">
+            <li>plt.hist() / bar()</li>
+            <li>sns.boxplot()</li>
+            <li>sns.violinplot()</li>
+            <li>sns.heatmap(df.corr())</li>
+            <li>sns.pairplot()</li>
+            <li>plt.plot() (시계열)</li>
+          </ul>
+        </div>
+        <div class="summary-card">
+          <h4>🤖 모델링·평가</h4>
+          <ul class="fn-list">
+            <li>LogisticRegression()</li>
+            <li>RandomForestClassifier()</li>
+            <li>model.fit(X, y)</li>
+            <li>model.predict(X)</li>
+            <li>confusion_matrix()</li>
+            <li>classification_report()</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:24px; padding:20px; background:var(--bg3); border-radius:10px;">
+        <h3 style="font-size:15px; margin-bottom:12px; color:var(--green);">🚀 더 나아가기</h3>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">
+          <div style="padding:12px; background:var(--bg2); border-radius:8px; font-size:13px;">
+            <strong style="color:var(--blue)">⚡ 고급 모델</strong><br>
+            <span style="color:var(--text-dim)">XGBoost, LightGBM, CatBoost 앙상블 모델 적용</span>
+          </div>
+          <div style="padding:12px; background:var(--bg2); border-radius:8px; font-size:13px;">
+            <strong style="color:var(--orange)">⚖️ 불균형 처리</strong><br>
+            <span style="color:var(--text-dim)">SMOTE로 불합격 샘플 오버샘플링</span>
+          </div>
+          <div style="padding:12px; background:var(--bg2); border-radius:8px; font-size:13px;">
+            <strong style="color:var(--purple)">🔧 하이퍼파라미터</strong><br>
+            <span style="color:var(--text-dim)">GridSearchCV로 최적 파라미터 탐색</span>
+          </div>
+          <div style="padding:12px; background:var(--bg2); border-radius:8px; font-size:13px;">
+            <strong style="color:var(--green)">🔍 모델 해석</strong><br>
+            <span style="color:var(--text-dim)">SHAP value로 개별 예측 근거 설명</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /layout -->
+
+<footer>
+  <p>🔬 반도체 공정 데이터 분석 강의자료 &nbsp;·&nbsp; Python Pandas 데이터 분석 입문</p>
+  <p style="margin-top:6px; font-size:12px;">Google Colab에서 <code style="color:var(--blue)">반도체_공정_데이터분석.ipynb</code> 파일을 열어 직접 실행해보세요!</p>
+</footer>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ 복사됨';
+    setTimeout(() => btn.textContent = '복사', 1800);
+  });
+}
+// 스크롤 TOC 활성화
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.toc a').forEach(a => a.style.color = '');
+      const link = document.querySelector(`.toc a[href="#${e.target.id}"]`);
+      if (link) { link.style.color = 'var(--blue)'; link.style.borderLeftColor = 'var(--blue)'; }
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('[id]').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

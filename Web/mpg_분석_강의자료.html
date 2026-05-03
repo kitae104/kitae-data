@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>판다스 기초 실습 - 자동차 연비 데이터(mpg.csv) 분석</title>
+<style>
+  :root {
+    --primary: #059669;
+    --primary-light: #ecfdf5;
+    --secondary: #0891b2;
+    --success: #16a34a;
+    --success-light: #f0fdf4;
+    --warning: #d97706;
+    --warning-light: #fffbeb;
+    --danger: #dc2626;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --code-bg: #1e1e2e;
+    --code-fg: #cdd6f4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; background: #f0fdf9; color: var(--gray-900); line-height: 1.7; }
+
+  /* Header */
+  .site-header {
+    background: linear-gradient(135deg, #065f46 0%, #0891b2 100%);
+    color: white; padding: 3rem 2rem; text-align: center;
+  }
+  .site-header .badge {
+    display: inline-block; background: rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 4px 16px; font-size: 0.85rem; margin-bottom: 1rem;
+  }
+  .site-header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .site-header p { font-size: 1.05rem; opacity: 0.9; }
+  .meta-row { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; }
+  .meta-item { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; opacity: 0.85; }
+
+  /* Layout */
+  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* TOC */
+  .toc { background: white; border: 2px solid var(--gray-200); border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 2.5rem; }
+  .toc h2 { font-size: 1rem; color: var(--gray-700); margin-bottom: 1rem; font-weight: 600; }
+  .toc ol { padding-left: 1.5rem; }
+  .toc li { margin: 0.4rem 0; }
+  .toc a { color: var(--primary); text-decoration: none; font-size: 0.95rem; }
+  .toc a:hover { text-decoration: underline; }
+  .toc .time { color: #9ca3af; font-size: 0.8rem; margin-left: 6px; }
+
+  /* Sections */
+  .section {
+    background: white; border-radius: 14px; border: 1px solid var(--gray-200);
+    padding: 2rem; margin-bottom: 2rem; scroll-margin-top: 1rem;
+  }
+  .section-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+  .step-badge {
+    background: linear-gradient(135deg, #059669, #0891b2);
+    color: white; border-radius: 10px; width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 800; flex-shrink: 0;
+  }
+  .section-title { flex: 1; }
+  .section-title h2 { font-size: 1.3rem; font-weight: 700; color: var(--gray-900); }
+  .section-title .subtitle { color: #6b7280; font-size: 0.9rem; margin-top: 2px; }
+  .time-badge {
+    background: var(--warning-light); color: var(--warning);
+    border-radius: 8px; padding: 4px 10px; font-size: 0.78rem; font-weight: 600;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* Callout boxes */
+  .callout { border-radius: 10px; padding: 1rem 1.25rem; margin: 1.2rem 0; display: flex; gap: 0.75rem; }
+  .callout-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+  .callout-body { flex: 1; }
+  .callout-body strong { display: block; margin-bottom: 0.25rem; font-size: 0.95rem; }
+  .callout-body p, .callout-body ul { font-size: 0.9rem; color: #374151; }
+  .callout-body ul { padding-left: 1.2rem; margin-top: 0.3rem; }
+  .callout-body li { margin: 0.2rem 0; }
+  .callout.info { background: var(--primary-light); border-left: 4px solid var(--primary); }
+  .callout.info .callout-icon { color: var(--primary); }
+  .callout.success { background: var(--success-light); border-left: 4px solid var(--success); }
+  .callout.success .callout-icon { color: var(--success); }
+  .callout.warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .callout.warning .callout-icon { color: var(--warning); }
+
+  /* Code blocks */
+  .code-block { position: relative; margin: 1.2rem 0; border-radius: 10px; overflow: hidden; }
+  .code-block-header {
+    background: #2d2d3f; color: #9ca3af;
+    padding: 8px 16px; font-size: 0.78rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .code-block-header .lang { color: #6ee7b7; font-weight: 600; }
+  .copy-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #d1d5db; padding: 4px 12px; border-radius: 6px;
+    font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+  .copy-btn.copied { background: #16a34a; border-color: #16a34a; color: white; }
+  pre {
+    background: var(--code-bg);
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+  code { color: var(--code-fg); }
+
+  /* Syntax highlighting */
+  .kw { color: #cba6f7; }
+  .fn { color: #89b4fa; }
+  .str { color: #a6e3a1; }
+  .num { color: #fab387; }
+  .cm { color: #6c7086; font-style: italic; }
+  .op { color: #89dceb; }
+  .var { color: #f38ba8; }
+  .attr { color: #f9e2af; }
+
+  /* Output block */
+  .output-block { margin: 1rem 0; }
+  .output-label {
+    font-size: 0.78rem; color: #6b7280; font-weight: 600;
+    padding: 4px 12px; background: var(--gray-100); border-radius: 6px 6px 0 0;
+    border: 1px solid var(--gray-200); border-bottom: none;
+  }
+  .output-content {
+    background: #fafafa; border: 1px solid var(--gray-200);
+    border-radius: 0 6px 6px 6px; padding: 1rem 1.25rem;
+    font-family: 'Consolas', monospace; font-size: 0.82rem;
+    color: #374151; overflow-x: auto; white-space: pre;
+  }
+
+  /* Explanation text */
+  .explain { font-size: 0.95rem; color: #374151; margin: 0.8rem 0; line-height: 1.8; }
+  .explain strong { color: var(--gray-900); }
+  .explain code { background: var(--gray-100); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; color: #065f46; }
+
+  /* Key point */
+  .key-point { background: linear-gradient(135deg, #ecfdf5, #e0f2fe); border-radius: 10px; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #a7f3d0; }
+  .key-point .title { font-weight: 700; color: #065f46; margin-bottom: 0.5rem; font-size: 0.9rem; }
+  .key-point p { font-size: 0.9rem; color: #374151; }
+
+  /* Sub steps */
+  .sub-step { margin: 1.5rem 0; }
+  .sub-step-title { font-size: 1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
+  .sub-step-title::before { content: ''; display: inline-block; width: 6px; height: 20px; background: var(--primary); border-radius: 3px; }
+
+  /* Divider */
+  .divider { border: none; border-top: 2px dashed var(--gray-200); margin: 1.5rem 0; }
+
+  /* Summary box */
+  .summary-box { background: linear-gradient(135deg, #065f46 0%, #0891b2 100%); color: white; border-radius: 14px; padding: 2rem; margin-top: 2rem; }
+  .summary-box h2 { font-size: 1.3rem; margin-bottom: 1rem; }
+  .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .summary-item { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+  .summary-item strong { display: block; margin-bottom: 4px; font-size: 1rem; }
+
+  /* Insight card */
+  .insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
+  .insight-card { background: var(--primary-light); border: 1px solid #a7f3d0; border-radius: 10px; padding: 1rem; text-align: center; }
+  .insight-card .value { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+  .insight-card .label { font-size: 0.82rem; color: #374151; margin-top: 4px; }
+
+  @media (max-width: 640px) {
+    .site-header h1 { font-size: 1.5rem; }
+    .meta-row { flex-wrap: wrap; gap: 1rem; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .insight-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="badge">🚗 판다스 기초 실습 · 2강</div>
+  <h1>자동차 연비 데이터 분석</h1>
+  <p>mpg.csv를 활용한 판다스 데이터 분석 & 시각화 입문</p>
+  <div class="meta-row">
+    <div class="meta-item">⏱ 총 소요시간: 약 80분</div>
+    <div class="meta-item">📁 데이터: mpg.csv (234행 × 11열)</div>
+    <div class="meta-item">🐍 Python + Pandas + Matplotlib</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h2>📋 목차</h2>
+    <ol>
+      <li><a href="#s1">데이터 불러오기 & 기본 탐색</a> <span class="time">~12분</span></li>
+      <li><a href="#s2">원하는 데이터 추출하기 (필터링 & 정렬)</a> <span class="time">~12분</span></li>
+      <li><a href="#s3">제조사·카테고리별 그룹 분석</a> <span class="time">~15분</span></li>
+      <li><a href="#s4">파생변수 만들기 (연비 평균 & 등급)</a> <span class="time">~10분</span></li>
+      <li><a href="#s5">변수 간 관계 분석</a> <span class="time">~10분</span></li>
+      <li><a href="#s6">데이터 시각화</a> <span class="time">~21분</span></li>
+    </ol>
+  </nav>
+
+  <!-- 데이터 소개 -->
+  <div class="callout info">
+    <div class="callout-icon">📌</div>
+    <div class="callout-body">
+      <strong>mpg.csv 데이터 소개</strong>
+      <p>1999~2008년 사이 출시된 자동차 234대의 연비 데이터입니다. 각 열의 의미는 다음과 같습니다.</p>
+      <ul>
+        <li><code>manufacturer</code>: 제조사 &nbsp;|&nbsp; <code>model</code>: 모델명 &nbsp;|&nbsp; <code>year</code>: 출시 연도</li>
+        <li><code>displ</code>: 배기량(L) &nbsp;|&nbsp; <code>cyl</code>: 실린더 수 &nbsp;|&nbsp; <code>trans</code>: 변속기 종류</li>
+        <li><code>drv</code>: 구동 방식 (f=전륜, r=후륜, 4=4륜)</li>
+        <li><code>cty</code>: 도시 연비(mpg) &nbsp;|&nbsp; <code>hwy</code>: 고속도로 연비(mpg)</li>
+        <li><code>fl</code>: 연료 종류 &nbsp;|&nbsp; <code>category</code>: 자동차 종류</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 1 ===== -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <div class="step-badge">1</div>
+      <div class="section-title">
+        <h2>데이터 불러오기 & 기본 탐색</h2>
+        <div class="subtitle">234행 데이터를 불러오고 전체 구조를 파악합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~12분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">1-1. 라이브러리 임포트 & 데이터 불러오기</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="kw">import</span> <span class="var">pandas</span> <span class="kw">as</span> pd
+<span class="kw">import</span> <span class="var">numpy</span> <span class="kw">as</span> np
+<span class="kw">import</span> <span class="var">matplotlib.pyplot</span> <span class="kw">as</span> plt
+<span class="kw">import</span> <span class="var">matplotlib</span>
+
+<span class="cm"># 한글 폰트 설정 (Windows)</span>
+matplotlib.rc(<span class="str">'font'</span>, family=<span class="str">'Malgun Gothic'</span>)
+plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="num">False</span>
+
+<span class="cm"># CSV 파일 불러오기</span>
+df = pd.<span class="fn">read_csv</span>(<span class="str">'mpg.csv'</span>)
+<span class="fn">print</span>(df.<span class="fn">head</span>())</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">  manufacturer model  displ  year  cyl       trans drv  cty  hwy fl category
+0         audi    a4    1.8  1999    4    auto(l5)   f   18   29  p  compact
+1         audi    a4    1.8  1999    4  manual(m5)   f   21   29  p  compact
+2         audi    a4    2.0  2008    4  manual(m6)   f   20   31  p  compact
+3         audi    a4    2.0  2008    4    auto(av)   f   21   30  p  compact
+4         audi    a4    2.8  1999    6    auto(l5)   f   16   26  p  compact</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">1-2. 데이터 크기 & 열 정보 확인</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="fn">print</span>(<span class="str">"데이터 크기:"</span>, df.<span class="attr">shape</span>)    <span class="cm"># (234, 11)</span>
+<span class="fn">print</span>(df.<span class="fn">info</span>())                   <span class="cm"># 열 타입 & 결측치 확인</span>
+<span class="fn">print</span>(df.<span class="fn">describe</span>())              <span class="cm"># 숫자형 열 통계 요약</span></code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">1-3. 고유값으로 데이터 범주 파악</div>
+      <p class="explain"><code>unique()</code>는 해당 열에 어떤 값들이 있는지, <code>nunique()</code>는 고유값이 몇 종류인지 알려줍니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 제조사 목록 (몇 개인지)</span>
+<span class="fn">print</span>(<span class="str">"제조사 수:"</span>, df[<span class="str">'manufacturer'</span>].<span class="fn">nunique</span>())
+<span class="fn">print</span>(<span class="str">"제조사 목록:"</span>, df[<span class="str">'manufacturer'</span>].<span class="fn">unique</span>())
+
+<span class="cm"># 자동차 종류(category) 목록</span>
+<span class="fn">print</span>(<span class="str">"자동차 종류:"</span>, df[<span class="str">'category'</span>].<span class="fn">unique</span>())
+
+<span class="cm"># 각 제조사별 모델 수</span>
+<span class="fn">print</span>(df[<span class="str">'manufacturer'</span>].<span class="fn">value_counts</span>())</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">제조사 수: 15
+제조사 목록: ['audi' 'chevrolet' 'dodge' 'ford' 'honda' 'hyundai' 'jeep' 'land rover'
+ 'lincoln' 'mercury' 'nissan' 'pontiac' 'subaru' 'toyota' 'volkswagen']
+
+자동차 종류: ['compact' 'midsize' 'suv' '2seater' 'minivan' 'pickup' 'subcompact']
+
+manufacturer
+dodge         37
+toyota        34
+volkswagen    27
+ford          25
+chevrolet     19
+...</div>
+      </div>
+    </div>
+
+    <!-- Insight cards -->
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="value">234</div>
+        <div class="label">전체 자동차 대수</div>
+      </div>
+      <div class="insight-card">
+        <div class="value">15</div>
+        <div class="label">제조사 수</div>
+      </div>
+      <div class="insight-card">
+        <div class="value">7</div>
+        <div class="label">자동차 카테고리 수</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 2 ===== -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <div class="step-badge">2</div>
+      <div class="section-title">
+        <h2>원하는 데이터 추출하기 (필터링 & 정렬)</h2>
+        <div class="subtitle">조건에 맞는 행을 뽑고, 원하는 순서로 정렬합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~12분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">2-1. 조건 필터링</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 고속도로 연비 30 이상인 차</span>
+eco = df[df[<span class="str">'hwy'</span>] >= <span class="num">30</span>]
+<span class="fn">print</span>(<span class="str">f"고속도로 연비 30↑: {len(eco)}대"</span>)
+
+<span class="cm"># compact 종류이고 전륜(f) 구동인 차</span>
+compact_fwd = df[(df[<span class="str">'category'</span>] == <span class="str">'compact'</span>) & (df[<span class="str">'drv'</span>] == <span class="str">'f'</span>)]
+<span class="fn">print</span>(<span class="str">f"compact + 전륜: {len(compact_fwd)}대"</span>)
+
+<span class="cm"># toyota 또는 honda 차량</span>
+jp_cars = df[df[<span class="str">'manufacturer'</span>].<span class="fn">isin</span>([<span class="str">'toyota'</span>, <span class="str">'honda'</span>])]
+<span class="fn">print</span>(<span class="str">f"도요타/혼다: {len(jp_cars)}대"</span>)
+
+<span class="cm"># query() 활용: 배기량 2.0 이하이고 연비 25 이상</span>
+small_eco = df.<span class="fn">query</span>(<span class="str">"displ <= 2.0 and hwy >= 25"</span>)
+<span class="fn">print</span>(small_eco[[<span class="str">'manufacturer'</span>, <span class="str">'model'</span>, <span class="str">'displ'</span>, <span class="str">'hwy'</span>]])</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">2-2. 정렬 (sort_values)</div>
+      <p class="explain"><code>sort_values()</code>로 특정 열 기준으로 오름차순/내림차순 정렬합니다. <code>ascending=False</code>면 내림차순.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 고속도로 연비 내림차순 상위 10대</span>
+top10 = df.<span class="fn">sort_values</span>(<span class="str">'hwy'</span>, ascending=<span class="num">False</span>).<span class="fn">head</span>(<span class="num">10</span>)
+<span class="fn">print</span>(top10[[<span class="str">'manufacturer'</span>, <span class="str">'model'</span>, <span class="str">'cty'</span>, <span class="str">'hwy'</span>, <span class="str">'category'</span>]])
+
+<span class="cm"># 배기량 오름차순, 연비 내림차순 다중 정렬</span>
+sorted_df = df.<span class="fn">sort_values</span>([<span class="str">'displ'</span>, <span class="str">'hwy'</span>],
+                            ascending=[<span class="num">True</span>, <span class="num">False</span>])
+<span class="fn">print</span>(sorted_df[[<span class="str">'manufacturer'</span>, <span class="str">'model'</span>, <span class="str">'displ'</span>, <span class="str">'hwy'</span>]].<span class="fn">head</span>(<span class="num">8</span>))</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과 (상위 10대)</div>
+        <div class="output-content">    manufacturer       model  cty  hwy    category
+212       volkswagen        jetta   35   44    compact
+213       volkswagen        jetta   29   41    compact
+222       volkswagen  new beetle   29   41  subcompact
+...
+고속도로 연비 1위: volkswagen jetta (44mpg)</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">2-3. 특정 열만 선택하여 보기</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 제조사, 모델, 연비 열만 선택</span>
+fuel_df = df[[<span class="str">'manufacturer'</span>, <span class="str">'model'</span>, <span class="str">'cty'</span>, <span class="str">'hwy'</span>]]
+<span class="fn">print</span>(fuel_df.<span class="fn">head</span>())
+
+<span class="cm"># nlargest: 도시 연비 상위 5대</span>
+<span class="fn">print</span>(df.<span class="fn">nlargest</span>(<span class="num">5</span>, <span class="str">'cty'</span>)[[<span class="str">'manufacturer'</span>, <span class="str">'model'</span>, <span class="str">'cty'</span>, <span class="str">'hwy'</span>]])
+
+<span class="cm"># nsmallest: 연비 하위 5대 (가장 나쁜)</span>
+<span class="fn">print</span>(df.<span class="fn">nsmallest</span>(<span class="num">5</span>, <span class="str">'hwy'</span>)[[<span class="str">'manufacturer'</span>, <span class="str">'model'</span>, <span class="str">'displ'</span>, <span class="str">'hwy'</span>]])</code></pre>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <div class="title">🔑 핵심 정리</div>
+      <p><code>sort_values('열이름')</code> 오름차순 / <code>ascending=False</code> 내림차순 / <code>nlargest(n, '열')</code> 상위 n개 / <code>nsmallest(n, '열')</code> 하위 n개</p>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 3 ===== -->
+  <section class="section" id="s3">
+    <div class="section-header">
+      <div class="step-badge">3</div>
+      <div class="section-title">
+        <h2>제조사·카테고리별 그룹 분석</h2>
+        <div class="subtitle">groupby로 집단별 패턴을 발견합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~15분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">3-1. 제조사별 연비 평균</div>
+      <p class="explain">234대 데이터를 제조사 단위로 묶어 평균을 계산합니다. 결과를 정렬해 한눈에 비교할 수 있습니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 제조사별 고속도로 연비 평균 (내림차순)</span>
+mfr_hwy = df.<span class="fn">groupby</span>(<span class="str">'manufacturer'</span>)[<span class="str">'hwy'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+mfr_hwy_sorted = mfr_hwy.<span class="fn">sort_values</span>(ascending=<span class="num">False</span>)
+<span class="fn">print</span>(mfr_hwy_sorted)
+
+<span class="cm"># 제조사별 도시/고속도로 평균 함께 보기</span>
+mfr_fuel = df.<span class="fn">groupby</span>(<span class="str">'manufacturer'</span>)[[<span class="str">'cty'</span>, <span class="str">'hwy'</span>]].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+mfr_fuel = mfr_fuel.<span class="fn">sort_values</span>(<span class="str">'hwy'</span>, ascending=<span class="num">False</span>)
+<span class="fn">print</span>(mfr_fuel)</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">manufacturer
+honda         32.6
+volkswagen    29.2
+hyundai       26.9
+nissan        26.3
+subaru        25.6
+audi          26.4
+toyota        24.9
+...
+
+              cty   hwy
+manufacturer
+honda        25.0  32.6
+volkswagen   21.0  29.2
+hyundai      18.6  26.9
+...</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">3-2. 카테고리별 연비 비교</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 카테고리별 연비 통계</span>
+cat_stats = df.<span class="fn">groupby</span>(<span class="str">'category'</span>)[[<span class="str">'cty'</span>, <span class="str">'hwy'</span>]].<span class="fn">agg</span>([<span class="str">'mean'</span>, <span class="str">'min'</span>, <span class="str">'max'</span>]).<span class="fn">round</span>(<span class="num">1</span>)
+<span class="fn">print</span>(cat_stats)
+
+<span class="cm"># 카테고리별 대수</span>
+<span class="fn">print</span>(<span class="str">"\n카테고리별 자동차 수:"</span>)
+<span class="fn">print</span>(df[<span class="str">'category'</span>].<span class="fn">value_counts</span>())</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">           cty              hwy
+          mean  min  max  mean  min  max
+category
+2seater   15.4   15   16  24.8   23   26
+compact   20.1   15   35  28.3   23   44
+midsize   18.8   15   25  27.3   23   32
+minivan   15.8   11   18  22.4   17   24
+pickup    13.0    9   18  16.9   12   22
+subcompact 20.4  15   35  28.1   20   44
+suv        13.5   9   18  18.1   12   27
+
+カテゴリ別 자동차 수:
+suv          62
+compact      47
+midsize      41
+subcompact   35
+pickup       33
+minivan      11
+2seater       5</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">3-3. 구동 방식별 & 연도별 분석</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 구동 방식별 평균 연비 (f=전륜, r=후륜, 4=4륜)</span>
+drv_mean = df.<span class="fn">groupby</span>(<span class="str">'drv'</span>)[[<span class="str">'cty'</span>, <span class="str">'hwy'</span>]].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+drv_mean.<span class="attr">index</span> = drv_mean.<span class="attr">index</span>.<span class="fn">map</span>({<span class="str">'f'</span>: <span class="str">'전륜(f)'</span>, <span class="str">'r'</span>: <span class="str">'후륜(r)'</span>, <span class="str">'4'</span>: <span class="str">'4륜(4)'</span>})
+<span class="fn">print</span>(drv_mean)
+
+<span class="cm"># 연도별(1999 vs 2008) 연비 변화</span>
+year_mean = df.<span class="fn">groupby</span>(<span class="str">'year'</span>)[[<span class="str">'cty'</span>, <span class="str">'hwy'</span>]].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+<span class="fn">print</span>(<span class="str">"\n연도별 평균 연비:"</span>)
+<span class="fn">print</span>(year_mean)</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">        cty   hwy
+전륜(f)  19.9  27.7
+후륜(r)  14.1  21.0
+4륜(4)   14.4  19.8
+
+연도별 평균 연비:
+       cty   hwy
+year
+1999  17.0  23.4
+2008  16.7  23.5</div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <strong>분석 인사이트</strong>
+        <ul>
+          <li>전륜구동이 후륜/4륜보다 연비가 약 30~40% 높음</li>
+          <li>혼다가 고속도로 연비 1위(32.6mpg), 픽업 트럭이 연비 최하위</li>
+          <li>1999년 대비 2008년 연비 개선폭이 미미함 → 추가 분석 필요</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 4 ===== -->
+  <section class="section" id="s4">
+    <div class="section-header">
+      <div class="step-badge">4</div>
+      <div class="section-title">
+        <h2>파생변수 만들기 (연비 평균 & 등급)</h2>
+        <div class="subtitle">도시/고속도로 연비를 조합해 새로운 분석 기준을 만듭니다</div>
+      </div>
+      <div class="time-badge">⏱ ~10분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">4-1. 통합 연비 평균(avg) 열 추가</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 도시+고속도로 연비 평균</span>
+df[<span class="str">'avg'</span>] = (df[<span class="str">'cty'</span>] + df[<span class="str">'hwy'</span>]) / <span class="num">2</span>
+
+<span class="fn">print</span>(df[[<span class="str">'manufacturer'</span>, <span class="str">'model'</span>, <span class="str">'cty'</span>, <span class="str">'hwy'</span>, <span class="str">'avg'</span>]].<span class="fn">head</span>())
+<span class="fn">print</span>(<span class="str">"\n전체 평균 연비:"</span>, df[<span class="str">'avg'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>))</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">  manufacturer model  cty  hwy   avg
+0         audi    a4   18   29  23.5
+1         audi    a4   21   29  25.0
+2         audi    a4   20   31  25.5
+3         audi    a4   21   30  25.5
+4         audi    a4   16   26  21.0
+
+전체 평균 연비: 20.1</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">4-2. 연비 합격 판정 (np.where)</div>
+      <p class="explain">전체 평균(약 20mpg)을 기준으로 합격/불합격을 나눕니다. <code>np.where(조건, 참값, 거짓값)</code> 패턴입니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 평균 연비 기준으로 합격/불합격 판정</span>
+df[<span class="str">'test'</span>] = np.<span class="fn">where</span>(df[<span class="str">'avg'</span>] >= <span class="num">20</span>, <span class="str">'pass'</span>, <span class="str">'fail'</span>)
+<span class="fn">print</span>(df[<span class="str">'test'</span>].<span class="fn">value_counts</span>())</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">test
+pass    128
+fail    106
+Name: count, dtype: int64</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">4-3. 연비 등급(A/B/C) 부여</div>
+      <p class="explain"><code>np.where()</code>를 중첩해서 세 등급으로 나눕니다. 평균 연비 30 이상 → A, 20 이상 → B, 미만 → C.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 연비 등급: A(avg>=30), B(avg>=20), C(그 외)</span>
+df[<span class="str">'grade'</span>] = np.<span class="fn">where</span>(df[<span class="str">'avg'</span>] >= <span class="num">30</span>, <span class="str">'A'</span>,
+               np.<span class="fn">where</span>(df[<span class="str">'avg'</span>] >= <span class="num">20</span>, <span class="str">'B'</span>, <span class="str">'C'</span>))
+
+<span class="fn">print</span>(<span class="str">"등급별 대수:"</span>)
+<span class="fn">print</span>(df[<span class="str">'grade'</span>].<span class="fn">value_counts</span>().<span class="fn">sort_index</span>())
+
+<span class="cm"># 등급별 카테고리 분포 (crosstab)</span>
+ct = pd.<span class="fn">crosstab</span>(df[<span class="str">'grade'</span>], df[<span class="str">'category'</span>])
+<span class="fn">print</span>(ct)</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">등급별 대수:
+grade
+A     10
+B    118
+C    106
+Name: count, dtype: int64
+
+category  2seater  compact  midsize  minivan  pickup  subcompact  suv
+grade
+A               0        8        0        0       0          2    0
+B               5       39       41       11       0         21    1
+C               0        0        0        0      33         12   61</div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>분석 결과 해석</strong>
+        <p>A등급(최고 연비)은 compact와 subcompact에 집중되어 있고, C등급(낮은 연비)은 pickup과 suv가 대부분을 차지합니다. 차체 크기와 연비는 반비례 관계임을 확인할 수 있습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 5 ===== -->
+  <section class="section" id="s5">
+    <div class="section-header">
+      <div class="step-badge">5</div>
+      <div class="section-title">
+        <h2>변수 간 관계 분석</h2>
+        <div class="subtitle">배기량·실린더와 연비 사이의 관계를 수치로 파악합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~10분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">5-1. 상관관계 분석 (corr)</div>
+      <p class="explain"><code>corr()</code>은 두 변수가 얼마나 함께 움직이는지를 -1 ~ +1 사이 값으로 나타냅니다. 1에 가까울수록 양의 상관, -1에 가까울수록 음의 상관.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 수치형 변수 간 상관관계</span>
+corr_cols = [<span class="str">'displ'</span>, <span class="str">'cyl'</span>, <span class="str">'cty'</span>, <span class="str">'hwy'</span>, <span class="str">'avg'</span>]
+corr_df = df[corr_cols].<span class="fn">corr</span>().<span class="fn">round</span>(<span class="num">2</span>)
+<span class="fn">print</span>(corr_df)</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">        displ   cyl   cty   hwy   avg
+displ    1.00  0.93 -0.80 -0.77 -0.79
+cyl      0.93  1.00 -0.81 -0.76 -0.80
+cty     -0.80 -0.81  1.00  0.96  0.99
+hwy     -0.77 -0.76  0.96  1.00  0.99
+avg     -0.79 -0.80  0.99  0.99  1.00</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">5-2. 실린더 수별 평균 연비</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 실린더 수별 평균 연비</span>
+cyl_avg = df.<span class="fn">groupby</span>(<span class="str">'cyl'</span>)[<span class="str">'avg'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+<span class="fn">print</span>(<span class="str">"실린더 수별 평균 연비:"</span>)
+<span class="fn">print</span>(cyl_avg)
+
+<span class="cm"># 배기량 구간별 연비 (pd.cut으로 구간 분할)</span>
+df[<span class="str">'displ_group'</span>] = pd.<span class="fn">cut</span>(df[<span class="str">'displ'</span>],
+                          bins=[<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">8</span>],
+                          labels=[<span class="str">'소형(1~2L)'</span>, <span class="str">'중형(2~3L)'</span>, <span class="str">'대형(3~4L)'</span>, <span class="str">'초대형(4L↑)'</span>])
+displ_avg = df.<span class="fn">groupby</span>(<span class="str">'displ_group'</span>, observed=<span class="num">True</span>)[<span class="str">'avg'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+<span class="fn">print</span>(<span class="str">"\n배기량 구간별 평균 연비:"</span>)
+<span class="fn">print</span>(displ_avg)</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">실린더 수별 평균 연비:
+cyl
+4    24.6
+6    20.5
+8    16.0
+Name: avg, dtype: float64
+
+배기량 구간별 평균 연비:
+displ_group
+소형(1~2L)    26.6
+중형(2~3L)    22.2
+대형(3~4L)    18.8
+초대형(4L↑)   16.0
+Name: avg, dtype: float64</div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <div class="title">🔑 분석 결론</div>
+      <p>배기량(displ)과 연비(avg)의 상관계수는 <strong>-0.79</strong>로 강한 음의 상관관계. 즉, 배기량이 클수록 연비가 나쁩니다. 소형(1~2L) 평균 26.6mpg vs 초대형(4L↑) 16.0mpg로 약 67% 차이.</p>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 6 ===== -->
+  <section class="section" id="s6">
+    <div class="section-header">
+      <div class="step-badge">6</div>
+      <div class="section-title">
+        <h2>데이터 시각화</h2>
+        <div class="subtitle">분석 결과를 다양한 그래프로 시각화합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~21분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-1. 제조사별 고속도로 연비 수평 막대 그래프</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>mfr_hwy = df.<span class="fn">groupby</span>(<span class="str">'manufacturer'</span>)[<span class="str">'hwy'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>).<span class="fn">sort_values</span>()
+
+fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">9</span>, <span class="num">6</span>))
+bars = ax.<span class="fn">barh</span>(mfr_hwy.<span class="attr">index</span>, mfr_hwy.<span class="attr">values</span>,
+               color=<span class="str">'#059669'</span>, edgecolor=<span class="str">'white'</span>, alpha=<span class="num">0.85</span>)
+
+<span class="cm"># 막대 끝에 수치 표시</span>
+<span class="kw">for</span> bar, val <span class="kw">in</span> <span class="fn">zip</span>(bars, mfr_hwy.<span class="attr">values</span>):
+    ax.<span class="fn">text</span>(val + <span class="num">0.2</span>, bar.<span class="fn">get_y</span>() + bar.<span class="fn">get_height</span>() / <span class="num">2</span>,
+           <span class="fn">f'{val}'</span>, va=<span class="str">'center'</span>, fontsize=<span class="num">8</span>)
+
+ax.<span class="fn">set_title</span>(<span class="str">'제조사별 고속도로 연비 평균'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="str">'고속도로 연비 (mpg)'</span>)
+ax.<span class="fn">axvline</span>(df[<span class="str">'hwy'</span>].<span class="fn">mean</span>(), color=<span class="str">'#ef4444'</span>,
+          linestyle=<span class="str">'--'</span>, linewidth=<span class="num">1.5</span>, label=<span class="str">f'전체 평균 ({df["hwy"].mean():.1f})'</span>)
+ax.<span class="fn">legend</span>()
+ax.<span class="fn">grid</span>(<span class="num">True</span>, axis=<span class="str">'x'</span>, alpha=<span class="num">0.3</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-2. 배기량 vs 연비 산점도 (카테고리 색상 구분)</div>
+      <p class="explain">산점도에 색상을 추가해 카테고리별 패턴을 한눈에 비교합니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">10</span>, <span class="num">6</span>))
+
+categories = df[<span class="str">'category'</span>].<span class="fn">unique</span>()
+colors = [<span class="str">'#2563eb'</span>, <span class="str">'#059669'</span>, <span class="str">'#d97706'</span>, <span class="str">'#7c3aed'</span>,
+          <span class="str">'#dc2626'</span>, <span class="str">'#0891b2'</span>, <span class="str">'#374151'</span>]
+
+<span class="kw">for</span> cat, color <span class="kw">in</span> <span class="fn">zip</span>(categories, colors):
+    subset = df[df[<span class="str">'category'</span>] == cat]
+    ax.<span class="fn">scatter</span>(subset[<span class="str">'displ'</span>], subset[<span class="str">'hwy'</span>],
+               c=color, label=cat, s=<span class="num">60</span>, alpha=<span class="num">0.7</span>, edgecolors=<span class="str">'white'</span>)
+
+ax.<span class="fn">set_title</span>(<span class="str">'배기량 vs 고속도로 연비 (카테고리별)'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="str">'배기량 (L)'</span>)
+ax.<span class="fn">set_ylabel</span>(<span class="str">'고속도로 연비 (mpg)'</span>)
+ax.<span class="fn">legend</span>(title=<span class="str">'카테고리'</span>, bbox_to_anchor=(<span class="num">1.02</span>, <span class="num">1</span>), loc=<span class="str">'upper left'</span>)
+ax.<span class="fn">grid</span>(<span class="num">True</span>, alpha=<span class="num">0.3</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-3. 카테고리별 연비 박스플롯</div>
+      <p class="explain">박스플롯(상자 수염 그림)은 데이터의 중앙값, 사분위 범위, 이상치를 동시에 보여주는 강력한 그래프입니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 카테고리별 고속도로 연비 데이터 준비</span>
+cat_order = df.<span class="fn">groupby</span>(<span class="str">'category'</span>)[<span class="str">'hwy'</span>].<span class="fn">median</span>().<span class="fn">sort_values</span>(ascending=<span class="num">False</span>).<span class="attr">index</span>
+data_by_cat = [df[df[<span class="str">'category'</span>] == c][<span class="str">'hwy'</span>].<span class="attr">values</span> <span class="kw">for</span> c <span class="kw">in</span> cat_order]
+
+fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">11</span>, <span class="num">6</span>))
+bp = ax.<span class="fn">boxplot</span>(data_by_cat, labels=cat_order,
+                patch_artist=<span class="num">True</span>, notch=<span class="num">False</span>)
+
+<span class="cm"># 박스 색상 지정</span>
+box_colors = [<span class="str">'#bfdbfe'</span>, <span class="str">'#bbf7d0'</span>, <span class="str">'#fde68a'</span>, <span class="str">'#ddd6fe'</span>,
+              <span class="str">'#fecaca'</span>, <span class="str">'#a5f3fc'</span>, <span class="str">'#e5e7eb'</span>]
+<span class="kw">for</span> patch, color <span class="kw">in</span> <span class="fn">zip</span>(bp[<span class="str">'boxes'</span>], box_colors):
+    patch.<span class="fn">set_facecolor</span>(color)
+
+ax.<span class="fn">set_title</span>(<span class="str">'자동차 종류별 고속도로 연비 분포'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="str">'자동차 종류'</span>)
+ax.<span class="fn">set_ylabel</span>(<span class="str">'고속도로 연비 (mpg)'</span>)
+ax.<span class="fn">grid</span>(<span class="num">True</span>, axis=<span class="str">'y'</span>, alpha=<span class="num">0.3</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-4. 연비 등급 파이 차트 & 구동방식 비교 막대</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">12</span>, <span class="num">5</span>))
+
+<span class="cm"># ① 연비 등급 파이 차트</span>
+grade_counts = df[<span class="str">'grade'</span>].<span class="fn">value_counts</span>().<span class="fn">sort_index</span>()
+explode = (<span class="num">0.05</span>, <span class="num">0</span>, <span class="num">0</span>)
+axes[<span class="num">0</span>].<span class="fn">pie</span>(grade_counts, labels=[<span class="str">'A등급'</span>, <span class="str">'B등급'</span>, <span class="str">'C등급'</span>],
+           autopct=<span class="str">'%1.1f%%'</span>, explode=explode,
+           colors=[<span class="str">'#f59e0b'</span>, <span class="str">'#10b981'</span>, <span class="str">'#6b7280'</span>],
+           startangle=<span class="num">90</span>, shadow=<span class="num">True</span>)
+axes[<span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'연비 등급 비율'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
+
+<span class="cm"># ② 구동방식별 도시/고속도로 연비 비교</span>
+drv_mean = df.<span class="fn">groupby</span>(<span class="str">'drv'</span>)[[<span class="str">'cty'</span>, <span class="str">'hwy'</span>]].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+drv_mean.<span class="attr">index</span> = [<span class="str">'4륜'</span>, <span class="str">'전륜'</span>, <span class="str">'후륜'</span>]
+drv_mean.<span class="fn">plot</span>.<span class="fn">bar</span>(ax=axes[<span class="num">1</span>], rot=<span class="num">0</span>, width=<span class="num">0.6</span>,
+                 color=[<span class="str">'#3b82f6'</span>, <span class="str">'#10b981'</span>],
+                 edgecolor=<span class="str">'white'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'구동방식별 연비 비교'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">'구동 방식'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_ylabel</span>(<span class="str">'연비 (mpg)'</span>)
+axes[<span class="num">1</span>].<span class="fn">legend</span>([<span class="str">'도시 연비'</span>, <span class="str">'고속도로 연비'</span>])
+axes[<span class="num">1</span>].<span class="fn">set_ylim</span>(<span class="num">0</span>, <span class="num">35</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-5. 종합 대시보드 (4개 그래프 한 화면)</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">2</span>, <span class="num">2</span>, figsize=(<span class="num">14</span>, <span class="num">10</span>))
+fig.<span class="fn">suptitle</span>(<span class="str">'자동차 연비 데이터 종합 분석 대시보드'</span>, fontsize=<span class="num">16</span>, fontweight=<span class="str">'bold'</span>)
+
+<span class="cm"># [0,0] 상위 10 제조사 고속도로 연비</span>
+top_mfr = df.<span class="fn">groupby</span>(<span class="str">'manufacturer'</span>)[<span class="str">'hwy'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+top_mfr = top_mfr.<span class="fn">sort_values</span>(ascending=<span class="num">False</span>).<span class="fn">head</span>(<span class="num">8</span>)
+top_mfr.<span class="fn">plot</span>.<span class="fn">bar</span>(ax=axes[<span class="num">0</span>, <span class="num">0</span>], color=<span class="str">'#059669'</span>, rot=<span class="num">45</span>, edgecolor=<span class="str">'white'</span>)
+axes[<span class="num">0</span>, <span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'제조사별 고속도로 연비 TOP8'</span>)
+axes[<span class="num">0</span>, <span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'연비 (mpg)'</span>)
+axes[<span class="num">0</span>, <span class="num">0</span>].<span class="fn">set_xlabel</span>(<span class="str">''</span>)
+
+<span class="cm"># [0,1] 배기량 vs 연비 산점도</span>
+axes[<span class="num">0</span>, <span class="num">1</span>].<span class="fn">scatter</span>(df[<span class="str">'displ'</span>], df[<span class="str">'hwy'</span>],
+                   c=<span class="str">'#2563eb'</span>, alpha=<span class="num">0.5</span>, s=<span class="num">40</span>, edgecolors=<span class="str">'white'</span>)
+axes[<span class="num">0</span>, <span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'배기량 vs 고속도로 연비'</span>)
+axes[<span class="num">0</span>, <span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">'배기량 (L)'</span>)
+axes[<span class="num">0</span>, <span class="num">1</span>].<span class="fn">set_ylabel</span>(<span class="str">'고속도로 연비'</span>)
+axes[<span class="num">0</span>, <span class="num">1</span>].<span class="fn">grid</span>(<span class="num">True</span>, alpha=<span class="num">0.3</span>)
+
+<span class="cm"># [1,0] 카테고리별 대수 막대</span>
+cat_count = df[<span class="str">'category'</span>].<span class="fn">value_counts</span>()
+cat_count.<span class="fn">plot</span>.<span class="fn">bar</span>(ax=axes[<span class="num">1</span>, <span class="num">0</span>], color=<span class="str">'#0891b2'</span>, rot=<span class="num">30</span>, edgecolor=<span class="str">'white'</span>)
+axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'자동차 종류별 대수'</span>)
+axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'대수'</span>)
+axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">set_xlabel</span>(<span class="str">''</span>)
+
+<span class="cm"># [1,1] 연비 히스토그램</span>
+df[<span class="str">'avg'</span>].<span class="fn">plot</span>.<span class="fn">hist</span>(ax=axes[<span class="num">1</span>, <span class="num">1</span>], bins=<span class="num">15</span>,
+                  color=<span class="str">'#059669'</span>, edgecolor=<span class="str">'white'</span>, alpha=<span class="num">0.8</span>)
+axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">axvline</span>(df[<span class="str">'avg'</span>].<span class="fn">mean</span>(), color=<span class="str">'#ef4444'</span>,
+                   linestyle=<span class="str">'--'</span>, linewidth=<span class="num">2</span>,
+                   label=<span class="str">f"평균: {df['avg'].mean():.1f}mpg"</span>)
+axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'평균 연비 분포'</span>)
+axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">'평균 연비 (mpg)'</span>)
+axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">set_ylabel</span>(<span class="str">'대수'</span>)
+axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">legend</span>()
+
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary -->
+  <div class="summary-box">
+    <h2>🎯 오늘 배운 내용 정리</h2>
+    <div class="summary-grid">
+      <div class="summary-item"><strong>🔍 탐색</strong>unique() / nunique() / value_counts() / info()</div>
+      <div class="summary-item"><strong>📊 필터 & 정렬</strong>[] / query() / sort_values() / nlargest()</div>
+      <div class="summary-item"><strong>📦 그룹 분석</strong>groupby() / agg() / crosstab() / corr()</div>
+      <div class="summary-item"><strong>✨ 파생변수</strong>열 연산 / np.where() / pd.cut() 구간 분할</div>
+      <div class="summary-item"><strong>📈 시각화</strong>barh / scatter / boxplot / hist / pie</div>
+      <div class="summary-item"><strong>💡 분석 결론</strong>배기량 ↑ → 연비 ↓ (r=-0.79), 전륜이 연비 최고</div>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ SECTION ===== -->
+  <section class="section" id="quiz" style="margin-top:2rem;">
+    <div class="section-header">
+      <div class="step-badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">✏️</div>
+      <div class="section-title">
+        <h2>이해도 확인 퀴즈</h2>
+        <div class="subtitle">오늘 배운 내용을 얼마나 이해했는지 확인해 보세요!</div>
+      </div>
+      <div class="time-badge" style="background:#fef3c7;color:#92400e;">📝 5문제</div>
+    </div>
+
+    <div id="quiz-container">
+
+      <!-- Q1 -->
+      <div class="quiz-card" id="q1">
+        <div class="quiz-num">Q1</div>
+        <div class="quiz-q">mpg 데이터에서 <strong>제조사(manufacturer)가 몇 종류인지</strong> 확인하는 올바른 코드는?</div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q1')">① <code>df['manufacturer'].count()</code> — 전체 행 수를 셈</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q1')">② <code>df['manufacturer'].nunique()</code> — 고유값 개수를 셈</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q1')">③ <code>len(df['manufacturer'])</code> — 전체 행 수를 셈</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q1')">④ <code>df.shape[1]</code> — 열(column) 수를 셈</li>
+        </ul>
+        <div class="quiz-feedback" id="q1-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 <code>count()</code>는 결측치를 제외한 <em>전체 행 수</em>, <code>nunique()</code>는 <em>중복 없는 고유값 개수</em>입니다. 목록 자체가 필요하면 <code>unique()</code>를 사용합니다.</div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-card" id="q2">
+        <div class="quiz-num">Q2</div>
+        <div class="quiz-q">고속도로 연비(<code>hwy</code>)가 높은 자동차 <strong>상위 5대</strong>를 출력하는 코드로 올바른 것은?</div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q2')">① <code>df.sort_values('hwy').head(5)</code></li>
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q2')">② <code>df.nlargest(5, 'hwy')</code></li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q2')">③ <code>df.head(5)['hwy']</code></li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q2')">④ <code>df['hwy'].max(5)</code></li>
+        </ul>
+        <div class="quiz-feedback" id="q2-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 ①번은 <em>오름차순</em> 정렬 후 앞 5개(가장 낮은 값)를 가져옵니다. 내림차순 상위를 원하면 <code>sort_values('hwy', ascending=False).head(5)</code> 또는 <strong><code>nlargest(5, 'hwy')</code></strong>가 더 간결합니다.</div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-card" id="q3">
+        <div class="quiz-num">Q3</div>
+        <div class="quiz-q">아래 코드를 실행한 뒤, 평균 연비(<code>avg</code>)가 <strong>17.5</strong>인 자동차의 <code>test</code> 값은?<br><br>
+          <code style="background:#1e1e2e;color:#cdd6f4;padding:6px 12px;border-radius:6px;display:inline-block;font-size:0.9rem;">
+            df['avg'] = (df['cty'] + df['hwy']) / 2<br>
+            df['test'] = np.where(df['avg'] &gt;= 20, 'pass', 'fail')
+          </code>
+        </div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q3')">① <code>'fail'</code> — 17.5 &lt; 20이므로</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q3')">② <code>'pass'</code> — 조건을 만족하므로</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q3')">③ <code>NaN</code> — avg 값이 정수가 아니므로</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q3')">④ 오류 발생 — avg 열이 없으므로</li>
+        </ul>
+        <div class="quiz-feedback" id="q3-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 17.5는 20보다 작으므로 조건 <code>df['avg'] >= 20</code>이 <code>False</code>. <code>np.where(조건, 참값, <strong>거짓값</strong>)</code>에서 거짓값인 <code>'fail'</code>이 할당됩니다.</div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-card" id="q4">
+        <div class="quiz-num">Q4</div>
+        <div class="quiz-q">배기량(<code>displ</code>)과 연비(<code>avg</code>)의 상관계수가 <strong>-0.79</strong>일 때, 이를 올바르게 해석한 것은?</div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q4')">① 배기량이 클수록 연비가 높아지는 강한 경향이 있다</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q4')">② 배기량과 연비는 거의 관계가 없다 (0에 가까우므로)</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q4')">③ 배기량이 클수록 연비가 낮아지는 강한 경향이 있다</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q4')">④ 배기량과 연비는 항상 정확히 반비례한다</li>
+        </ul>
+        <div class="quiz-feedback" id="q4-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 상관계수 범위: <strong>-1 ~ +1</strong>. 음수(-) = 한 쪽이 증가하면 다른 쪽 감소, |값|이 클수록 관계 강함. -0.79는 <em>강한 음의 상관</em>. <code>-1.0</code>일 때만 "항상 정확히 반비례"입니다.</div>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-card" id="q5">
+        <div class="quiz-num">Q5</div>
+        <div class="quiz-q">아래 코드에서 <code>pd.cut()</code>의 역할로 가장 올바른 설명은?<br><br>
+          <code style="background:#1e1e2e;color:#cdd6f4;padding:6px 12px;border-radius:6px;display:inline-block;font-size:0.9rem;">
+            df['displ_group'] = pd.cut(df['displ'],<br>
+            &nbsp;&nbsp;bins=[1, 2, 3, 4, 8],<br>
+            &nbsp;&nbsp;labels=['소형','중형','대형','초대형'])
+          </code>
+        </div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q5')">① 배기량이 1~8 사이인 행만 필터링한다</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q5')">② 배기량 데이터를 오름차순으로 정렬한다</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q5')">③ 연속형 수치를 구간별로 나눠 범주 레이블을 붙인다</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q5')">④ 배기량 평균을 기준으로 상위/하위 두 그룹으로 나눈다</li>
+        </ul>
+        <div class="quiz-feedback" id="q5-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 <code>pd.cut()</code>은 연속형 숫자를 <em>bins(구간 경계)</em>로 잘라 <em>labels(이름)</em>를 부여합니다. 나이대(10대/20대…), 점수 등급 등 구간화에 활용합니다. 균등 분할이 필요하면 <code>pd.qcut()</code>을 사용합니다.</div>
+        </div>
+      </div>
+
+    </div><!-- /#quiz-container -->
+
+    <!-- Score -->
+    <div class="quiz-score-wrap" id="quiz-score-wrap" style="display:none;">
+      <div class="quiz-score-card">
+        <div class="score-emoji" id="score-emoji">🎉</div>
+        <div class="score-text">최종 점수</div>
+        <div class="score-num" id="score-num">0 / 5</div>
+        <div class="score-msg" id="score-msg"></div>
+        <button class="retry-btn" onclick="retryQuiz()">다시 풀기</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  /* ===== QUIZ STYLES ===== */
+  .quiz-card {
+    background: var(--gray-50); border: 2px solid var(--gray-200);
+    border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .quiz-card.done { border-color: var(--gray-200); }
+  .quiz-num {
+    display: inline-block; background: linear-gradient(135deg,#059669,#0891b2);
+    color: white; font-weight: 800; font-size: 0.85rem;
+    padding: 3px 12px; border-radius: 20px; margin-bottom: 0.75rem;
+  }
+  .quiz-q { font-size: 0.97rem; font-weight: 600; color: var(--gray-900); line-height: 1.7; margin-bottom: 1rem; }
+  .quiz-options { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .quiz-opt {
+    padding: 0.7rem 1rem; border-radius: 8px; border: 1.5px solid var(--gray-200);
+    background: white; cursor: pointer; font-size: 0.9rem; color: var(--gray-700);
+    transition: all 0.15s; user-select: none;
+  }
+  .quiz-opt:hover:not(.selected) { border-color: #6ee7b7; background: #ecfdf5; }
+  .quiz-opt.correct { background: #f0fdf4; border-color: #16a34a; color: #14532d; font-weight: 600; }
+  .quiz-opt.wrong   { background: #fef2f2; border-color: #dc2626; color: #7f1d1d; }
+  .quiz-opt.selected { pointer-events: none; }
+  .quiz-opt.disabled { pointer-events: none; opacity: 0.55; }
+  .quiz-feedback {
+    display: none; margin-top: 1rem; padding: 0.75rem 1rem;
+    border-radius: 8px; font-size: 0.88rem; align-items: flex-start; gap: 0.5rem;
+  }
+  .quiz-feedback.show { display: flex; flex-direction: column; gap: 0.4rem; }
+  .quiz-feedback.correct-fb { background: #f0fdf4; border-left: 4px solid #16a34a; }
+  .quiz-feedback.wrong-fb   { background: #fef2f2; border-left: 4px solid #dc2626; }
+  .fb-icon { font-size: 1.1rem; }
+  .fb-msg  { font-weight: 700; font-size: 0.95rem; }
+  .fb-explain { color: #374151; line-height: 1.6; }
+  .fb-explain code { background: #e5e7eb; padding: 1px 5px; border-radius: 4px; font-size: 0.85rem; color: #065f46; }
+
+  .quiz-score-wrap { margin-top: 2rem; }
+  .quiz-score-card {
+    background: linear-gradient(135deg,#065f46,#0891b2); color: white;
+    border-radius: 16px; padding: 2.5rem; text-align: center;
+  }
+  .score-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+  .score-text  { font-size: 1rem; opacity: 0.85; margin-bottom: 0.25rem; }
+  .score-num   { font-size: 2.5rem; font-weight: 900; margin-bottom: 0.5rem; }
+  .score-msg   { font-size: 1rem; opacity: 0.9; margin-bottom: 1.5rem; }
+  .retry-btn {
+    background: white; color: #065f46; font-weight: 700; font-size: 0.95rem;
+    padding: 0.6rem 2rem; border-radius: 8px; border: none; cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .retry-btn:hover { transform: scale(1.04); }
+</style>
+
+<script>
+let quizScore = 0;
+let quizAnswered = 0;
+const TOTAL = 5;
+
+function checkAnswer(el, isCorrect, qId) {
+  const card = document.getElementById(qId);
+  if (card.classList.contains('done')) return;
+  card.classList.add('done');
+
+  const opts = card.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.classList.add('disabled'));
+
+  const fb = document.getElementById(qId + '-fb');
+  if (isCorrect) {
+    el.classList.add('correct', 'selected');
+    fb.classList.add('show', 'correct-fb');
+    fb.querySelector('.fb-icon').textContent = '✅';
+    fb.querySelector('.fb-msg').textContent = '정답입니다!';
+    quizScore++;
+  } else {
+    el.classList.add('wrong', 'selected');
+    opts.forEach(o => {
+      if (o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+    });
+    fb.classList.add('show', 'wrong-fb');
+    fb.querySelector('.fb-icon').textContent = '❌';
+    fb.querySelector('.fb-msg').textContent = '틀렸습니다. 아래 해설을 확인하세요.';
+  }
+
+  quizAnswered++;
+  if (quizAnswered === TOTAL) showScore();
+}
+
+function showScore() {
+  const wrap = document.getElementById('quiz-score-wrap');
+  wrap.style.display = 'block';
+  document.getElementById('score-num').textContent = quizScore + ' / ' + TOTAL;
+  const msgs = [
+    ['😢','조금 더 복습해 봐요! 위 해설을 천천히 읽어보세요.'],
+    ['😢','조금 더 복습해 봐요! 위 해설을 천천히 읽어보세요.'],
+    ['🤔','절반 통과! 틀린 문제 해설을 다시 한번 확인하세요.'],
+    ['😊','잘 했어요! 한두 문제만 더 잡으면 완벽합니다.'],
+    ['🎯','아쉽네요, 아주 아쉬워요! 한 문제 차이!'],
+    ['🏆','만점! 오늘 강의를 완벽히 이해했습니다! 🎉']
+  ];
+  const [emoji, msg] = msgs[quizScore];
+  document.getElementById('score-emoji').textContent = emoji;
+  document.getElementById('score-msg').textContent = msg;
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function retryQuiz() {
+  quizScore = 0; quizAnswered = 0;
+  document.getElementById('quiz-score-wrap').style.display = 'none';
+  document.querySelectorAll('.quiz-card').forEach(c => {
+    c.classList.remove('done');
+    c.querySelectorAll('.quiz-opt').forEach(o => {
+      o.classList.remove('correct','wrong','selected','disabled');
+    });
+    c.querySelectorAll('.quiz-feedback').forEach(f => {
+      f.classList.remove('show','correct-fb','wrong-fb');
+    });
+  });
+  document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

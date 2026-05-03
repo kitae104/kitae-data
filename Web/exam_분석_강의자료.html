@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>판다스 기초 실습 - 학생 성적 데이터(exam.csv) 분석</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --secondary: #7c3aed;
+    --success: #16a34a;
+    --success-light: #f0fdf4;
+    --warning: #d97706;
+    --warning-light: #fffbeb;
+    --danger: #dc2626;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --code-bg: #1e1e2e;
+    --code-fg: #cdd6f4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; background: #f8fafc; color: var(--gray-900); line-height: 1.7; }
+
+  /* Header */
+  .site-header {
+    background: linear-gradient(135deg, #1d4ed8 0%, #7c3aed 100%);
+    color: white; padding: 3rem 2rem; text-align: center;
+  }
+  .site-header .badge {
+    display: inline-block; background: rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 4px 16px; font-size: 0.85rem; margin-bottom: 1rem;
+  }
+  .site-header h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .site-header p { font-size: 1.05rem; opacity: 0.9; }
+  .meta-row { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; }
+  .meta-item { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; opacity: 0.85; }
+
+  /* Layout */
+  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* TOC */
+  .toc { background: white; border: 2px solid var(--gray-200); border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 2.5rem; }
+  .toc h2 { font-size: 1rem; color: var(--gray-700); margin-bottom: 1rem; font-weight: 600; }
+  .toc ol { padding-left: 1.5rem; }
+  .toc li { margin: 0.4rem 0; }
+  .toc a { color: var(--primary); text-decoration: none; font-size: 0.95rem; }
+  .toc a:hover { text-decoration: underline; }
+  .toc .time { color: #9ca3af; font-size: 0.8rem; margin-left: 6px; }
+
+  /* Sections */
+  .section {
+    background: white; border-radius: 14px; border: 1px solid var(--gray-200);
+    padding: 2rem; margin-bottom: 2rem; scroll-margin-top: 1rem;
+  }
+  .section-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+  .step-badge {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white; border-radius: 10px; width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 800; flex-shrink: 0;
+  }
+  .section-title { flex: 1; }
+  .section-title h2 { font-size: 1.3rem; font-weight: 700; color: var(--gray-900); }
+  .section-title .subtitle { color: #6b7280; font-size: 0.9rem; margin-top: 2px; }
+  .time-badge {
+    background: var(--warning-light); color: var(--warning);
+    border-radius: 8px; padding: 4px 10px; font-size: 0.78rem; font-weight: 600;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* Callout boxes */
+  .callout { border-radius: 10px; padding: 1rem 1.25rem; margin: 1.2rem 0; display: flex; gap: 0.75rem; }
+  .callout-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+  .callout-body { flex: 1; }
+  .callout-body strong { display: block; margin-bottom: 0.25rem; font-size: 0.95rem; }
+  .callout-body p, .callout-body ul { font-size: 0.9rem; color: #374151; }
+  .callout-body ul { padding-left: 1.2rem; margin-top: 0.3rem; }
+  .callout-body li { margin: 0.2rem 0; }
+  .callout.info { background: var(--primary-light); border-left: 4px solid var(--primary); }
+  .callout.info .callout-icon { color: var(--primary); }
+  .callout.success { background: var(--success-light); border-left: 4px solid var(--success); }
+  .callout.success .callout-icon { color: var(--success); }
+  .callout.warning { background: var(--warning-light); border-left: 4px solid var(--warning); }
+  .callout.warning .callout-icon { color: var(--warning); }
+
+  /* Code blocks */
+  .code-block { position: relative; margin: 1.2rem 0; border-radius: 10px; overflow: hidden; }
+  .code-block-header {
+    background: #2d2d3f; color: #9ca3af;
+    padding: 8px 16px; font-size: 0.78rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .code-block-header .lang { color: #818cf8; font-weight: 600; }
+  .copy-btn {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #d1d5db; padding: 4px 12px; border-radius: 6px;
+    font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+  .copy-btn.copied { background: #16a34a; border-color: #16a34a; color: white; }
+  pre {
+    background: var(--code-bg);
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+  code { color: var(--code-fg); }
+
+  /* Syntax highlighting */
+  .kw { color: #cba6f7; } /* keyword */
+  .fn { color: #89b4fa; } /* function */
+  .str { color: #a6e3a1; } /* string */
+  .num { color: #fab387; } /* number */
+  .cm { color: #6c7086; font-style: italic; } /* comment */
+  .op { color: #89dceb; } /* operator/punctuation */
+  .var { color: #f38ba8; } /* variable/import */
+  .attr { color: #f9e2af; } /* attribute */
+
+  /* Output block */
+  .output-block { margin: 1rem 0; }
+  .output-label {
+    font-size: 0.78rem; color: #6b7280; font-weight: 600;
+    padding: 4px 12px; background: var(--gray-100); border-radius: 6px 6px 0 0;
+    border: 1px solid var(--gray-200); border-bottom: none;
+  }
+  .output-content {
+    background: #fafafa; border: 1px solid var(--gray-200);
+    border-radius: 0 6px 6px 6px; padding: 1rem 1.25rem;
+    font-family: 'Consolas', monospace; font-size: 0.82rem;
+    color: #374151; overflow-x: auto; white-space: pre;
+  }
+
+  /* Table */
+  .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+  .data-table th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; }
+  .data-table td { padding: 7px 12px; border-bottom: 1px solid var(--gray-200); }
+  .data-table tr:nth-child(even) { background: var(--gray-50); }
+  .data-table tr:hover { background: var(--primary-light); }
+
+  /* Explanation text */
+  .explain { font-size: 0.95rem; color: #374151; margin: 0.8rem 0; line-height: 1.8; }
+  .explain strong { color: var(--gray-900); }
+  .explain code { background: var(--gray-100); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; color: #be185d; }
+
+  /* Key point */
+  .key-point { background: linear-gradient(135deg, #eff6ff, #f5f3ff); border-radius: 10px; padding: 1rem 1.25rem; margin: 1rem 0; border: 1px solid #c7d2fe; }
+  .key-point .title { font-weight: 700; color: var(--secondary); margin-bottom: 0.5rem; font-size: 0.9rem; }
+  .key-point p { font-size: 0.9rem; color: #374151; }
+
+  /* Sub steps */
+  .sub-step { margin: 1.5rem 0; }
+  .sub-step-title { font-size: 1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; }
+  .sub-step-title::before { content: ''; display: inline-block; width: 6px; height: 20px; background: var(--primary); border-radius: 3px; }
+
+  /* Divider */
+  .divider { border: none; border-top: 2px dashed var(--gray-200); margin: 1.5rem 0; }
+
+  /* Summary box */
+  .summary-box { background: linear-gradient(135deg, #1d4ed8 0%, #7c3aed 100%); color: white; border-radius: 14px; padding: 2rem; margin-top: 2rem; }
+  .summary-box h2 { font-size: 1.3rem; margin-bottom: 1rem; }
+  .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .summary-item { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+  .summary-item strong { display: block; margin-bottom: 4px; font-size: 1rem; }
+
+  @media (max-width: 640px) {
+    .site-header h1 { font-size: 1.5rem; }
+    .meta-row { flex-wrap: wrap; gap: 1rem; }
+    .summary-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="badge">📊 판다스 기초 실습 · 1강</div>
+  <h1>학생 성적 데이터 분석</h1>
+  <p>exam.csv를 활용한 판다스 데이터 분석 & 시각화 입문</p>
+  <div class="meta-row">
+    <div class="meta-item">⏱ 총 소요시간: 약 80분</div>
+    <div class="meta-item">📁 데이터: exam.csv (25행 × 9열)</div>
+    <div class="meta-item">🐍 Python + Pandas + Matplotlib</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h2>📋 목차</h2>
+    <ol>
+      <li><a href="#s1">데이터 불러오기 & 기본 탐색</a> <span class="time">~15분</span></li>
+      <li><a href="#s2">기술통계로 데이터 이해하기</a> <span class="time">~10분</span></li>
+      <li><a href="#s3">원하는 데이터 추출하기 (필터링)</a> <span class="time">~15분</span></li>
+      <li><a href="#s4">그룹별 분석 (groupby)</a> <span class="time">~15분</span></li>
+      <li><a href="#s5">파생변수 만들기</a> <span class="time">~10분</span></li>
+      <li><a href="#s6">데이터 시각화</a> <span class="time">~15분</span></li>
+    </ol>
+  </nav>
+
+  <!-- 데이터 소개 -->
+  <div class="callout info">
+    <div class="callout-icon">📌</div>
+    <div class="callout-body">
+      <strong>exam.csv 데이터 소개</strong>
+      <p>5개 반, 25명의 학생 성적 데이터입니다. 각 열의 의미는 다음과 같습니다.</p>
+      <ul>
+        <li><code>no</code> : 학생 번호 &nbsp;|&nbsp; <code>nclass</code> : 반 번호 (1~5)</li>
+        <li><code>hours</code> : 공부 시간 &nbsp;|&nbsp; <code>extra</code> : 과외 횟수</li>
+        <li><code>math</code> : 수학 점수 &nbsp;|&nbsp; <code>eng</code> : 영어 점수 &nbsp;|&nbsp; <code>science</code> : 과학 점수</li>
+        <li><code>tot</code> : 합계 점수 &nbsp;|&nbsp; <code>test</code> : 합격 여부 (Pass/Fail)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== SECTION 1 ===== -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <div class="step-badge">1</div>
+      <div class="section-title">
+        <h2>데이터 불러오기 & 기본 탐색</h2>
+        <div class="subtitle">CSV 파일을 DataFrame으로 로드하고 기본 구조를 확인합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~15분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">1-1. 라이브러리 임포트 & 데이터 불러오기</div>
+      <p class="explain">판다스 분석에 필요한 라이브러리를 먼저 불러옵니다. <code>pd.read_csv()</code>로 CSV 파일을 DataFrame으로 읽어옵니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="kw">import</span> <span class="var">pandas</span> <span class="kw">as</span> pd
+<span class="kw">import</span> <span class="var">numpy</span> <span class="kw">as</span> np
+<span class="kw">import</span> <span class="var">matplotlib.pyplot</span> <span class="kw">as</span> plt
+<span class="kw">import</span> <span class="var">matplotlib</span>
+
+<span class="cm"># 한글 폰트 설정 (Windows)</span>
+matplotlib.rc(<span class="str">'font'</span>, family=<span class="str">'Malgun Gothic'</span>)
+plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="num">False</span>
+
+<span class="cm"># CSV 파일 불러오기</span>
+df = pd.<span class="fn">read_csv</span>(<span class="str">'exam.csv'</span>)
+<span class="fn">print</span>(df)</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">    no  nclass  hours  extra  math  eng  science  tot  test
+0   11       1     17      6    37   70       44  151  Pass
+1   12       1     30      7    60   80       70  210  Pass
+2   13       1     19      7    41   71       46  158  Pass
+3   14       1     14      4    34   67       40  141  Fail
+4   15       1     27      4    82   78       73  233  Pass
+..  ..       .     ..      .    ..   ..       ..  ...   ...
+[25 rows x 9 columns]</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">1-2. 데이터 크기와 구조 확인</div>
+      <p class="explain">데이터를 불러온 뒤 가장 먼저 크기, 열 정보, 데이터 타입을 확인합니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 행 x 열 개수 확인</span>
+<span class="fn">print</span>(<span class="str">"데이터 크기:"</span>, df.<span class="attr">shape</span>)
+
+<span class="cm"># 열 이름 확인</span>
+<span class="fn">print</span>(<span class="str">"열 이름:"</span>, df.<span class="attr">columns</span>.<span class="fn">tolist</span>())
+
+<span class="cm"># 데이터 타입 및 결측치 확인</span>
+<span class="fn">print</span>(df.<span class="fn">info</span>())</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">데이터 크기: (25, 9)
+열 이름: ['no', 'nclass', 'hours', 'extra', 'math', 'eng', 'science', 'tot', 'test']
+
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 25 entries, 0 to 24
+Data columns (total 9 columns):
+ #   Column   Non-Null Count  Dtype
+---  ------   --------------  -----
+ 0   no       25 non-null     int64
+ 1   nclass   25 non-null     int64
+ 2   hours    25 non-null     int64
+ 3   extra    25 non-null     int64
+ 4   math     25 non-null     int64
+ 5   eng      25 non-null     int64
+ 6   science  25 non-null     int64
+ 7   tot      25 non-null     int64
+ 8   test     25 non-null     object</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">1-3. 앞/뒤 데이터 미리보기</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 앞에서 5행</span>
+<span class="fn">print</span>(df.<span class="fn">head</span>())
+
+<span class="cm"># 뒤에서 5행</span>
+<span class="fn">print</span>(df.<span class="fn">tail</span>())
+
+<span class="cm"># 특정 열만 보기 - 학생 번호와 과목 점수만</span>
+<span class="fn">print</span>(df[[<span class="str">'no'</span>, <span class="str">'math'</span>, <span class="str">'eng'</span>, <span class="str">'science'</span>]].<span class="fn">head</span>())</code></pre>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <div class="title">🔑 핵심 정리</div>
+      <p><code>df.shape</code> → (행 수, 열 수) / <code>df.info()</code> → 열 타입 + 결측치 요약 / <code>df.head(n)</code> → 위에서 n행 / <code>df.tail(n)</code> → 아래서 n행</p>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 2 ===== -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <div class="step-badge">2</div>
+      <div class="section-title">
+        <h2>기술통계로 데이터 이해하기</h2>
+        <div class="subtitle">평균, 최대/최솟값 등 통계량으로 데이터의 전체 경향을 파악합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~10분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">2-1. 전체 통계 요약</div>
+      <p class="explain"><code>df.describe()</code>는 숫자형 열에 대해 개수, 평균, 표준편차, 최솟/최댓값, 사분위수를 한 번에 보여줍니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 수치형 열 전체 통계 요약</span>
+df.<span class="fn">describe</span>()</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">            no     nclass      hours      extra       math        eng    science        tot
+count  25.000000  25.000000  25.000000  25.000000  25.000000  25.000000  25.000000  25.000000
+mean   33.000000   3.000000  24.840000   6.200000  55.760000  74.640000  59.320000 189.720000
+std    14.361407   1.443376   9.283546   2.291288  19.482462   6.357766  19.546076  44.263344
+min    11.000000   1.000000   9.000000   1.000000  33.000000  65.000000  35.000000 135.000000
+25%    22.000000   2.000000  15.000000   4.500000  38.000000  69.000000  41.000000 148.500000
+50%    33.000000   3.000000  25.000000   7.000000  48.000000  74.000000  55.000000 180.000000
+75%    44.000000   4.000000  32.000000   8.000000  76.000000  80.000000  73.000000 233.000000
+max    55.000000   5.000000  40.000000  10.000000  87.000000  86.000000  97.000000 261.000000</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">2-2. 개별 통계 함수</div>
+      <p class="explain">특정 열이나 통계량만 따로 확인할 때 사용합니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 과목별 평균</span>
+<span class="fn">print</span>(<span class="str">"수학 평균:"</span>, df[<span class="str">'math'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>))
+<span class="fn">print</span>(<span class="str">"영어 평균:"</span>, df[<span class="str">'eng'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>))
+<span class="fn">print</span>(<span class="str">"과학 평균:"</span>, df[<span class="str">'science'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>))
+
+<span class="cm"># 합계 점수 최대·최솟값</span>
+<span class="fn">print</span>(<span class="str">"최고 합계:"</span>, df[<span class="str">'tot'</span>].<span class="fn">max</span>())
+<span class="fn">print</span>(<span class="str">"최저 합계:"</span>, df[<span class="str">'tot'</span>].<span class="fn">min</span>())
+
+<span class="cm"># 공부 시간 중앙값 (중간값)</span>
+<span class="fn">print</span>(<span class="str">"공부 시간 중앙값:"</span>, df[<span class="str">'hours'</span>].<span class="fn">median</span>())
+
+<span class="cm"># 여러 열 평균 한 번에</span>
+<span class="fn">print</span>(df[[<span class="str">'math'</span>, <span class="str">'eng'</span>, <span class="str">'science'</span>]].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>))</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">수학 평균: 55.8
+영어 평균: 74.6
+과학 평균: 59.3
+최고 합계: 261
+최저 합계: 135
+공부 시간 중앙값: 25.0
+math       55.8
+eng        74.6
+science    59.3
+dtype: float64</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">2-3. 합격/불합격 비율 확인</div>
+      <p class="explain">범주형(문자) 열은 <code>value_counts()</code>로 빈도를 확인합니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 합격/불합격 빈도 수</span>
+<span class="fn">print</span>(df[<span class="str">'test'</span>].<span class="fn">value_counts</span>())
+
+<span class="cm"># 비율로 보기 (normalize=True)</span>
+<span class="fn">print</span>(df[<span class="str">'test'</span>].<span class="fn">value_counts</span>(normalize=<span class="num">True</span>).<span class="fn">round</span>(<span class="num">2</span>))</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">test
+Pass    15
+Fail    10
+Name: count, dtype: int64
+
+test
+Pass    0.60
+Fail    0.40
+Name: proportion, dtype: float64</div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <strong>데이터 파악 결과</strong>
+        <ul>
+          <li>전체 25명 중 합격 15명(60%), 불합격 10명(40%)</li>
+          <li>영어 평균(74.6)이 가장 높고, 수학 평균(55.8)이 가장 낮음</li>
+          <li>평균 공부 시간은 약 25시간</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 3 ===== -->
+  <section class="section" id="s3">
+    <div class="section-header">
+      <div class="step-badge">3</div>
+      <div class="section-title">
+        <h2>원하는 데이터 추출하기 (필터링)</h2>
+        <div class="subtitle">조건을 걸어 특정 행이나 열만 뽑아내는 방법을 배웁니다</div>
+      </div>
+      <div class="time-badge">⏱ ~15분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">3-1. 단일 조건 필터링</div>
+      <p class="explain">대괄호 안에 조건식을 넣어 해당 행만 추출합니다. 조건식은 <code>True/False</code>로 평가됩니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 1반 학생만</span>
+class1 = df[df[<span class="str">'nclass'</span>] == <span class="num">1</span>]
+<span class="fn">print</span>(class1)
+
+<span class="cm"># 수학 점수 70점 이상</span>
+math_high = df[df[<span class="str">'math'</span>] >= <span class="num">70</span>]
+<span class="fn">print</span>(math_high[[<span class="str">'no'</span>, <span class="str">'nclass'</span>, <span class="str">'math'</span>, <span class="str">'test'</span>]])
+
+<span class="cm"># 합격한 학생만</span>
+pass_df = df[df[<span class="str">'test'</span>] == <span class="str">'Pass'</span>]
+<span class="fn">print</span>(<span class="str">f"합격 학생 수: {<span class="fn">len</span>(pass_df)}명"</span>)</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">3-2. 복합 조건 필터링</div>
+      <p class="explain"><code>&amp;</code>(AND), <code>|</code>(OR) 연산자로 여러 조건을 결합합니다. 각 조건은 반드시 <code>()</code>로 감싸야 합니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># AND: 수학 70점 이상 AND 영어 75점 이상</span>
+top = df[(df[<span class="str">'math'</span>] >= <span class="num">70</span>) & (df[<span class="str">'eng'</span>] >= <span class="num">75</span>)]
+<span class="fn">print</span>(<span class="str">"수학 70↑ & 영어 75↑:"</span>, <span class="fn">len</span>(top), <span class="str">"명"</span>)
+<span class="fn">print</span>(top[[<span class="str">'no'</span>, <span class="str">'nclass'</span>, <span class="str">'math'</span>, <span class="str">'eng'</span>, <span class="str">'test'</span>]])
+
+<span class="cm"># OR: 수학 80점 이상 OR 과학 80점 이상</span>
+excel = df[(df[<span class="str">'math'</span>] >= <span class="num">80</span>) | (df[<span class="str">'science'</span>] >= <span class="num">80</span>)]
+<span class="fn">print</span>(<span class="str">"수학 80↑ OR 과학 80↑:"</span>, <span class="fn">len</span>(excel), <span class="str">"명"</span>)
+
+<span class="cm"># isin(): 특정 반만 선택 (2반 또는 4반)</span>
+class24 = df[df[<span class="str">'nclass'</span>].<span class="fn">isin</span>([<span class="num">2</span>, <span class="num">4</span>])]
+<span class="fn">print</span>(class24[[<span class="str">'no'</span>, <span class="str">'nclass'</span>, <span class="str">'math'</span>]])</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">3-3. query() 메서드 활용</div>
+      <p class="explain"><code>query()</code>는 문자열로 조건을 작성해 더 읽기 쉬운 코드를 만들 수 있습니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># query()로 동일한 조건 - 더 읽기 쉬움</span>
+result = df.<span class="fn">query</span>(<span class="str">"math >= 70 and eng >= 75"</span>)
+<span class="fn">print</span>(result[[<span class="str">'no'</span>, <span class="str">'nclass'</span>, <span class="str">'math'</span>, <span class="str">'eng'</span>]])
+
+<span class="cm"># 합격하고 공부 시간 30시간 이상</span>
+hardworking_pass = df.<span class="fn">query</span>(<span class="str">"test == 'Pass' and hours >= 30"</span>)
+<span class="fn">print</span>(hardworking_pass[[<span class="str">'no'</span>, <span class="str">'hours'</span>, <span class="str">'tot'</span>, <span class="str">'test'</span>]])</code></pre>
+      </div>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <strong>주의: 조건 연산자 차이</strong>
+        <p>판다스에서는 <code>and</code> 대신 <code>&amp;</code>, <code>or</code> 대신 <code>|</code>를 사용합니다. <code>query()</code> 안에서만 <code>and/or</code>를 사용할 수 있습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 4 ===== -->
+  <section class="section" id="s4">
+    <div class="section-header">
+      <div class="step-badge">4</div>
+      <div class="section-title">
+        <h2>그룹별 분석 (groupby)</h2>
+        <div class="subtitle">반별, 합격 여부별로 묶어서 통계를 비교합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~15분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">4-1. 반별 평균 점수</div>
+      <p class="explain"><code>groupby()</code>는 특정 열의 값에 따라 데이터를 묶은 뒤 집계 함수를 적용합니다. Excel의 피벗 테이블과 유사합니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 반별 수학 평균</span>
+<span class="fn">print</span>(df.<span class="fn">groupby</span>(<span class="str">'nclass'</span>)[<span class="str">'math'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>))
+
+<span class="cm"># 반별 과목 평균 전체</span>
+class_mean = df.<span class="fn">groupby</span>(<span class="str">'nclass'</span>)[[<span class="str">'math'</span>, <span class="str">'eng'</span>, <span class="str">'science'</span>, <span class="str">'tot'</span>]].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+<span class="fn">print</span>(class_mean)</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">nclass
+1    50.8
+2    48.0
+3    41.6
+4    58.8
+5    68.6
+Name: math, dtype: float64
+
+        math   eng  science    tot
+nclass
+1       50.8  73.2     54.6  178.6
+2       48.0  71.6     51.8  171.4
+3       41.6  70.0     47.4  159.0
+4       58.8  74.8     65.8  199.4
+5       68.6  79.6     73.0  221.2</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">4-2. 반별 합격/불합격 인원</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 반별 합격/불합격 인원 (crosstab)</span>
+ct = pd.<span class="fn">crosstab</span>(df[<span class="str">'nclass'</span>], df[<span class="str">'test'</span>])
+<span class="fn">print</span>(ct)
+
+<span class="cm"># 반별 합격률 (비율로)</span>
+ct_pct = pd.<span class="fn">crosstab</span>(df[<span class="str">'nclass'</span>], df[<span class="str">'test'</span>], normalize=<span class="str">'index'</span>).<span class="fn">round</span>(<span class="num">2</span>)
+<span class="fn">print</span>(ct_pct)</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">test    Fail  Pass
+nclass
+1          2     3
+2          3     2
+3          3     2
+4          1     4
+5          1     4
+
+test    Fail  Pass
+nclass
+1       0.40  0.60
+2       0.60  0.40
+3       0.60  0.40
+4       0.20  0.80
+5       0.20  0.80</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">4-3. 반별 여러 통계 한 번에 (agg)</div>
+      <p class="explain"><code>agg()</code>로 여러 집계 함수를 동시에 적용할 수 있습니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 반별 합계(tot) 통계: 평균, 최대, 최소, 중앙값</span>
+result = df.<span class="fn">groupby</span>(<span class="str">'nclass'</span>)[<span class="str">'tot'</span>].<span class="fn">agg</span>([<span class="str">'mean'</span>, <span class="str">'max'</span>, <span class="str">'min'</span>, <span class="str">'median'</span>]).<span class="fn">round</span>(<span class="num">1</span>)
+result.<span class="attr">columns</span> = [<span class="str">'평균'</span>, <span class="str">'최대'</span>, <span class="str">'최소'</span>, <span class="str">'중앙값'</span>]
+<span class="fn">print</span>(result)</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">         평균    최대    최소   중앙값
+nclass
+1       178.6   233   141   158.0
+2       171.4   252   139   157.0
+3       159.0   206   136   144.0
+4       199.4   258   135   183.0
+5       221.2   261   161   236.0</div>
+      </div>
+    </div>
+
+    <div class="key-point">
+      <div class="title">🔑 핵심 정리</div>
+      <p>5반이 평균 합계 221.2점으로 1위, 3반이 159.0점으로 가장 낮습니다. <code>groupby('열이름')['집계열'].집계함수()</code> 패턴을 기억하세요!</p>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 5 ===== -->
+  <section class="section" id="s5">
+    <div class="section-header">
+      <div class="step-badge">5</div>
+      <div class="section-title">
+        <h2>파생변수 만들기</h2>
+        <div class="subtitle">기존 열을 조합해 새로운 분석용 열을 추가합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~10분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">5-1. 과목 평균 점수 열 추가</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 과목 평균 점수 열 추가</span>
+df[<span class="str">'avg'</span>] = (df[<span class="str">'math'</span>] + df[<span class="str">'eng'</span>] + df[<span class="str">'science'</span>]) / <span class="num">3</span>
+df[<span class="str">'avg'</span>] = df[<span class="str">'avg'</span>].<span class="fn">round</span>(<span class="num">1</span>)
+<span class="fn">print</span>(df[[<span class="str">'no'</span>, <span class="str">'math'</span>, <span class="str">'eng'</span>, <span class="str">'science'</span>, <span class="str">'avg'</span>]].<span class="fn">head</span>())</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">5-2. 성적 등급 열 추가 (np.where)</div>
+      <p class="explain"><code>np.where(조건, 참일 때 값, 거짓일 때 값)</code>으로 조건에 따라 값을 다르게 부여할 수 있습니다. 중첩해서 다중 조건도 처리합니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 합계 기준 등급 부여: A(220↑), B(180↑), C(그 외)</span>
+df[<span class="str">'grade'</span>] = np.<span class="fn">where</span>(df[<span class="str">'tot'</span>] >= <span class="num">220</span>, <span class="str">'A'</span>,
+               np.<span class="fn">where</span>(df[<span class="str">'tot'</span>] >= <span class="num">180</span>, <span class="str">'B'</span>, <span class="str">'C'</span>))
+
+<span class="fn">print</span>(df[[<span class="str">'no'</span>, <span class="str">'nclass'</span>, <span class="str">'tot'</span>, <span class="str">'grade'</span>]])
+<span class="fn">print</span>(<span class="str">"\n등급별 인원:"</span>)
+<span class="fn">print</span>(df[<span class="str">'grade'</span>].<span class="fn">value_counts</span>().<span class="fn">sort_index</span>())</code></pre>
+      </div>
+      <div class="output-block">
+        <div class="output-label">▶ 출력 결과</div>
+        <div class="output-content">등급별 인원:
+grade
+A     7
+B     7
+C    11
+Name: count, dtype: int64</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">5-3. 공부 효율 지수 추가</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># 공부 효율 = 합계 / 공부시간 (1시간당 점수)</span>
+df[<span class="str">'efficiency'</span>] = (df[<span class="str">'tot'</span>] / df[<span class="str">'hours'</span>]).<span class="fn">round</span>(<span class="num">1</span>)
+
+<span class="cm"># 효율이 높은 상위 5명</span>
+top5 = df.<span class="fn">nlargest</span>(<span class="num">5</span>, <span class="str">'efficiency'</span>)
+<span class="fn">print</span>(top5[[<span class="str">'no'</span>, <span class="str">'nclass'</span>, <span class="str">'hours'</span>, <span class="str">'tot'</span>, <span class="str">'efficiency'</span>, <span class="str">'grade'</span>]])</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 6 ===== -->
+  <section class="section" id="s6">
+    <div class="section-header">
+      <div class="step-badge">6</div>
+      <div class="section-title">
+        <h2>데이터 시각화</h2>
+        <div class="subtitle">Matplotlib으로 분석 결과를 그래프로 표현합니다</div>
+      </div>
+      <div class="time-badge">⏱ ~15분</div>
+    </div>
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-1. 합격/불합격 막대 그래프</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">12</span>, <span class="num">5</span>))
+
+<span class="cm"># ① 합격/불합격 막대 그래프</span>
+counts = df[<span class="str">'test'</span>].<span class="fn">value_counts</span>()
+colors = [<span class="str">'#2563eb'</span>, <span class="str">'#ef4444'</span>]
+counts.<span class="fn">plot</span>.<span class="fn">bar</span>(ax=axes[<span class="num">0</span>], color=colors, rot=<span class="num">0</span>, edgecolor=<span class="str">'white'</span>)
+axes[<span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'합격/불합격 인원'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
+axes[<span class="num">0</span>].<span class="fn">set_xlabel</span>(<span class="str">''</span>)
+axes[<span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'인원 수'</span>)
+<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(counts):
+    axes[<span class="num">0</span>].<span class="fn">text</span>(i, v + <span class="num">0.2</span>, <span class="fn">str</span>(v) + <span class="str">'명'</span>, ha=<span class="str">'center'</span>, fontweight=<span class="str">'bold'</span>)
+
+<span class="cm"># ② 등급별 막대 그래프</span>
+grade_counts = df[<span class="str">'grade'</span>].<span class="fn">value_counts</span>().<span class="fn">sort_index</span>()
+grade_colors = [<span class="str">'#f59e0b'</span>, <span class="str">'#10b981'</span>, <span class="str">'#6b7280'</span>]
+grade_counts.<span class="fn">plot</span>.<span class="fn">bar</span>(ax=axes[<span class="num">1</span>], color=grade_colors, rot=<span class="num">0</span>, edgecolor=<span class="str">'white'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'성적 등급별 인원'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">''</span>)
+axes[<span class="num">1</span>].<span class="fn">set_ylabel</span>(<span class="str">'인원 수'</span>)
+<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(grade_counts):
+    axes[<span class="num">1</span>].<span class="fn">text</span>(i, v + <span class="num">0.1</span>, <span class="fn">str</span>(v) + <span class="str">'명'</span>, ha=<span class="str">'center'</span>, fontweight=<span class="str">'bold'</span>)
+
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-2. 반별 과목 평균 비교 (그룹 막대)</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>class_mean = df.<span class="fn">groupby</span>(<span class="str">'nclass'</span>)[[<span class="str">'math'</span>, <span class="str">'eng'</span>, <span class="str">'science'</span>]].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+
+ax = class_mean.<span class="fn">plot</span>.<span class="fn">bar</span>(figsize=(<span class="num">10</span>, <span class="num">5</span>), rot=<span class="num">0</span>, width=<span class="num">0.7</span>,
+                        color=[<span class="str">'#3b82f6'</span>, <span class="str">'#10b981'</span>, <span class="str">'#f59e0b'</span>])
+ax.<span class="fn">set_title</span>(<span class="str">'반별 과목 평균 점수 비교'</span>, fontsize=<span class="num">14</span>, fontweight=<span class="str">'bold'</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="str">'반'</span>)
+ax.<span class="fn">set_ylabel</span>(<span class="str">'평균 점수'</span>)
+ax.<span class="fn">legend</span>([<span class="str">'수학'</span>, <span class="str">'영어'</span>, <span class="str">'과학'</span>])
+ax.<span class="fn">set_ylim</span>(<span class="num">0</span>, <span class="num">100</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-3. 공부 시간 vs 합계 점수 산점도</div>
+      <p class="explain">산점도(scatter plot)는 두 변수 간의 관계를 파악할 때 사용합니다.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+
+<span class="cm"># 합격/불합격 색상 구분</span>
+colors_map = {<span class="str">'Pass'</span>: <span class="str">'#2563eb'</span>, <span class="str">'Fail'</span>: <span class="str">'#ef4444'</span>}
+<span class="kw">for</span> label, group <span class="kw">in</span> df.<span class="fn">groupby</span>(<span class="str">'test'</span>):
+    ax.<span class="fn">scatter</span>(group[<span class="str">'hours'</span>], group[<span class="str">'tot'</span>],
+               c=colors_map[label], label=label,
+               s=<span class="num">80</span>, alpha=<span class="num">0.8</span>, edgecolors=<span class="str">'white'</span>)
+
+ax.<span class="fn">set_title</span>(<span class="str">'공부 시간 vs 합계 점수'</span>, fontsize=<span class="num">14</span>, fontweight=<span class="str">'bold'</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="str">'공부 시간 (시간)'</span>)
+ax.<span class="fn">set_ylabel</span>(<span class="str">'합계 점수'</span>)
+ax.<span class="fn">legend</span>(title=<span class="str">'합격 여부'</span>)
+ax.<span class="fn">grid</span>(<span class="num">True</span>, alpha=<span class="num">0.3</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-4. 과목별 점수 분포 박스플롯 + 히스토그램</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">14</span>, <span class="num">5</span>))
+
+<span class="cm"># ① 박스플롯: 과목별 점수 분포</span>
+df[[<span class="str">'math'</span>, <span class="str">'eng'</span>, <span class="str">'science'</span>]].<span class="fn">plot</span>.<span class="fn">box</span>(
+    ax=axes[<span class="num">0</span>],
+    patch_artist=<span class="num">True</span>,
+    boxprops=<span class="fn">dict</span>(facecolor=<span class="str">'#eff6ff'</span>),
+    medianprops=<span class="fn">dict</span>(color=<span class="str">'#2563eb'</span>, linewidth=<span class="num">2</span>)
+)
+axes[<span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'과목별 점수 분포 (박스플롯)'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
+axes[<span class="num">0</span>].<span class="fn">set_xticklabels</span>([<span class="str">'수학'</span>, <span class="str">'영어'</span>, <span class="str">'과학'</span>])
+axes[<span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'점수'</span>)
+axes[<span class="num">0</span>].<span class="fn">grid</span>(<span class="num">True</span>, alpha=<span class="num">0.3</span>)
+
+<span class="cm"># ② 히스토그램: 합계 점수 분포</span>
+df[<span class="str">'tot'</span>].<span class="fn">plot</span>.<span class="fn">hist</span>(ax=axes[<span class="num">1</span>], bins=<span class="num">8</span>, color=<span class="str">'#2563eb'</span>,
+                 edgecolor=<span class="str">'white'</span>, alpha=<span class="num">0.8</span>)
+axes[<span class="num">1</span>].<span class="fn">axvline</span>(df[<span class="str">'tot'</span>].<span class="fn">mean</span>(), color=<span class="str">'#ef4444'</span>,
+               linestyle=<span class="str">'--'</span>, linewidth=<span class="num">2</span>, label=<span class="str">f"평균: {df['tot'].mean():.0f}"</span>)
+axes[<span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'합계 점수 분포 (히스토그램)'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">'합계 점수'</span>)
+axes[<span class="num">1</span>].<span class="fn">set_ylabel</span>(<span class="str">'인원 수'</span>)
+axes[<span class="num">1</span>].<span class="fn">legend</span>()
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="sub-step">
+      <div class="sub-step-title">6-5. 종합 대시보드 (한 화면에 4개 그래프)</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="lang">Python</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">2</span>, <span class="num">2</span>, figsize=(<span class="num">14</span>, <span class="num">10</span>))
+fig.<span class="fn">suptitle</span>(<span class="str">'학생 성적 데이터 종합 분석 대시보드'</span>, fontsize=<span class="num">16</span>, fontweight=<span class="str">'bold'</span>)
+
+<span class="cm"># [0,0] 반별 합계 평균 막대</span>
+class_tot = df.<span class="fn">groupby</span>(<span class="str">'nclass'</span>)[<span class="str">'tot'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+class_tot.<span class="fn">plot</span>.<span class="fn">bar</span>(ax=axes[<span class="num">0</span>, <span class="num">0</span>], color=<span class="str">'#3b82f6'</span>, rot=<span class="num">0</span>, edgecolor=<span class="str">'white'</span>)
+axes[<span class="num">0</span>, <span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'반별 합계 평균'</span>)
+axes[<span class="num">0</span>, <span class="num">0</span>].<span class="fn">set_xlabel</span>(<span class="str">'반'</span>); axes[<span class="num">0</span>, <span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'평균 점수'</span>)
+
+<span class="cm"># [0,1] 합격/불합격 파이차트</span>
+counts = df[<span class="str">'test'</span>].<span class="fn">value_counts</span>()
+axes[<span class="num">0</span>, <span class="num">1</span>].<span class="fn">pie</span>(counts, labels=counts.<span class="attr">index</span>, autopct=<span class="str">'%1.1f%%'</span>,
+              colors=[<span class="str">'#2563eb'</span>, <span class="str">'#ef4444'</span>], startangle=<span class="num">90</span>)
+axes[<span class="num">0</span>, <span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'합격/불합격 비율'</span>)
+
+<span class="cm"># [1,0] 공부 시간 vs 합계 산점도</span>
+colors_map = {<span class="str">'Pass'</span>: <span class="str">'#2563eb'</span>, <span class="str">'Fail'</span>: <span class="str">'#ef4444'</span>}
+<span class="kw">for</span> label, group <span class="kw">in</span> df.<span class="fn">groupby</span>(<span class="str">'test'</span>):
+    axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">scatter</span>(group[<span class="str">'hours'</span>], group[<span class="str">'tot'</span>],
+                      c=colors_map[label], label=label, s=<span class="num">70</span>, alpha=<span class="num">0.8</span>)
+axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'공부 시간 vs 합계 점수'</span>)
+axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">set_xlabel</span>(<span class="str">'공부 시간'</span>); axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'합계'</span>)
+axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">legend</span>(); axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">grid</span>(<span class="num">True</span>, alpha=<span class="num">0.3</span>)
+
+<span class="cm"># [1,1] 등급 수평 막대</span>
+grade_counts = df[<span class="str">'grade'</span>].<span class="fn">value_counts</span>().<span class="fn">sort_index</span>()
+grade_counts.<span class="fn">plot</span>.<span class="fn">barh</span>(ax=axes[<span class="num">1</span>, <span class="num">1</span>],
+                       color=[<span class="str">'#f59e0b'</span>, <span class="str">'#10b981'</span>, <span class="str">'#6b7280'</span>],
+                       edgecolor=<span class="str">'white'</span>)
+axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'성적 등급 분포'</span>)
+axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">'인원 수'</span>)
+<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(grade_counts):
+    axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">text</span>(v + <span class="num">0.05</span>, i, <span class="fn">str</span>(v) + <span class="str">'명'</span>, va=<span class="str">'center'</span>)
+
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Summary -->
+  <div class="summary-box">
+    <h2>🎯 오늘 배운 내용 정리</h2>
+    <div class="summary-grid">
+      <div class="summary-item"><strong>📥 데이터 불러오기</strong>pd.read_csv() / head() / info() / shape</div>
+      <div class="summary-item"><strong>📊 기술통계</strong>describe() / mean() / max() / value_counts()</div>
+      <div class="summary-item"><strong>🔍 필터링</strong>조건식 [] / &amp; | / isin() / query()</div>
+      <div class="summary-item"><strong>📦 그룹 분석</strong>groupby() / agg() / crosstab()</div>
+      <div class="summary-item"><strong>✨ 파생변수</strong>새 열 할당 / np.where() 중첩 조건</div>
+      <div class="summary-item"><strong>📈 시각화</strong>bar / scatter / box / hist / pie</div>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ SECTION ===== -->
+  <section class="section" id="quiz" style="margin-top:2rem;">
+    <div class="section-header">
+      <div class="step-badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">✏️</div>
+      <div class="section-title">
+        <h2>이해도 확인 퀴즈</h2>
+        <div class="subtitle">오늘 배운 내용을 얼마나 이해했는지 확인해 보세요!</div>
+      </div>
+      <div class="time-badge" style="background:#fef3c7;color:#92400e;">📝 5문제</div>
+    </div>
+
+    <div id="quiz-container">
+
+      <!-- Q1 -->
+      <div class="quiz-card" id="q1">
+        <div class="quiz-num">Q1</div>
+        <div class="quiz-q"><code>df.info()</code>를 실행했을 때 확인할 <strong>수 없는</strong> 정보는 무엇인가요?</div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q1')">① 각 열의 데이터 타입 (int64, object 등)</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q1')">② 결측치(NaN)가 없는 값의 개수</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q1')">③ 각 열의 평균값과 최댓값</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q1')">④ 전체 행(row)의 개수</li>
+        </ul>
+        <div class="quiz-feedback" id="q1-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 <code>df.info()</code>는 열 이름·타입·결측치 수를 보여줍니다. <strong>평균·최대값은 <code>df.describe()</code></strong>로 확인합니다.</div>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-card" id="q2">
+        <div class="quiz-num">Q2</div>
+        <div class="quiz-q">수학 점수(<code>math</code>)가 70점 이상이고 합격(<code>test == 'Pass'</code>)인 학생만 추출하는 올바른 코드는?</div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q2')">① <code>df[df['math'] >= 70 and df['test'] == 'Pass']</code></li>
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q2')">② <code>df[(df['math'] >= 70) &amp; (df['test'] == 'Pass')]</code></li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q2')">③ <code>df[df['math'] >= 70 | df['test'] == 'Pass']</code></li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q2')">④ <code>df.filter(math=70, test='Pass')</code></li>
+        </ul>
+        <div class="quiz-feedback" id="q2-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 판다스에서 AND 조건은 <code>&amp;</code>, OR 조건은 <code>|</code>를 사용하며 각 조건은 <strong>반드시 괄호 <code>()</code>로 감쌉니다</strong>. Python의 <code>and/or</code>는 사용 불가!</div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-card" id="q3">
+        <div class="quiz-num">Q3</div>
+        <div class="quiz-q"><strong>반(nclass)별 수학(math) 점수 평균</strong>을 구하는 올바른 코드는?</div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q3')">① <code>df.mean(['nclass', 'math'])</code></li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q3')">② <code>df.groupby('math')['nclass'].mean()</code></li>
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q3')">③ <code>df.groupby('nclass')['math'].mean()</code></li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q3')">④ <code>df['nclass']['math'].groupby().mean()</code></li>
+        </ul>
+        <div class="quiz-feedback" id="q3-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 패턴: <code>df.groupby(<em>'기준열'</em>)[<em>'집계열'</em>].집계함수()</code> — 기준이 되는 열을 <code>groupby()</code> 안에, 계산할 열을 <code>[]</code> 안에 씁니다.</div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-card" id="q4">
+        <div class="quiz-num">Q4</div>
+        <div class="quiz-q">아래 코드를 실행했을 때, 합계(<code>tot</code>) 점수가 <strong>195점</strong>인 학생의 등급(<code>grade</code>)은?<br><br>
+          <code style="background:#1e1e2e;color:#cdd6f4;padding:6px 12px;border-radius:6px;display:inline-block;font-size:0.9rem;">
+            df['grade'] = np.where(df['tot'] &gt;= 220, 'A',<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;np.where(df['tot'] &gt;= 180, 'B', 'C'))
+          </code>
+        </div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q4')">① A등급 (220점 이상)</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q4')">② B등급 (180점 이상 220점 미만)</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q4')">③ C등급 (180점 미만)</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q4')">④ 오류 발생 (조건이 겹침)</li>
+        </ul>
+        <div class="quiz-feedback" id="q4-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 195점은 220 미만 → A 탈락, 180 이상 → B 해당. <code>np.where()</code>는 <strong>조건을 위에서 아래로 순서대로 체크</strong>합니다.</div>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-card" id="q5">
+        <div class="quiz-num">Q5</div>
+        <div class="quiz-q"><strong>공부 시간(hours)과 합계 점수(tot)의 관계</strong>를 시각화하고, 합격/불합격을 색으로 구분하려 합니다. 가장 적합한 그래프 종류는?</div>
+        <ul class="quiz-options">
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q5')">① 히스토그램 — 하나의 변수 분포를 볼 때</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q5')">② 파이 차트 — 전체 대비 비율을 볼 때</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, false, 'q5')">③ 막대 그래프 — 범주별 값을 비교할 때</li>
+          <li class="quiz-opt" onclick="checkAnswer(this, true,  'q5')">④ 산점도(scatter) — 두 수치 변수 간 관계를 볼 때</li>
+        </ul>
+        <div class="quiz-feedback" id="q5-fb">
+          <span class="fb-icon"></span>
+          <span class="fb-msg"></span>
+          <div class="fb-explain">💡 <strong>산점도</strong>는 두 수치 변수를 x·y 축으로 놓고 점으로 표현해 상관관계 파악에 최적. <code>groupby('test')</code>로 합격 여부를 나눠 색을 다르게 지정합니다.</div>
+        </div>
+      </div>
+
+    </div><!-- /#quiz-container -->
+
+    <!-- Score -->
+    <div class="quiz-score-wrap" id="quiz-score-wrap" style="display:none;">
+      <div class="quiz-score-card">
+        <div class="score-emoji" id="score-emoji">🎉</div>
+        <div class="score-text">최종 점수</div>
+        <div class="score-num" id="score-num">0 / 5</div>
+        <div class="score-msg" id="score-msg"></div>
+        <button class="retry-btn" onclick="retryQuiz()">다시 풀기</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  /* ===== QUIZ STYLES ===== */
+  .quiz-card {
+    background: var(--gray-50); border: 2px solid var(--gray-200);
+    border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .quiz-card.done { border-color: var(--gray-200); }
+  .quiz-num {
+    display: inline-block; background: linear-gradient(135deg,#2563eb,#7c3aed);
+    color: white; font-weight: 800; font-size: 0.85rem;
+    padding: 3px 12px; border-radius: 20px; margin-bottom: 0.75rem;
+  }
+  .quiz-q { font-size: 0.97rem; font-weight: 600; color: var(--gray-900); line-height: 1.7; margin-bottom: 1rem; }
+  .quiz-options { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .quiz-opt {
+    padding: 0.7rem 1rem; border-radius: 8px; border: 1.5px solid var(--gray-200);
+    background: white; cursor: pointer; font-size: 0.9rem; color: var(--gray-700);
+    transition: all 0.15s; user-select: none;
+  }
+  .quiz-opt:hover:not(.selected) { border-color: #93c5fd; background: #eff6ff; }
+  .quiz-opt.correct { background: #f0fdf4; border-color: #16a34a; color: #14532d; font-weight: 600; }
+  .quiz-opt.wrong   { background: #fef2f2; border-color: #dc2626; color: #7f1d1d; }
+  .quiz-opt.selected { pointer-events: none; }
+  .quiz-opt.disabled { pointer-events: none; opacity: 0.55; }
+  .quiz-feedback {
+    display: none; margin-top: 1rem; padding: 0.75rem 1rem;
+    border-radius: 8px; font-size: 0.88rem; align-items: flex-start; gap: 0.5rem;
+  }
+  .quiz-feedback.show { display: flex; flex-direction: column; gap: 0.4rem; }
+  .quiz-feedback.correct-fb { background: #f0fdf4; border-left: 4px solid #16a34a; }
+  .quiz-feedback.wrong-fb   { background: #fef2f2; border-left: 4px solid #dc2626; }
+  .fb-icon { font-size: 1.1rem; }
+  .fb-msg  { font-weight: 700; font-size: 0.95rem; }
+  .fb-explain { color: #374151; line-height: 1.6; }
+  .fb-explain code { background: #e5e7eb; padding: 1px 5px; border-radius: 4px; font-size: 0.85rem; color: #be185d; }
+
+  .quiz-score-wrap { margin-top: 2rem; }
+  .quiz-score-card {
+    background: linear-gradient(135deg,#1d4ed8,#7c3aed); color: white;
+    border-radius: 16px; padding: 2.5rem; text-align: center;
+  }
+  .score-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+  .score-text  { font-size: 1rem; opacity: 0.85; margin-bottom: 0.25rem; }
+  .score-num   { font-size: 2.5rem; font-weight: 900; margin-bottom: 0.5rem; }
+  .score-msg   { font-size: 1rem; opacity: 0.9; margin-bottom: 1.5rem; }
+  .retry-btn {
+    background: white; color: #1d4ed8; font-weight: 700; font-size: 0.95rem;
+    padding: 0.6rem 2rem; border-radius: 8px; border: none; cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .retry-btn:hover { transform: scale(1.04); }
+</style>
+
+<script>
+let quizScore = 0;
+let quizAnswered = 0;
+const TOTAL = 5;
+
+function checkAnswer(el, isCorrect, qId) {
+  const card = document.getElementById(qId);
+  if (card.classList.contains('done')) return;
+  card.classList.add('done');
+
+  const opts = card.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.classList.add('disabled'));
+
+  const fb = document.getElementById(qId + '-fb');
+  if (isCorrect) {
+    el.classList.add('correct', 'selected');
+    fb.classList.add('show', 'correct-fb');
+    fb.querySelector('.fb-icon').textContent = '✅';
+    fb.querySelector('.fb-msg').textContent = '정답입니다!';
+    quizScore++;
+  } else {
+    el.classList.add('wrong', 'selected');
+    // 정답 강조
+    opts.forEach(o => {
+      if (o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+    });
+    fb.classList.add('show', 'wrong-fb');
+    fb.querySelector('.fb-icon').textContent = '❌';
+    fb.querySelector('.fb-msg').textContent = '틀렸습니다. 아래 해설을 확인하세요.';
+  }
+
+  quizAnswered++;
+  if (quizAnswered === TOTAL) showScore();
+}
+
+function showScore() {
+  const wrap = document.getElementById('quiz-score-wrap');
+  wrap.style.display = 'block';
+  document.getElementById('score-num').textContent = quizScore + ' / ' + TOTAL;
+  const msgs = [
+    ['😢','조금 더 복습해 봐요! 위 해설을 천천히 읽어보세요.'],
+    ['😢','조금 더 복습해 봐요! 위 해설을 천천히 읽어보세요.'],
+    ['🤔','절반 통과! 틀린 문제 해설을 다시 한번 확인하세요.'],
+    ['😊','잘 했어요! 한두 문제만 더 잡으면 완벽합니다.'],
+    ['🎯','아쉽네요, 아주 아쉬워요! 한 문제 차이!'],
+    ['🏆','만점! 오늘 강의를 완벽히 이해했습니다! 🎉']
+  ];
+  const [emoji, msg] = msgs[quizScore];
+  document.getElementById('score-emoji').textContent = emoji;
+  document.getElementById('score-msg').textContent = msg;
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function retryQuiz() {
+  quizScore = 0; quizAnswered = 0;
+  document.getElementById('quiz-score-wrap').style.display = 'none';
+  document.querySelectorAll('.quiz-card').forEach(c => {
+    c.classList.remove('done');
+    c.querySelectorAll('.quiz-opt').forEach(o => {
+      o.classList.remove('correct','wrong','selected','disabled');
+    });
+    c.querySelectorAll('.quiz-feedback').forEach(f => {
+      f.classList.remove('show','correct-fb','wrong-fb');
+    });
+  });
+  document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
