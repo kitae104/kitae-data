@@ -9,3 +9,5 @@
 - npm i -g vercel
 - vercel login
 - vercel --prod
+
+# 실행
