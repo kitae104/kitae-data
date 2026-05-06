@@ -13,10 +13,31 @@ function formatTitle(filename) {
     try {
         const webDir = path.resolve(__dirname, '..', 'Web');
         const entries = await fs.readdir(webDir, { withFileTypes: true });
-        const htmlFiles = entries
+        const allHtml = entries
             .filter(e => e.isFile() && e.name.toLowerCase().endsWith('.html') && e.name.toLowerCase() !== 'index.html')
-            .map(e => e.name)
+            .map(e => e.name);
+
+        let orderList = [];
+        try {
+            const orderText = await fs.readFile(path.join(webDir, 'order.txt'), 'utf8');
+            orderList = orderText
+                .split(/\r?\n/)
+                .map(l => l.trim())
+                .filter(l => l && !l.startsWith('#'));
+        } catch (err) {
+            if (err.code !== 'ENOENT') throw err;
+        }
+
+        const ordered = orderList.filter(name => allHtml.includes(name));
+        const remaining = allHtml
+            .filter(name => !ordered.includes(name))
             .sort((a, b) => a.localeCompare(b, 'ko'));
+        const htmlFiles = [...ordered, ...remaining];
+
+        const missing = orderList.filter(name => !allHtml.includes(name));
+        if (missing.length) {
+            console.warn('order.txt에 있지만 실제 파일이 없는 항목:', missing);
+        }
 
         const listItems = htmlFiles.map((f, index) => {
             const title = escapeHtml(formatTitle(f));
