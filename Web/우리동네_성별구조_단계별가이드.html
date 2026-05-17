@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리동네 성별 인구 구조 시각화 | 단계별 완성 가이드</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --emerald: #059669;
+  --emerald-d: #047857;
+  --emerald-pale: #ECFDF5;
+  --blue: #3B82F6;
+  --blue-pale: #EFF6FF;
+  --amber: #D97706;
+  --amber-pale: #FFFBEB;
+  --rose: #E11D48;
+  --violet: #7C3AED;
+  --bg: #F0FDF4;
+  --surface: #FFFFFF;
+  --border: #D1FAE5;
+  --border2: #E2E8F0;
+  --text: #0F172A;
+  --text2: #374151;
+  --text3: #9CA3AF;
+  --code-bg: #0D1117;
+  --radius: 12px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+
+/* ── 헤더 ─────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, #064E3B 0%, #059669 55%, #34D399 100%);
+  color: white; padding: 56px 40px 48px; position: relative; overflow: hidden;
+}
+.hero::after {
+  content: '📊';
+  position: absolute; right: 60px; bottom: -10px;
+  font-size: 140px; opacity: 0.07; line-height: 1;
+}
+.hero-inner { max-width: 940px; margin: 0 auto; position: relative; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  color: white; font-size: 12px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 20px; margin-bottom: 20px;
+}
+.hero h1 { font-size: clamp(24px, 4vw, 46px); font-weight: 700; line-height: 1.2; margin-bottom: 14px; }
+.hero h1 em { font-style: normal; color: #A7F3D0; }
+.hero p { font-size: 16px; color: rgba(255,255,255,0.82); max-width: 600px; line-height: 1.65; margin-bottom: 28px; }
+.hero-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+.badge {
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+  color: white; font-size: 13px; padding: 5px 14px; border-radius: 20px;
+}
+
+/* ── 진행 트랙 ─────────────────────── */
+.track-bar {
+  background: white; border-bottom: 2px solid var(--border);
+  position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.track-inner {
+  max-width: 940px; margin: 0 auto;
+  display: flex; overflow-x: auto; gap: 0;
+}
+.track-step {
+  flex: 1; min-width: 100px; display: flex; flex-direction: column;
+  align-items: center; padding: 12px 10px; cursor: pointer;
+  border-bottom: 3px solid transparent; transition: all 0.2s;
+  text-decoration: none;
+}
+.track-step:hover { background: var(--emerald-pale); }
+.track-step.active { border-bottom-color: var(--emerald); }
+.step-circle {
+  width: 28px; height: 28px; border-radius: 50%; border: 2px solid #CBD5E1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #94A3B8;
+  margin-bottom: 4px; transition: all 0.2s;
+}
+.track-step.active .step-circle { background: var(--emerald); border-color: var(--emerald); color: white; }
+.step-label { font-size: 11px; color: #6B7280; text-align: center; line-height: 1.3; }
+.track-step.active .step-label { color: var(--emerald); font-weight: 600; }
+
+/* ── 메인 ─────────────────────────── */
+.main { max-width: 940px; margin: 0 auto; padding: 40px 20px 80px; }
+
+/* ── 스텝 섹션 헤더 ──────────────────── */
+.phase {
+  margin-top: 52px; margin-bottom: 0;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+}
+.phase-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(90deg, var(--emerald) 0%, #10B981 100%);
+  color: white;
+}
+.phase:first-child { margin-top: 0; }
+.ph-num {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700; flex-shrink: 0;
+}
+.ph-info h2 { font-size: 19px; font-weight: 700; margin-bottom: 2px; }
+.ph-info p { font-size: 13px; color: rgba(255,255,255,0.8); }
+.phase-body { padding: 24px; }
+
+/* ── 코드 블록 ─────────────────────── */
+.cb {
+  background: var(--code-bg); border-radius: var(--radius);
+  overflow: hidden; margin: 16px 0; border: 1px solid rgba(255,255,255,0.06);
+}
+.ch {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.dots { display: flex; gap: 5px; }
+.dots span { width: 11px; height: 11px; border-radius: 50%; }
+.dr { background: #FF5F57; } .dy { background: #FEBC2E; } .dg { background: #28C840; }
+.clabel { font-size: 11px; color: #64748B; font-family: 'JetBrains Mono', monospace; }
+.cpbtn {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  color: #94A3B8; font-size: 11px; padding: 3px 10px; border-radius: 5px;
+  cursor: pointer; font-family: 'Noto Sans KR'; transition: all 0.15s;
+}
+.cpbtn:hover { color: white; background: rgba(255,255,255,0.13); }
+.cpbtn.ok { color: #34D399; background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); }
+pre { padding: 18px 20px; overflow-x: auto; margin: 0; font-size: 13.5px; line-height: 1.85; }
+code { font-family: 'JetBrains Mono', monospace; color: #CBD5E1; }
+.kw { color: #C792EA; }
+.fn { color: #82AAFF; }
+.st { color: #C3E88D; }
+.cm { color: #4A5568; font-style: italic; }
+.nm { color: #F78C6C; }
+.op { color: #89DDFF; }
+
+/* ── 출력 영역 ─────────────────────── */
+.out {
+  background: #F8FAFC; border: 1px solid #E2E8F0;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 13px 18px; font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px; color: #334155; white-space: pre; overflow-x: auto;
+}
+.cb + .out { margin-top: -16px; }
+
+/* ── 설명·팁 박스 ─────────────────── */
+.explain {
+  background: #F9FAFB; border: 1px solid #E5E7EB;
+  border-left: 4px solid var(--emerald);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 18px; margin: 14px 0; font-size: 14px; color: var(--text2);
+}
+.explain strong { color: var(--text); }
+.tip-box {
+  border-radius: var(--radius); padding: 14px 18px;
+  margin: 12px 0; display: flex; gap: 12px; align-items: flex-start; font-size: 14px;
+}
+.tip-box.info { background: var(--blue-pale); border: 1px solid #BFDBFE; }
+.tip-box.warn { background: var(--amber-pale); border: 1px solid #FDE68A; }
+.tip-box.good { background: var(--emerald-pale); border: 1px solid #A7F3D0; }
+.tip-box.info p { color: #1E40AF; }
+.tip-box.warn p { color: #92400E; }
+.tip-box.good p { color: #065F46; }
+.ti { font-size: 18px; flex-shrink: 0; }
+.tip-box p { margin: 0; line-height: 1.65; }
+
+/* ── 비교 카드 ─────────────────────── */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+.cmp-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 16px;
+}
+.cmp-card .tag { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.cmp-card.before .tag { color: #EF4444; }
+.cmp-card.after .tag { color: var(--emerald); }
+.cmp-card pre { padding: 0; font-size: 12px; background: transparent; color: var(--text2); }
+.cmp-card pre code { color: var(--text2); }
+
+/* ── 최종 코드 통합 박스 ────────────── */
+.full-code-box {
+  background: linear-gradient(135deg, #064E3B, #065F46);
+  border-radius: var(--radius); padding: 24px; margin-top: 16px;
+}
+.full-code-box h3 { color: #A7F3D0; font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.full-code-box .cb { border-color: rgba(255,255,255,0.1); }
+
+/* ── 시각화 미리보기 ─────────────────── */
+.viz-preview {
+  background: white; border: 2px dashed #D1FAE5; border-radius: var(--radius);
+  padding: 20px; margin: 16px 0; text-align: center;
+}
+.viz-chart { margin: 16px auto; }
+
+/* 간이 인구 피라미드 SVG */
+.pyramid-bar-m { fill: #3B82F6; }
+.pyramid-bar-f { fill: #EF4444; }
+
+/* ── 업그레이드 탭 ────────────────────── */
+.upg-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border2); margin-bottom: 0; }
+.upg-tab {
+  padding: 10px 18px; font-size: 13px; font-weight: 500;
+  color: #6B7280; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px;
+}
+.upg-tab.active { color: var(--emerald); border-bottom-color: var(--emerald); font-weight: 700; }
+.upg-panel { display: none; padding-top: 16px; }
+.upg-panel.active { display: block; }
+
+/* ── 핵심 정리 ─────────────────────── */
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+.sum-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 14px 16px;
+}
+.sum-card .fn-name {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;
+  background: var(--emerald-pale); color: var(--emerald-d);
+  padding: 2px 8px; border-radius: 5px; display: inline-block; margin-bottom: 7px;
+}
+.sum-card p { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+/* ── 연습 ─────────────────────────── */
+.exercise-box {
+  background: linear-gradient(135deg, #064E3B, #065F46);
+  border-radius: var(--radius); padding: 28px; color: white; margin-top: 16px;
+}
+.exercise-box h3 { font-size: 17px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.ex-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; font-size: 14px; }
+.ex-num { font-weight: 700; color: #A7F3D0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.ex-item p { color: rgba(255,255,255,0.9); line-height: 1.6; }
+.ex-hint { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 5px; font-style: italic; }
+
+footer { background: #022C22; color: #6EE7B7; text-align: center; padding: 28px; font-size: 13px; margin-top: 60px; }
+@media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } .hero { padding: 36px 18px; } .main { padding: 28px 14px; } }
+</style>
+</head>
+<body>
+
+<!-- ─── 헤더 ─────────────────────────── -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">🗺️ 단계별 프로젝트</div>
+    <h1>우리동네<br><em>성별 인구 구조</em> 시각화<br>단계별 완성 가이드</h1>
+    <p>data1.csv 파일에서 원하는 지역을 검색해 남녀 연령별 인구를 항아리 모양 그래프로 시각화하는 프로그램을 처음부터 단계별로 만들어 봅니다.</p>
+    <div class="hero-badges">
+      <span class="badge">📝 5단계 구성</span>
+      <span class="badge">csv 모듈 → pandas로 발전</span>
+      <span class="badge">input() 입력 처리</span>
+      <span class="badge">인구 피라미드 그래프</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─── 진행 바 ─────────────────────────── -->
+<nav class="track-bar">
+  <div class="track-inner">
+    <a class="track-step active" href="#p1">
+      <div class="step-circle">1</div>
+      <div class="step-label">파일 읽기</div>
+    </a>
+    <a class="track-step" href="#p2">
+      <div class="step-circle">2</div>
+      <div class="step-label">지역 검색</div>
+    </a>
+    <a class="track-step" href="#p3">
+      <div class="step-circle">3</div>
+      <div class="step-label">데이터 추출</div>
+    </a>
+    <a class="track-step" href="#p4">
+      <div class="step-circle">4</div>
+      <div class="step-label">그래프 그리기</div>
+    </a>
+    <a class="track-step" href="#p5">
+      <div class="step-circle">5</div>
+      <div class="step-label">완성 & 개선</div>
+    </a>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ════════════════════════════════════
+  완성 목표 소개
+════════════════════════════════════ -->
+<div style="background:white;border:1px solid #D1FAE5;border-radius:12px;padding:22px 24px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+  <h3 style="font-size:16px;font-weight:700;color:#059669;margin-bottom:12px;">🎯 최종 완성 프로그램은 이런 모습입니다</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:14px;color:#374151;">
+    <div>
+      <p style="font-weight:600;margin-bottom:6px;">📥 입력</p>
+      <p>사용자가 동·구·시 이름을 입력하면<br>→ data1.csv에서 해당 지역 자동 검색</p>
+    </div>
+    <div>
+      <p style="font-weight:600;margin-bottom:6px;">📤 출력</p>
+      <p>0세~100세 연령별 남녀 인구를<br>→ 인구 피라미드(항아리 그래프) 로 표시</p>
+    </div>
+  </div>
+
+  <!-- 간이 피라미드 미리보기 -->
+  <div style="background:#F8FAFC;border-radius:8px;padding:16px;margin-top:14px;text-align:center;">
+    <p style="font-size:12px;color:#6B7280;margin-bottom:10px;font-weight:600;">미리보기: 서울특별시 인구 피라미드 (10세 단위 축약)</p>
+    <svg viewBox="0 0 480 260" style="width:100%;max-width:480px;font-family:'Noto Sans KR',sans-serif;">
+      <!-- 레이블 -->
+      <text x="240" y="16" text-anchor="middle" font-size="12" font-weight="700" fill="#374151">서울특별시 지역의 남녀 성별 인구 분포</text>
+      <!-- 축 -->
+      <line x1="240" y1="25" x2="240" y2="240" stroke="#CBD5E1" stroke-width="1.5"/>
+      <!-- 데이터 (10세 단위, 단위: 만명, 스케일 조정) -->
+      <!-- 0-9세 -->
+      <rect x="170" y="28" width="70" height="16" class="pyramid-bar-m" opacity="0.8"/>
+      <rect x="240" y="28" width="66" height="16" class="pyramid-bar-f" opacity="0.8"/>
+      <text x="236" y="40" text-anchor="end" font-size="9" fill="#6B7280">0~9세</text>
+      <!-- 10-19세 -->
+      <rect x="160" y="48" width="80" height="16" class="pyramid-bar-m" opacity="0.8"/>
+      <rect x="240" y="48" width="76" height="16" class="pyramid-bar-f" opacity="0.8"/>
+      <text x="236" y="60" text-anchor="end" font-size="9" fill="#6B7280">10대</text>
+      <!-- 20-29세 -->
+      <rect x="130" y="68" width="110" height="16" class="pyramid-bar-m" opacity="0.8"/>
+      <rect x="240" y="68" width="118" height="16" class="pyramid-bar-f" opacity="0.8"/>
+      <text x="236" y="80" text-anchor="end" font-size="9" fill="#6B7280">20대</text>
+      <!-- 30-39세 -->
+      <rect x="125" y="88" width="115" height="16" class="pyramid-bar-m" opacity="0.8"/>
+      <rect x="240" y="88" width="110" height="16" class="pyramid-bar-f" opacity="0.8"/>
+      <text x="236" y="100" text-anchor="end" font-size="9" fill="#6B7280">30대</text>
+      <!-- 40-49세 -->
+      <rect x="120" y="108" width="120" height="16" class="pyramid-bar-m" opacity="0.8"/>
+      <rect x="240" y="108" width="116" height="16" class="pyramid-bar-f" opacity="0.8"/>
+      <text x="236" y="120" text-anchor="end" font-size="9" fill="#6B7280">40대</text>
+      <!-- 50-59세 -->
+      <rect x="118" y="128" width="122" height="16" class="pyramid-bar-m" opacity="0.8"/>
+      <rect x="240" y="128" width="125" height="16" class="pyramid-bar-f" opacity="0.8"/>
+      <text x="236" y="140" text-anchor="end" font-size="9" fill="#6B7280">50대</text>
+      <!-- 60-69세 -->
+      <rect x="126" y="148" width="114" height="16" class="pyramid-bar-m" opacity="0.8"/>
+      <rect x="240" y="148" width="120" height="16" class="pyramid-bar-f" opacity="0.8"/>
+      <text x="236" y="160" text-anchor="end" font-size="9" fill="#6B7280">60대</text>
+      <!-- 70-79세 -->
+      <rect x="150" y="168" width="90" height="16" class="pyramid-bar-m" opacity="0.8"/>
+      <rect x="240" y="168" width="105" height="16" class="pyramid-bar-f" opacity="0.8"/>
+      <text x="236" y="180" text-anchor="end" font-size="9" fill="#6B7280">70대</text>
+      <!-- 80+ -->
+      <rect x="178" y="188" width="62" height="16" class="pyramid-bar-m" opacity="0.8"/>
+      <rect x="240" y="188" width="90" height="16" class="pyramid-bar-f" opacity="0.8"/>
+      <text x="236" y="200" text-anchor="end" font-size="9" fill="#6B7280">80세+</text>
+      <!-- 범례 -->
+      <rect x="130" y="220" width="14" height="12" class="pyramid-bar-m"/>
+      <text x="148" y="231" font-size="11" fill="#374151">남성 ←</text>
+      <rect x="290" y="220" width="14" height="12" class="pyramid-bar-f"/>
+      <text x="308" y="231" font-size="11" fill="#374151">→ 여성</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+  PHASE 1. 파일 읽기
+════════════════════════════════════ -->
+<section id="p1" class="phase">
+  <div class="phase-header">
+    <div class="ph-num">1</div>
+    <div class="ph-info">
+      <h2>파일 읽기 — csv 모듈로 시작하기</h2>
+      <p>원본 코드처럼 csv 모듈을 써서 data1.csv를 읽어봅니다</p>
+    </div>
+  </div>
+  <div class="phase-body">
+
+    <div class="explain">
+      원본 노트북은 Python의 기본 내장 <strong>csv 모듈</strong>을 사용합니다. pandas를 쓰지 않아도 CSV를 읽을 수 있지만, 데이터를 하나하나 직접 처리해야 합니다. 먼저 이 방법으로 시작해 봅니다.
+    </div>
+
+    <div class="cb">
+      <div class="ch">
+        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="clabel">step1_read_csv.py — 파일 열고 내용 확인</span>
+        <button class="cpbtn" onclick="cp(this)">복사</button>
+      </div>
+      <pre><code><span class="cm"># ① csv 모듈 불러오기</span>
+<span class="kw">import</span> csv
+
+<span class="cm"># ② 파일 열기 (인코딩 지정 필수!)</span>
+<span class="cm">#    cp949 = 한글 윈도우 기본 인코딩</span>
+f = <span class="fn">open</span>(<span class="st">"./data1.csv"</span>, encoding=<span class="st">'cp949'</span>)
+data = csv.<span class="fn">reader</span>(f)
+
+<span class="cm"># ③ 첫 번째 행(헤더)만 출력해서 구조 확인</span>
+header = <span class="fn">next</span>(data)   <span class="cm"># 첫 행 한 줄 읽기</span>
+<span class="fn">print</span>(<span class="st">f"총 컬럼 수: {len(header)}"</span>)
+<span class="fn">print</span>(<span class="st">"앞 5개 컬럼:"</span>, header[:<span class="nm">5</span>])
+
+f.<span class="fn">close</span>()  <span class="cm"># 파일 닫기</span></code></pre>
+    </div>
+    <div class="out">총 컬럼 수: 310
+앞 5개 컬럼: ['행정구역', '2024년09월_계_총인구수', '2024년09월_계_연령구간인구수', '2024년09월_계_0세', '2024년09월_계_1세']</div>
+
+    <div class="tip-box info">
+      <span class="ti">💡</span>
+      <p><strong>원본 코드에는 encoding 지정이 없어서 오류가 날 수 있습니다.</strong> <code>open("./data1.csv", encoding='cp949')</code>처럼 인코딩을 명시하면 한글이 정상 출력됩니다.</p>
+    </div>
+
+    <div class="tip-box warn">
+      <span class="ti">⚠️</span>
+      <p>원본 코드: <code>f = open("./data1.csv")</code><br>
+      수정 코드: <code>f = open("./data1.csv", <strong>encoding='cp949'</strong>)</code><br>
+      파일을 열면 반드시 <code>f.close()</code>로 닫거나, <code>with open(...) as f:</code> 구문을 씁니다.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  PHASE 2. 지역 검색
+════════════════════════════════════ -->
+<section id="p2" class="phase">
+  <div class="phase-header">
+    <div class="ph-num">2</div>
+    <div class="ph-info">
+      <h2>지역 검색 — 사용자 입력 & 행 찾기</h2>
+      <p>input()으로 지역명을 입력받고 해당 행을 찾습니다</p>
+    </div>
+  </div>
+  <div class="phase-body">
+
+    <div class="explain">
+      <strong>핵심 아이디어:</strong> 각 행의 첫 번째 값(행정구역)에 사용자가 입력한 텍스트가 <strong>포함</strong>되어 있으면 그 행을 선택합니다. <code>if findDong in row[0]:</code>
+    </div>
+
+    <div class="cb">
+      <div class="ch">
+        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="clabel">step2_search.py — 지역명 검색</span>
+        <button class="cpbtn" onclick="cp(this)">복사</button>
+      </div>
+      <pre><code><span class="kw">import</span> csv
+
+<span class="cm"># ① 찾을 지역명 입력받기</span>
+findDong = <span class="fn">input</span>(<span class="st">"동/구/시 이름을 입력하세요: "</span>)
+
+<span class="cm"># ② 파일을 열고 검색</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"./data1.csv"</span>, encoding=<span class="st">'cp949'</span>) <span class="kw">as</span> f:
+    data = csv.<span class="fn">reader</span>(f)
+
+    found = <span class="nm">False</span>   <span class="cm"># 찾았는지 여부</span>
+    <span class="kw">for</span> row <span class="kw">in</span> data:
+        <span class="kw">if</span> findDong <span class="kw">in</span> row[<span class="nm">0</span>]:   <span class="cm"># 행정구역 이름에 포함되면</span>
+            <span class="fn">print</span>(<span class="st">f"찾았습니다! → {row[0]}"</span>)
+            <span class="fn">print</span>(<span class="st">f"총인구: {row[1]}"</span>)
+            found = <span class="nm">True</span>
+            <span class="kw">break</span>   <span class="cm"># 하나 찾으면 멈추기</span>
+
+    <span class="kw">if</span> <span class="kw">not</span> found:
+        <span class="fn">print</span>(<span class="st">f"'{findDong}' 을(를) 포함한 지역을 찾지 못했습니다."</span>)</code></pre>
+    </div>
+    <div class="out">동/구/시 이름을 입력하세요: 서울
+찾았습니다! → 서울특별시  (1100000000)
+총인구: 9,350,995</div>
+
+    <div class="tip-box good">
+      <span class="ti">✅</span>
+      <p><code>with open(...) as f:</code> 구문을 쓰면 블록이 끝날 때 자동으로 파일이 닫힙니다. <code>f.close()</code>를 따로 쓰지 않아도 됩니다!</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  PHASE 3. 데이터 추출
+════════════════════════════════════ -->
+<section id="p3" class="phase">
+  <div class="phase-header">
+    <div class="ph-num">3</div>
+    <div class="ph-info">
+      <h2>데이터 추출 — 남성·여성 인구 리스트 만들기</h2>
+      <p>해당 행에서 연령별 남녀 인구를 숫자 리스트로 추출합니다</p>
+    </div>
+  </div>
+  <div class="phase-body">
+
+    <div class="explain">
+      <strong>컬럼 위치 이해하기</strong><br>
+      0 = 행정구역 | 1 = 계_총인구수 | 2 = 계_연령구간인구수 | 3 = 계_0세 | … | 104 = 계_101 | 105 = 남_총인구수 | 106 = 남_0세 | … | 207 = 남_100세이상 | 208 = 여_총인구수 | 209 = 여_연령구간인구수 | 210 = 여_0세 | …
+    </div>
+
+    <div class="cb">
+      <div class="ch">
+        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="clabel">step3_extract.py — 남녀 인구 추출</span>
+        <button class="cpbtn" onclick="cp(this)">복사</button>
+      </div>
+      <pre><code><span class="kw">import</span> csv
+
+m = []   <span class="cm"># 남성 인구 리스트 (음수로 저장 — 왼쪽 방향 막대를 위해)</span>
+f2 = []  <span class="cm"># 여성 인구 리스트</span>
+
+findDong = <span class="fn">input</span>(<span class="st">"동 이름 : "</span>)
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"./data1.csv"</span>, encoding=<span class="st">'cp949'</span>) <span class="kw">as</span> f:
+    data = csv.<span class="fn">reader</span>(f)
+    <span class="kw">for</span> row <span class="kw">in</span> data:
+        <span class="kw">if</span> findDong <span class="kw">in</span> row[<span class="nm">0</span>]:
+
+            <span class="cm"># 남성: 열 106 ~ 206 (0세~100세) → 음수로 저장</span>
+            <span class="kw">for</span> i <span class="kw">in</span> row[<span class="nm">106</span>:<span class="nm">207</span>]:
+                i_clean = i.<span class="fn">replace</span>(<span class="st">','</span>, <span class="st">''</span>).<span class="fn">strip</span>()  <span class="cm"># 쉼표 제거</span>
+                m.<span class="fn">append</span>(-<span class="fn">int</span>(i_clean))              <span class="cm"># 음수로 변환</span>
+
+            <span class="cm"># 여성: 열 210 ~ 310 (0세~100세) → 양수로 저장</span>
+            <span class="kw">for</span> i <span class="kw">in</span> row[<span class="nm">210</span>:]:
+                i_clean = i.<span class="fn">replace</span>(<span class="st">','</span>, <span class="st">''</span>).<span class="fn">strip</span>()
+                f2.<span class="fn">append</span>(<span class="fn">int</span>(i_clean))
+
+            <span class="kw">break</span>
+
+<span class="fn">print</span>(<span class="st">f"남성 데이터 개수: {len(m)}"</span>)
+<span class="fn">print</span>(<span class="st">f"여성 데이터 개수: {len(f2)}"</span>)
+<span class="fn">print</span>(<span class="st">f"남성 0세: {abs(m[0]):,}명 / 여성 0세: {f2[0]:,}명"</span>)</code></pre>
+    </div>
+    <div class="out">동 이름 : 서울
+남성 데이터 개수: 101
+여성 데이터 개수: 101
+남성 0세: 19,407명 / 여성 0세: 18,693명</div>
+
+    <div class="tip-box info">
+      <span class="ti">💡</span>
+      <p><strong>왜 남성을 음수로 저장할까요?</strong><br>
+      막대 그래프에서 왼쪽(-) 방향으로 남성, 오른쪽(+) 방향으로 여성을 그려 <em>인구 피라미드(항아리 그래프)</em> 모양을 만들기 위해서입니다.</p>
+    </div>
+
+    <div class="compare-grid">
+      <div class="cmp-card before">
+        <div class="tag">❌ 원본 코드 (쉼표 처리 없음)</div>
+        <pre><code>for i in row[3:104]:
+    m.append(-int(i))
+# → 쉼표 포함 문자열이면
+#   ValueError 오류 발생!</code></pre>
+      </div>
+      <div class="cmp-card after">
+        <div class="tag">✅ 개선 코드 (쉼표 제거 추가)</div>
+        <pre><code>for i in row[106:207]:
+    i_clean = i.replace(',','').strip()
+    m.append(-int(i_clean))
+# → 쉼표 제거 후 변환
+#   정상 작동!</code></pre>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  PHASE 4. 그래프 그리기
+════════════════════════════════════ -->
+<section id="p4" class="phase">
+  <div class="phase-header">
+    <div class="ph-num">4</div>
+    <div class="ph-info">
+      <h2>그래프 그리기 — matplotlib으로 인구 피라미드 완성</h2>
+      <p>barh()로 가로 막대 그래프를 그려 인구 구조를 시각화합니다</p>
+    </div>
+  </div>
+  <div class="phase-body">
+
+    <div class="explain">
+      <strong>barh() = 가로 막대 그래프(horizontal bar chart)</strong><br>
+      <code>range(101)</code>은 0~100세, 남성은 음수 값이라 왼쪽으로, 여성은 양수라 오른쪽으로 그려집니다. 두 막대를 겹쳐서 표시합니다.
+    </div>
+
+    <div class="cb">
+      <div class="ch">
+        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="clabel">step4_chart_basic.py — 기본 인구 피라미드</span>
+        <button class="cpbtn" onclick="cp(this)">복사</button>
+      </div>
+      <pre><code><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib
+
+<span class="cm"># 한글 폰트 (Windows)</span>
+matplotlib.rc(<span class="st">'font'</span>, family=<span class="st">'Malgun Gothic'</span>)
+matplotlib.rcParams[<span class="st">'axes.unicode_minus'</span>] = <span class="nm">False</span>
+
+<span class="cm"># m, f2, findDong 은 앞 단계에서 이미 만들어져 있어야 함</span>
+
+plt.<span class="fn">figure</span>(figsize=(<span class="nm">10</span>, <span class="nm">8</span>))
+plt.<span class="fn">title</span>(findDong + <span class="st">" 지역의 남녀 성별 인구 분포"</span>,
+        fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>)
+
+<span class="cm"># 남성 막대 (음수 → 왼쪽으로)</span>
+plt.<span class="fn">barh</span>(<span class="fn">range</span>(<span class="nm">101</span>), m, label=<span class="st">'남성'</span>, color=<span class="st">'#3B82F6'</span>, alpha=<span class="nm">0.8</span>)
+
+<span class="cm"># 여성 막대 (양수 → 오른쪽으로)</span>
+plt.<span class="fn">barh</span>(<span class="fn">range</span>(<span class="nm">101</span>), f2, label=<span class="st">'여성'</span>, color=<span class="st">'#EF4444'</span>, alpha=<span class="nm">0.8</span>)
+
+plt.<span class="fn">xlabel</span>(<span class="st">'인구수 (명) — 왼쪽: 남성, 오른쪽: 여성'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'나이 (세)'</span>)
+plt.<span class="fn">legend</span>(fontsize=<span class="nm">12</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+
+    <div class="tip-box good">
+      <span class="ti">✅</span>
+      <p><strong>원본 코드에서 개선한 부분:</strong><br>
+      • <code>color</code> 속성 추가 → 남성=파랑, 여성=빨강으로 구분<br>
+      • <code>figsize</code> 추가 → 그래프 크기 명시<br>
+      • <code>xlabel / ylabel</code> 추가 → 축 설명 표시<br>
+      • <code>tight_layout()</code> 추가 → 레이아웃 자동 조정</p>
+    </div>
+
+    <!-- 탭: 기본 vs 개선 -->
+    <div style="background:white;border:1px solid #E2E8F0;border-radius:12px;overflow:hidden;margin-top:16px;">
+      <div class="upg-tabs" style="padding: 0 16px;">
+        <div class="upg-tab active" onclick="switchTab(this,'t1')">기본 버전</div>
+        <div class="upg-tab" onclick="switchTab(this,'t2')">개선 버전 (X축 레이블)</div>
+        <div class="upg-tab" onclick="switchTab(this,'t3')">pandas 버전</div>
+      </div>
+      <div style="padding:16px;">
+        <div class="upg-panel active" id="t1">
+          <p style="font-size:14px;color:#374151;margin-bottom:10px;">원본 코드와 거의 동일한 기본 버전입니다. 흑백 막대로 그려집니다.</p>
+          <div class="cb">
+            <div class="ch"><div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span class="clabel">기본 버전</span><button class="cpbtn" onclick="cp(this)">복사</button></div>
+            <pre><code>plt.title(findDong + <span class="st">" 지역의 남녀 성별 인구 분포"</span>)
+plt.<span class="fn">barh</span>(<span class="fn">range</span>(<span class="nm">101</span>), m, label=<span class="st">'남성'</span>)
+plt.<span class="fn">barh</span>(<span class="fn">range</span>(<span class="nm">101</span>), f2, label=<span class="st">'여성'</span>)
+plt.<span class="fn">legend</span>()
+plt.<span class="fn">show</span>()</code></pre>
+          </div>
+        </div>
+
+        <div class="upg-panel" id="t2">
+          <p style="font-size:14px;color:#374151;margin-bottom:10px;">X축 레이블을 절댓값으로 표시해서 읽기 더 쉽게 만든 버전입니다.</p>
+          <div class="cb">
+            <div class="ch"><div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span class="clabel">개선 버전 — X축 절댓값 레이블</span><button class="cpbtn" onclick="cp(this)">복사</button></div>
+            <pre><code>fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="nm">10</span>, <span class="nm">9</span>))
+ax.<span class="fn">barh</span>(<span class="fn">range</span>(<span class="nm">101</span>), m,  label=<span class="st">'남성'</span>, color=<span class="st">'#3B82F6'</span>, alpha=<span class="nm">0.8</span>)
+ax.<span class="fn">barh</span>(<span class="fn">range</span>(<span class="nm">101</span>), f2, label=<span class="st">'여성'</span>, color=<span class="st">'#EF4444'</span>, alpha=<span class="nm">0.8</span>)
+
+<span class="cm"># X축 음수 레이블을 절댓값으로 바꾸기</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+ticks = ax.<span class="fn">get_xticks</span>()
+ax.<span class="fn">set_xticklabels</span>([<span class="fn">f'{abs(int(t)):,}'</span> <span class="kw">for</span> t <span class="kw">in</span> ticks])
+
+ax.<span class="fn">set_title</span>(findDong + <span class="st">" 지역의 남녀 성별 인구 분포"</span>,
+             fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>)
+ax.<span class="fn">set_ylabel</span>(<span class="st">'나이 (세)'</span>)
+ax.<span class="fn">axvline</span>(<span class="nm">0</span>, color=<span class="st">'black'</span>, linewidth=<span class="nm">1</span>)  <span class="cm"># 중심선</span>
+ax.<span class="fn">legend</span>(fontsize=<span class="nm">12</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+          </div>
+        </div>
+
+        <div class="upg-panel" id="t3">
+          <p style="font-size:14px;color:#374151;margin-bottom:10px;">csv 대신 pandas를 써서 훨씬 간결하게 작성한 버전입니다.</p>
+          <div class="cb">
+            <div class="ch"><div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span class="clabel">pandas 버전 — 더 간결하고 안전</span><button class="cpbtn" onclick="cp(this)">복사</button></div>
+            <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib
+
+matplotlib.rc(<span class="st">'font'</span>, family=<span class="st">'Malgun Gothic'</span>)
+matplotlib.rcParams[<span class="st">'axes.unicode_minus'</span>] = <span class="nm">False</span>
+
+<span class="cm"># pandas로 읽기 (쉼표 자동 처리 설정)</span>
+df = pd.<span class="fn">read_csv</span>(<span class="st">'data1.csv'</span>, encoding=<span class="st">'cp949'</span>,
+                  thousands=<span class="st">','</span>)   <span class="cm"># thousands=',' 로 자동 쉼표 제거!</span>
+
+findDong = <span class="fn">input</span>(<span class="st">"동 이름 : "</span>)
+
+<span class="cm"># 해당 행 찾기</span>
+row = df[df[<span class="st">'행정구역'</span>].<span class="fn">str</span>.<span class="fn">contains</span>(findDong)]
+<span class="kw">if</span> <span class="fn">len</span>(row) == <span class="nm">0</span>:
+    <span class="fn">print</span>(<span class="st">"지역을 찾지 못했습니다."</span>)
+<span class="kw">else</span>:
+    r = row.<span class="fn">iloc</span>[<span class="nm">0</span>]
+
+    <span class="cm"># 남성 데이터 (음수)</span>
+    m_cols = [<span class="st">f'2024년09월_남_{i}세'</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">101</span>)]
+    m = [-r[c] <span class="kw">for</span> c <span class="kw">in</span> m_cols <span class="kw">if</span> c <span class="kw">in</span> r.index]
+
+    <span class="cm"># 여성 데이터</span>
+    f_cols = [<span class="st">f'2024년09월_여_{i}세'</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">101</span>)]
+    f2 = [r[c] <span class="kw">for</span> c <span class="kw">in</span> f_cols <span class="kw">if</span> c <span class="kw">in</span> r.index]
+
+    fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="nm">10</span>, <span class="nm">9</span>))
+    ax.<span class="fn">barh</span>(<span class="fn">range</span>(<span class="fn">len</span>(m)), m,  label=<span class="st">'남성'</span>, color=<span class="st">'#3B82F6'</span>, alpha=<span class="nm">0.8</span>)
+    ax.<span class="fn">barh</span>(<span class="fn">range</span>(<span class="fn">len</span>(f2)), f2, label=<span class="st">'여성'</span>, color=<span class="st">'#EF4444'</span>, alpha=<span class="nm">0.8</span>)
+    ax.<span class="fn">axvline</span>(<span class="nm">0</span>, color=<span class="st">'black'</span>, linewidth=<span class="nm">1</span>)
+    ax.<span class="fn">set_title</span>(findDong + <span class="st">" 지역의 남녀 성별 인구 분포"</span>,
+                 fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>)
+    ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>)
+    ax.<span class="fn">set_ylabel</span>(<span class="st">'나이 (세)'</span>)
+    ax.<span class="fn">legend</span>()
+    plt.<span class="fn">tight_layout</span>()
+    plt.<span class="fn">show</span>()</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  PHASE 5. 완성 & 최종 코드
+════════════════════════════════════ -->
+<section id="p5" class="phase">
+  <div class="phase-header">
+    <div class="ph-num">5</div>
+    <div class="ph-info">
+      <h2>최종 완성 코드 & 개선 포인트 정리</h2>
+      <p>모든 단계를 합친 완성본과 더 나아갈 수 있는 방향</p>
+    </div>
+  </div>
+  <div class="phase-body">
+
+    <div class="full-code-box">
+      <h3>🎯 최종 완성 코드 (pandas 버전)</h3>
+      <div class="cb">
+        <div class="ch">
+          <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+          <span class="clabel">우리동네_성별구조_완성.py</span>
+          <button class="cpbtn" onclick="cp(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 우리동네 성별 인구 구조 시각화
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib
+<span class="kw">import</span> platform
+
+<span class="cm"># ① 한글 폰트 설정 (OS별)</span>
+<span class="kw">if</span> platform.<span class="fn">system</span>() == <span class="st">'Windows'</span>:
+    matplotlib.rc(<span class="st">'font'</span>, family=<span class="st">'Malgun Gothic'</span>)
+<span class="kw">elif</span> platform.<span class="fn">system</span>() == <span class="st">'Darwin'</span>:  <span class="cm"># Mac</span>
+    matplotlib.rc(<span class="st">'font'</span>, family=<span class="st">'AppleGothic'</span>)
+matplotlib.rcParams[<span class="st">'axes.unicode_minus'</span>] = <span class="nm">False</span>
+
+<span class="cm"># ② 데이터 불러오기</span>
+df = pd.<span class="fn">read_csv</span>(<span class="st">'data1.csv'</span>, encoding=<span class="st">'cp949'</span>, thousands=<span class="st">','</span>)
+
+<span class="cm"># ③ 지역명 입력 & 검색</span>
+findDong = <span class="fn">input</span>(<span class="st">"동/구/시 이름을 입력하세요: "</span>)
+matched = df[df[<span class="st">'행정구역'</span>].<span class="fn">str</span>.<span class="fn">contains</span>(findDong, na=<span class="nm">False</span>)]
+
+<span class="kw">if</span> <span class="fn">len</span>(matched) == <span class="nm">0</span>:
+    <span class="fn">print</span>(<span class="st">f"'{findDong}' 지역을 찾지 못했습니다."</span>)
+<span class="kw">else</span>:
+    r = matched.<span class="fn">iloc</span>[<span class="nm">0</span>]
+    region_name = r[<span class="st">'행정구역'</span>].<span class="fn">split</span>(<span class="st">'  '</span>)[<span class="nm">0</span>]
+
+    <span class="cm"># ④ 남녀 연령별 데이터 추출 (0~100세)</span>
+    ages = <span class="fn">list</span>(<span class="fn">range</span>(<span class="nm">101</span>))
+    m_data  = []  <span class="cm"># 남성 (음수)</span>
+    f_data  = []  <span class="cm"># 여성 (양수)</span>
+
+    <span class="kw">for</span> i <span class="kw">in</span> ages:
+        col_m = <span class="st">f'2024년09월_남_{i}세'</span>
+        col_f = <span class="st">f'2024년09월_여_{i}세'</span>
+        <span class="cm"># 100세는 컬럼명이 '100세 이상' 이므로 예외 처리</span>
+        <span class="kw">if</span> i == <span class="nm">100</span>:
+            col_m = <span class="st">'2024년09월_남_100세 이상'</span>
+            col_f = <span class="st">'2024년09월_여_100세 이상'</span>
+        m_data.<span class="fn">append</span>(-r[col_m] <span class="kw">if</span> col_m <span class="kw">in</span> r.index <span class="kw">else</span> <span class="nm">0</span>)
+        f_data.<span class="fn">append</span>(r[col_f]  <span class="kw">if</span> col_f <span class="kw">in</span> r.index <span class="kw">else</span> <span class="nm">0</span>)
+
+    <span class="cm"># ⑤ 그래프 그리기</span>
+    fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="nm">10</span>, <span class="nm">10</span>))
+
+    ax.<span class="fn">barh</span>(ages, m_data, label=<span class="st">'남성'</span>, color=<span class="st">'#3B82F6'</span>, alpha=<span class="nm">0.8</span>)
+    ax.<span class="fn">barh</span>(ages, f_data, label=<span class="st">'여성'</span>, color=<span class="st">'#EF4444'</span>, alpha=<span class="nm">0.8</span>)
+    ax.<span class="fn">axvline</span>(<span class="nm">0</span>, color=<span class="st">'gray'</span>, linewidth=<span class="nm">1.2</span>)   <span class="cm"># 중심선</span>
+
+    <span class="cm"># X축 절댓값 표시</span>
+    ticks = ax.<span class="fn">get_xticks</span>()
+    ax.<span class="fn">set_xticklabels</span>([<span class="st">f'{int(abs(t)):,}'</span> <span class="kw">for</span> t <span class="kw">in</span> ticks])
+
+    ax.<span class="fn">set_title</span>(region_name + <span class="st">" 지역의 남녀 성별 인구 분포"</span>,
+                fontsize=<span class="nm">15</span>, fontweight=<span class="st">'bold'</span>, pad=<span class="nm">15</span>)
+    ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)  ← 남성 | 여성 →'</span>)
+    ax.<span class="fn">set_ylabel</span>(<span class="st">'나이 (세)'</span>)
+    ax.<span class="fn">legend</span>(fontsize=<span class="nm">12</span>, loc=<span class="st">'lower right'</span>)
+    ax.<span class="fn">grid</span>(axis=<span class="st">'x'</span>, alpha=<span class="nm">0.3</span>)
+    plt.<span class="fn">tight_layout</span>()
+    plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <!-- 핵심 정리 -->
+    <h3 style="font-size:16px;font-weight:700;margin:28px 0 14px;color:#059669;">📚 이번 프로젝트 핵심 정리</h3>
+    <div class="summary-grid">
+      <div class="sum-card">
+        <div class="fn-name">open() + csv.reader</div>
+        <p>기본 CSV 읽기. 직접 반복문으로 처리해야 함</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">encoding='cp949'</div>
+        <p>한글이 포함된 파일 열 때 필수 지정</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">input()</div>
+        <p>사용자 입력 받기. Jupyter에서 실행 가능</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">if X in row[0]</div>
+        <p>문자열 포함 여부로 행 검색</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">replace(',', '')</div>
+        <p>숫자 문자열에서 쉼표 제거</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">barh(y, x)</div>
+        <p>가로 막대 그래프. 음수=왼쪽, 양수=오른쪽</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">thousands=','</div>
+        <p>pandas read_csv에서 쉼표 자동 처리</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">str.contains()</div>
+        <p>pandas 문자열 포함 검색. in 연산자 대신 사용</p>
+      </div>
+    </div>
+
+    <!-- 연습 문제 -->
+    <div class="exercise-box">
+      <h3>✏️ 도전 과제</h3>
+
+      <div class="ex-item">
+        <div class="ex-num">과제 1</div>
+        <p>완성 코드를 Google Colab에서 실행해서 "경기도"의 인구 피라미드를 그려보세요.</p>
+        <div class="ex-hint">힌트: Colab에서는 한글 폰트 설정 코드가 달라집니다 (NanumGothic 사용)</div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-num">과제 2</div>
+        <p>두 지역을 나란히 비교하는 그래프를 만들어 보세요. (예: 서울 vs 경기도)</p>
+        <div class="ex-hint">힌트: plt.subplots(1, 2)로 두 칸 만들고 각각 barh 그리기</div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-num">과제 3</div>
+        <p>연령대를 10세 단위로 묶어서 더 단순한 피라미드를 그려보세요.</p>
+        <div class="ex-hint">힌트: for i in range(0, 101, 10): 묶음별 합계 계산</div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-num">과제 4 (심화)</div>
+        <p>지역 이름을 input 대신 드롭다운으로 선택하는 인터랙티브 위젯을 만들어 보세요.</p>
+        <div class="ex-hint">힌트: Jupyter에서 ipywidgets의 interact() 함수 사용</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>🗺️ 우리동네 성별 인구 구조 시각화 수업자료 | 원본: 우리동네성별구조.ipynb + data1.csv</p>
+</footer>
+
+<script>
+// 복사 버튼
+function cp(btn) {
+  const pre = btn.closest('.cb').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+
+// 탭 전환
+function switchTab(tab, panelId) {
+  const container = tab.closest('div');
+  container.querySelectorAll('.upg-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  tab.closest('div').parentElement.querySelectorAll('.upg-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+
+// 스크롤 spy
+const steps = document.querySelectorAll('.track-step');
+const phases = document.querySelectorAll('section.phase');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  phases.forEach(s => { if (window.scrollY >= s.offsetTop - 130) cur = s.id; });
+  steps.forEach(s => {
+    s.classList.toggle('active', s.getAttribute('href') === '#' + cur);
+  });
+});
+</script>
+</body>
+</html>

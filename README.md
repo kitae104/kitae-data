@@ -11,3 +11,4 @@
 - vercel --prod
 
 # 실행
+- npm run build 
