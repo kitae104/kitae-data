@@ -600,9 +600,6 @@
 <span class="cmt"># 'as pd'는 앞으로 pandas를 pd라는 짧은 이름으로 부르겠다는 뜻입니다</span>
 <span class="kw">import</span> pandas <span class="kw">as</span> pd
 
-<span class="cmt"># numpy는 숫자 계산을 도와주는 라이브러리입니다</span>
-<span class="kw">import</span> numpy <span class="kw">as</span> np
-
 <span class="fn">print</span>(<span class="str">"✅ 라이브러리 불러오기 완료!"</span>)
 <span class="fn">print</span>(<span class="str">f"Pandas 버전: <span class="op">{</span>pd.__version__<span class="op">}</span>"</span>)</code></pre>
     </div>
@@ -686,7 +683,7 @@ data = {
     <span class="str">'국어'</span>:  [<span class="num">85</span>, <span class="num">92</span>, <span class="num">78</span>, <span class="num">95</span>, <span class="num">88</span>, <span class="num">76</span>, <span class="num">91</span>, <span class="num">83</span>],
     <span class="str">'수학'</span>:  [<span class="num">92</span>, <span class="num">78</span>, <span class="num">95</span>, <span class="num">88</span>, <span class="num">72</span>, <span class="num">85</span>, <span class="num">79</span>, <span class="num">96</span>],
     <span class="str">'영어'</span>:  [<span class="num">88</span>, <span class="num">95</span>, <span class="num">82</span>, <span class="num">91</span>, <span class="num">85</span>, <span class="num">90</span>, <span class="num">77</span>, <span class="num">89</span>],
-    <span class="str">'과학'</span>:  [<span class="num">79</span>, <span class="num">88</span>, <span class="num">91</span>, <span class="num">85</span>, <span class="num">93</span>, <span class="num">82</span>, <span class="num">88</span>, <span class="num">75</span>]
+    
 }
 
 <span class="cmt"># 딕셔너리를 DataFrame으로 변환!</span>
@@ -859,14 +856,14 @@ df.<span class="fn">loc</span>[<span class="num">0</span>:<span class="num">2</s
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
       <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
-<span class="kw">import</span> numpy <span class="kw">as</span> np
+
 
 <span class="cmt"># 결측값이 포함된 데이터 만들기 (np.nan = 값 없음)</span>
 data = {
     <span class="str">'이름'</span>:  [<span class="str">'김민준'</span>, <span class="str">'이서연'</span>, <span class="str">'박지호'</span>, <span class="str">'최예린'</span>, <span class="str">'정도윤'</span>],
-    <span class="str">'국어'</span>:  [<span class="num">85</span>, <span class="num">92</span>, <span class="num">78</span>, np.nan, <span class="num">88</span>],   <span class="cmt"># 최예린 국어 결측</span>
-    <span class="str">'수학'</span>:  [<span class="num">92</span>, <span class="num">78</span>, np.nan, <span class="num">88</span>, <span class="num">72</span>],   <span class="cmt"># 박지호 수학 결측</span>
-    <span class="str">'영어'</span>:  [<span class="num">88</span>, np.nan, <span class="num">82</span>, <span class="num">91</span>, <span class="num">85</span>]    <span class="cmt"># 이서연 영어 결측</span>
+    <span class="str">'국어'</span>:  [<span class="num">85</span>, <span class="num">92</span>, <span class="num">78</span>, None, <span class="num">88</span>],   <span class="cmt"># 최예린 국어 결측</span>
+    <span class="str">'수학'</span>:  [<span class="num">92</span>, <span class="num">78</span>, None, <span class="num">88</span>, <span class="num">72</span>],   <span class="cmt"># 박지호 수학 결측</span>
+    <span class="str">'영어'</span>:  [<span class="num">88</span>, None, <span class="num">82</span>, <span class="num">91</span>, <span class="num">85</span>]    <span class="cmt"># 이서연 영어 결측</span>
 }
 df = pd.DataFrame(data)
 
@@ -952,8 +949,10 @@ df_clean = df_clean.<span class="fn">reset_index</span>(drop=<span class="kw">Tr
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
       <pre><code><span class="cmt">## 새 열 추가 ##</span>
-df[<span class="str">'총점'</span>] = df[<span class="str">'국어'</span>] + df[<span class="str">'수학'</span>] + df[<span class="str">'영어'</span>] + df[<span class="str">'과학'</span>]
-df[<span class="str">'평균'</span>] = (df[<span class="str">'총점'</span>] / <span class="num">4</span>).<span class="fn">round</span>(<span class="num">1</span>)
+df[<span class="str">'총점'</span>] = df[<span class="str">'국어'</span>] + df[<span class="str">'수학'</span>] + df[<span class="str">'영어'</span>] 
+df[<span class="str">'평균'</span>] = (df[<span class="str">'총점'</span>] / <span class="num">3</span>).<span class="fn">round</span>(<span class="num">1</span>)
+df[<span class="str">'학년'</span>] = [1, 1, 2, 2, 3]
+
 
 <span class="cmt"># apply()로 함수를 각 값에 적용 (등급 부여)</span>
 <span class="kw">def</span> <span class="fn">get_grade</span>(score):
@@ -1019,52 +1018,7 @@ grade_stats.columns = [<span class="str">'인원수'</span>, <span class="str">'
     </div>
   </div>
 
-  <!-- STEP 5: 반도체 데이터 -->
-  <div class="content-section">
-    <div class="section-label">
-      <div class="section-num">5</div>
-      <div>
-        <div class="section-title">반도체 공정 데이터 EDA 실습</div>
-        <div class="section-desc">실제 산업 데이터와 유사한 공정 센서 데이터 분석</div>
-      </div>
-    </div>
-
-    <div class="code-wrap">
-      <div class="code-header">
-        <div class="code-dots">
-          <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
-        </div>
-        <span class="code-title">05_semiconductor_eda.py</span>
-        <button class="copy-btn" onclick="copyCode(this)">복사</button>
-      </div>
-      <pre><code><span class="cmt"># 반도체 공정 센서 데이터 생성 (100개 샘플)</span>
-np.random.seed(<span class="num">42</span>)
-n = <span class="num">100</span>
-
-semi_data = {
-    <span class="str">'공정ID'</span>:     [<span class="str">f'LOT{str(i).zfill(3)}'</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, n+<span class="num">1</span>)],
-    <span class="str">'온도(°C)'</span>:   np.<span class="fn">round</span>(np.random.<span class="fn">normal</span>(<span class="num">300</span>, <span class="num">15</span>, n), <span class="num">1</span>),
-    <span class="str">'습도(%)'</span>:    np.<span class="fn">round</span>(np.random.<span class="fn">normal</span>(<span class="num">45</span>,  <span class="num">5</span>,  n), <span class="num">1</span>),
-    <span class="str">'압력(Pa)'</span>:   np.<span class="fn">round</span>(np.random.<span class="fn">normal</span>(<span class="num">101.3</span>, <span class="num">2</span>, n), <span class="num">2</span>),
-    <span class="str">'가스유량'</span>:   np.<span class="fn">round</span>(np.random.<span class="fn">normal</span>(<span class="num">100</span>, <span class="num">8</span>, n), <span class="num">1</span>),
-    <span class="str">'두께(nm)'</span>:   np.<span class="fn">round</span>(np.random.<span class="fn">normal</span>(<span class="num">50</span>, <span class="num">3</span>, n), <span class="num">2</span>),
-    <span class="str">'불량여부'</span>:   np.random.<span class="fn">choice</span>([<span class="num">0</span>, <span class="num">1</span>], n, p=[<span class="num">0.85</span>, <span class="num">0.15</span>])
-}
-df_semi = pd.DataFrame(semi_data)
-
-<span class="cmt"># 기본 정보 확인</span>
-df_semi.<span class="fn">info</span>()
-df_semi.<span class="fn">describe</span>()
-
-<span class="cmt"># 정상 vs 불량 비교</span>
-result = df_semi.<span class="fn">groupby</span>(<span class="str">'불량여부'</span>)[[<span class="str">'온도(°C)'</span>, <span class="str">'두께(nm)'</span>]].<span class="fn">mean</span>()
-
-<span class="cmt"># 불량률 계산</span>
-defect_rate = df_semi[<span class="str">'불량여부'</span>].<span class="fn">mean</span>() * <span class="num">100</span>
-<span class="fn">print</span>(<span class="str">f"불량률: {defect_rate:.1f}%"</span>)</code></pre>
-    </div>
-  </div>
-
+  
   <div class="quiz-section">
     <div class="quiz-title"><span class="icon">✏️</span>연습 문제</div>
     <div class="quiz-item"><span class="quiz-num">Q1</span><div><p>df_clean에서 국어 점수가 90점 이상인 학생의 이름과 국어 점수만 출력하세요.</p><div class="quiz-hint">힌트: 조건 필터 + 열 선택 조합</div></div></div>
