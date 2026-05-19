@@ -1037,295 +1037,695 @@ grade_stats.columns = [<span class="str">'인원수'</span>, <span class="str">'
     <div class="session-icon orange">📈</div>
     <div>
       <h2>3차시: 데이터 시각화</h2>
-      <p>Matplotlib으로 막대, 선, 히스토그램, 산점도 등 다양한 그래프를 그리고 대시보드로 조합합니다. 데이터를 눈에 보이게 만드는 법을 배웁니다.</p>
+      <p>matplotlib으로 5가지 그래프를 그려봅니다. 산점도 · 선 · 막대 · 파이 · 박스 — 각각 언제 쓰는지, 코드는 어떻게 쓰는지 배웁니다.</p>
     </div>
   </div>
 
   <div class="objectives">
     <h3>🎯 학습 목표</h3>
     <ul class="obj-list">
-      <li><span class="obj-check">✓</span>Matplotlib의 기본 구조와 사용법을 이해한다</li>
-      <li><span class="obj-check">✓</span>막대, 선, 히스토그램, 산점도, 파이 차트를 그릴 수 있다</li>
-      <li><span class="obj-check">✓</span>그래프에 제목, 축 레이블, 범례를 추가할 수 있다</li>
-      <li><span class="obj-check">✓</span>여러 그래프를 배치해 대시보드를 만들 수 있다</li>
+      <li><span class="obj-check">✓</span>matplotlib을 불러오고 그래프를 화면에 출력할 수 있다</li>
+      <li><span class="obj-check">✓</span>산점도(scatter)로 두 값의 관계를 볼 수 있다</li>
+      <li><span class="obj-check">✓</span>선 그래프(plot)로 변화 흐름을 표현할 수 있다</li>
+      <li><span class="obj-check">✓</span>막대 그래프(bar)로 값을 비교할 수 있다</li>
+      <li><span class="obj-check">✓</span>파이 차트(pie)로 비율을 나타낼 수 있다</li>
+      <li><span class="obj-check">✓</span>박스 플롯(boxplot)으로 데이터 분포를 확인할 수 있다</li>
     </ul>
   </div>
 
-  <!-- 그래프 종류 카드 -->
-  <div class="graph-grid">
-    <div class="graph-card"><div class="graph-icon">📊</div><div class="graph-name">막대 그래프</div><div class="graph-use">항목 간 크기 비교</div></div>
-    <div class="graph-card"><div class="graph-icon">📈</div><div class="graph-name">선 그래프</div><div class="graph-use">시간 흐름/추이</div></div>
-    <div class="graph-card"><div class="graph-icon">📉</div><div class="graph-name">히스토그램</div><div class="graph-use">데이터 분포</div></div>
-    <div class="graph-card"><div class="graph-icon">🔵</div><div class="graph-name">산점도</div><div class="graph-use">두 변수 관계</div></div>
-    <div class="graph-card"><div class="graph-icon">🥧</div><div class="graph-name">파이 차트</div><div class="graph-use">비율/구성</div></div>
-    <div class="graph-card"><div class="graph-icon">🌡️</div><div class="graph-name">히트맵</div><div class="graph-use">상관관계 매트릭스</div></div>
-  </div>
-
-  <!-- STEP 0: 환경 설정 -->
+  <!-- ════════════════ 준비 ════════════════ -->
   <div class="content-section">
     <div class="section-label">
-      <div class="section-num">0</div>
+      <div class="section-num" style="background:#64748B;">준비</div>
       <div>
-        <div class="section-title">환경 설정 (한글 폰트)</div>
-        <div class="section-desc">그래프에서 한글이 깨지지 않도록 먼저 설정</div>
+        <div class="section-title">라이브러리 불러오기 & 연습 데이터</div>
+        <div class="section-desc">모든 그래프에서 공통으로 쓰는 설정입니다. 맨 처음 한 번만 실행하세요.</div>
       </div>
+    </div>
+
+    <div class="tip-box success">
+      <span class="tip-icon">✅</span>
+      <p><strong>그래프 그리는 순서는 항상 같습니다:</strong><br>
+      ① 그래프 명령어 → ② 제목·축 이름 → ③ <code>plt.show()</code> 로 출력</p>
     </div>
 
     <div class="code-wrap">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">00_setup.py</span>
+        <span class="code-title">00_준비.py</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
       <pre><code><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> matplotlib
-<span class="kw">import</span> platform
 
-<span class="cmt"># 한글 폰트 설정 (OS별)</span>
-<span class="kw">if</span> platform.<span class="fn">system</span>() == <span class="str">'Windows'</span>:
-    matplotlib.rc(<span class="str">'font'</span>, family=<span class="str">'Malgun Gothic'</span>)
-<span class="kw">elif</span> platform.<span class="fn">system</span>() == <span class="str">'Darwin'</span>:
-    matplotlib.rc(<span class="str">'font'</span>, family=<span class="str">'AppleGothic'</span>)
-<span class="kw">else</span>:  <span class="cmt"># Linux / Google Colab</span>
-    <span class="op">!</span>apt-get -qq install fonts-nanum
-    matplotlib.rc(<span class="str">'font'</span>, family=<span class="str">'NanumGothic'</span>)
+<span class="cm"># 한글 폰트 설정</span>
+matplotlib.rc(<span class="st">'font'</span>, family=<span class="st">'Malgun Gothic'</span>)   <span class="cm"># Windows</span>
+<span class="cm"># Mac 사용자는 'AppleGothic' 으로 바꾸세요</span>
+matplotlib.rcParams[<span class="st">'axes.unicode_minus'</span>] = <span class="nm">False</span>
 
-<span class="cmt"># 마이너스 기호 깨짐 방지</span>
-matplotlib.rc(<span class="str">'axes'</span>, unicode_minus=<span class="kw">False</span>)
-
-<span class="cmt"># Jupyter에서 그래프를 셀 안에 표시</span>
-<span class="op">%</span>matplotlib inline</code></pre>
+<span class="cm"># 오늘 실습에 쓸 데이터</span>
+이름  = [<span class="st">'철수'</span>, <span class="st">'영희'</span>, <span class="st">'민준'</span>, <span class="st">'지아'</span>, <span class="st">'현우'</span>]
+수학  = [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>, <span class="nm">95</span>, <span class="nm">88</span>]
+영어  = [<span class="nm">80</span>, <span class="nm">88</span>, <span class="nm">72</span>, <span class="nm">90</span>, <span class="nm">85</span>]
+<span class="fn">print</span>(<span class="st">"준비 완료!"</span>)</code></pre>
     </div>
   </div>
 
-  <!-- STEP 1: 막대 그래프 -->
+  <!-- ════════════════ 1. 산점도 ════════════════ -->
   <div class="content-section">
     <div class="section-label">
       <div class="section-num">1</div>
       <div>
-        <div class="section-title">막대 그래프 (Bar Chart)</div>
-        <div class="section-desc">항목 간의 크기를 비교할 때 가장 많이 사용하는 그래프</div>
+        <div class="section-title">산점도 — plt.scatter()</div>
+        <div class="section-desc">두 값 사이에 관계가 있는지 볼 때 사용합니다</div>
       </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-icon">💡</span>
+      <p><strong>산점도</strong>는 두 값을 x축·y축에 각각 놓고 점으로 찍어봅니다.<br>
+      점들이 오른쪽 위 방향으로 모이면 → 두 값이 함께 커지는 관계입니다.<br>
+      예: 수학 점수와 영어 점수가 함께 오르는지 확인하기</p>
     </div>
 
     <div class="code-wrap">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">01_bar_chart.py</span>
+        <span class="code-title">01_산점도.py</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code><span class="cmt"># 그래프 크기 설정 (가로 10인치, 세로 6인치)</span>
-plt.<span class="fn">figure</span>(figsize=(<span class="num">10</span>, <span class="num">6</span>))
+      <pre><code><span class="cm"># x축: 수학 점수,  y축: 영어 점수</span>
+plt.<span class="fn">scatter</span>(수학, 영어)
 
-<span class="cmt"># 막대 그래프 그리기</span>
-plt.<span class="fn">bar</span>(df[<span class="str">'이름'</span>], df[<span class="str">'평균'</span>],
-        color=<span class="str">'steelblue'</span>,   <span class="cmt"># 막대 색상</span>
-        edgecolor=<span class="str">'black'</span>,   <span class="cmt"># 테두리 색상</span>
-        alpha=<span class="num">0.8</span>)           <span class="cmt"># 투명도 (0~1)</span>
+plt.<span class="fn">title</span>(<span class="st">'수학 점수 vs 영어 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'수학 점수'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'영어 점수'</span>)
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
 
-<span class="cmt"># 그래프 꾸미기</span>
-plt.<span class="fn">title</span>(<span class="str">'학생별 평균 점수'</span>, fontsize=<span class="num">16</span>, fontweight=<span class="str">'bold'</span>)
-plt.<span class="fn">xlabel</span>(<span class="str">'학생 이름'</span>, fontsize=<span class="num">12</span>)
-plt.<span class="fn">ylabel</span>(<span class="str">'평균 점수 (점)'</span>, fontsize=<span class="num">12</span>)
-plt.<span class="fn">ylim</span>(<span class="num">0</span>, <span class="num">100</span>)
+    <div class="tip-box info">
+      <span class="tip-icon">ℹ️</span>
+      <p><strong>점에 이름 표시하기</strong> — <code>plt.annotate()</code> 로 각 점 옆에 이름을 붙일 수 있습니다.</p>
+    </div>
 
-<span class="cmt"># 전체 평균선 추가 (점선)</span>
-plt.<span class="fn">axhline</span>(y=df[<span class="str">'평균'</span>].<span class="fn">mean</span>(), color=<span class="str">'red'</span>,
-            linestyle=<span class="str">'--'</span>, label=<span class="str">f"평균: {df['평균'].mean():.1f}"</span>)
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">01_산점도_이름추가.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>plt.<span class="fn">scatter</span>(수학, 영어, color=<span class="st">'steelblue'</span>, s=<span class="nm">100</span>)  <span class="cm"># s=점 크기</span>
 
-plt.<span class="fn">legend</span>()           <span class="cmt"># 범례</span>
-plt.<span class="fn">grid</span>(axis=<span class="str">'y'</span>, alpha=<span class="num">0.3</span>)  <span class="cmt"># 가로 격자선</span>
-plt.<span class="fn">tight_layout</span>()     <span class="cmt"># 레이아웃 자동 조정</span>
-plt.<span class="fn">show</span>()             <span class="cmt"># 출력</span></code></pre>
+<span class="cm"># 각 점 옆에 이름 붙이기</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(이름)):
+    plt.<span class="fn">annotate</span>(이름[i], (수학[i], 영어[i]),
+                textcoords=<span class="st">'offset points'</span>, xytext=(<span class="nm">5</span>, <span class="nm">5</span>))
+
+plt.<span class="fn">title</span>(<span class="st">'수학 점수 vs 영어 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'수학 점수'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'영어 점수'</span>)
+plt.<span class="fn">grid</span>(<span class="nm">True</span>)
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+
+    <!-- 산점도 출력 미리보기 -->
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:16px 20px;margin:14px 0;">
+      <p style="font-size:12px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">📊 그래프 모양</p>
+      <svg viewBox="0 0 340 200" style="width:100%;max-width:340px;display:block;margin:0 auto;" font-family="sans-serif">
+        <rect width="340" height="200" fill="#fff" rx="6"/>
+        <!-- 축 -->
+        <line x1="50" y1="20" x2="50" y2="165" stroke="#CBD5E1" stroke-width="1.5"/>
+        <line x1="50" y1="165" x2="310" y2="165" stroke="#CBD5E1" stroke-width="1.5"/>
+        <!-- 격자 -->
+        <line x1="50" y1="60"  x2="310" y2="60"  stroke="#F1F5F9" stroke-width="1"/>
+        <line x1="50" y1="100" x2="310" y2="100" stroke="#F1F5F9" stroke-width="1"/>
+        <line x1="50" y1="140" x2="310" y2="140" stroke="#F1F5F9" stroke-width="1"/>
+        <!-- 점: 수학[85,92,78,95,88] 영어[80,88,72,90,85] -->
+        <!-- x: (v-70)/(100-70)*250+50, y: 165-(v-65)/(95-65)*130 -->
+        <!-- 철수(85,80) → x=175, y=100 -->
+        <circle cx="175" cy="100" r="7" fill="#3B82F6" opacity="0.85"/>
+        <text x="182" y="97" font-size="11" fill="#475569">철수</text>
+        <!-- 영희(92,88) → x=225, y=67 -->
+        <circle cx="225" cy="67" r="7" fill="#3B82F6" opacity="0.85"/>
+        <text x="232" y="64" font-size="11" fill="#475569">영희</text>
+        <!-- 민준(78,72) → x=140, y=132 -->
+        <circle cx="140" cy="132" r="7" fill="#3B82F6" opacity="0.85"/>
+        <text x="147" y="129" font-size="11" fill="#475569">민준</text>
+        <!-- 지아(95,90) → x=242, y=58 -->
+        <circle cx="242" cy="58" r="7" fill="#3B82F6" opacity="0.85"/>
+        <text x="249" y="55" font-size="11" fill="#475569">지아</text>
+        <!-- 현우(88,85) → x=192, y=80 -->
+        <circle cx="192" cy="80" r="7" fill="#3B82F6" opacity="0.85"/>
+        <text x="199" y="77" font-size="11" fill="#475569">현우</text>
+        <!-- 축 레이블 -->
+        <text x="180" y="185" font-size="11" fill="#64748B" text-anchor="middle">수학 점수</text>
+        <text x="16" y="100" font-size="11" fill="#64748B" text-anchor="middle" transform="rotate(-90,16,100)">영어 점수</text>
+        <text x="180" y="13" font-size="11" fill="#1E293B" text-anchor="middle" font-weight="600">수학 점수 vs 영어 점수</text>
+      </svg>
     </div>
   </div>
 
-  <!-- STEP 2: 선 그래프 -->
+  <!-- ════════════════ 2. 선 그래프 ════════════════ -->
   <div class="content-section">
     <div class="section-label">
       <div class="section-num">2</div>
       <div>
-        <div class="section-title">선 그래프 (Line Chart)</div>
-        <div class="section-desc">시간에 따른 변화나 트렌드를 파악할 때 사용</div>
+        <div class="section-title">선 그래프 — plt.plot()</div>
+        <div class="section-desc">시간에 따른 변화, 흐름을 볼 때 사용합니다</div>
       </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-icon">💡</span>
+      <p><strong>선 그래프</strong>는 점들을 선으로 이어서 변화 흐름을 보여줍니다.<br>
+      예: 월별 기온 변화, 일별 판매량 추이</p>
     </div>
 
     <div class="code-wrap">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">02_line_chart.py</span>
+        <span class="code-title">02_선그래프.py</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code>months = [<span class="str">'1월'</span>, <span class="str">'2월'</span>, <span class="str">'3월'</span>, <span class="str">'4월'</span>, <span class="str">'5월'</span>, <span class="str">'6월'</span>,
-          <span class="str">'7월'</span>, <span class="str">'8월'</span>, <span class="str">'9월'</span>, <span class="str">'10월'</span>, <span class="str">'11월'</span>, <span class="str">'12월'</span>]
-product_A = [<span class="num">120</span>, <span class="num">135</span>, <span class="num">148</span>, <span class="num">162</span>, <span class="num">158</span>, <span class="num">171</span>,
-             <span class="num">185</span>, <span class="num">192</span>, <span class="num">178</span>, <span class="num">165</span>, <span class="num">182</span>, <span class="num">210</span>]
-product_B = [<span class="num">95</span>,  <span class="num">102</span>, <span class="num">115</span>, <span class="num">108</span>, <span class="num">122</span>, <span class="num">118</span>,
-             <span class="num">130</span>, <span class="num">142</span>, <span class="num">138</span>, <span class="num">152</span>, <span class="num">148</span>, <span class="num">165</span>]
+      <pre><code><span class="cm"># 새 데이터: 월별 평균 기온</span>
+월   = [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">6</span>, <span class="nm">7</span>, <span class="nm">8</span>, <span class="nm">9</span>, <span class="nm">10</span>, <span class="nm">11</span>, <span class="nm">12</span>]
+기온  = [<span class="nm">-2</span>, <span class="nm">1</span>, <span class="nm">8</span>, <span class="nm">15</span>, <span class="nm">20</span>, <span class="nm">25</span>, <span class="nm">29</span>, <span class="nm">28</span>, <span class="nm">23</span>, <span class="nm">16</span>, <span class="nm">8</span>, <span class="nm">0</span>]
 
-plt.<span class="fn">figure</span>(figsize=(<span class="num">12</span>, <span class="num">6</span>))
+<span class="cm"># marker='o' → 각 데이터 위치에 점 표시</span>
+plt.<span class="fn">plot</span>(월, 기온, marker=<span class="st">'o'</span>, color=<span class="st">'tomato'</span>)
 
-<span class="cmt"># marker='o' → 데이터 포인트마다 원형 마커</span>
-plt.<span class="fn">plot</span>(months, product_A,
-         marker=<span class="str">'o'</span>, linewidth=<span class="num">2.5</span>, markersize=<span class="num">8</span>,
-         color=<span class="str">'#E74C3C'</span>, label=<span class="str">'제품 A'</span>)
-plt.<span class="fn">plot</span>(months, product_B,
-         marker=<span class="str">'s'</span>, linewidth=<span class="num">2.5</span>, markersize=<span class="num">8</span>,
-         color=<span class="str">'#3498DB'</span>, label=<span class="str">'제품 B'</span>, linestyle=<span class="str">'--'</span>)
+plt.<span class="fn">title</span>(<span class="st">'월별 평균 기온'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'월'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'기온 (℃)'</span>)
+plt.<span class="fn">grid</span>(<span class="nm">True</span>)
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
 
-plt.<span class="fn">title</span>(<span class="str">'월별 제품 판매량 추이'</span>, fontsize=<span class="num">16</span>, fontweight=<span class="str">'bold'</span>)
-plt.<span class="fn">xlabel</span>(<span class="str">'월'</span>); plt.<span class="fn">ylabel</span>(<span class="str">'판매량 (개)'</span>)
-plt.<span class="fn">legend</span>(fontsize=<span class="num">12</span>); plt.<span class="fn">grid</span>(alpha=<span class="num">0.3</span>)
-plt.<span class="fn">tight_layout</span>(); plt.<span class="fn">show</span>()</code></pre>
+    <div class="tip-box info">
+      <span class="tip-icon">ℹ️</span>
+      <p><strong>선 두 개 비교하기</strong> — <code>plt.plot()</code> 을 두 번 쓰면 같은 그래프에 두 선이 그려집니다.<br>
+      <code>label=</code> 과 <code>plt.legend()</code> 로 범례를 표시합니다.</p>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">02_선그래프_두줄.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cm"># 수학·영어 점수 변화 비교</span>
+plt.<span class="fn">plot</span>(이름, 수학, marker=<span class="st">'o'</span>, label=<span class="st">'수학'</span>, color=<span class="st">'steelblue'</span>)
+plt.<span class="fn">plot</span>(이름, 영어, marker=<span class="st">'s'</span>, label=<span class="st">'영어'</span>, color=<span class="st">'tomato'</span>)
+
+plt.<span class="fn">title</span>(<span class="st">'학생별 수학 vs 영어 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'이름'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>)
+plt.<span class="fn">legend</span>()   <span class="cm"># 범례 표시</span>
+plt.<span class="fn">grid</span>(<span class="nm">True</span>)
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+
+    <!-- 선그래프 미리보기 -->
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:16px 20px;margin:14px 0;">
+      <p style="font-size:12px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">📊 그래프 모양</p>
+      <svg viewBox="0 0 340 200" style="width:100%;max-width:340px;display:block;margin:0 auto;" font-family="sans-serif">
+        <rect width="340" height="200" fill="#fff" rx="6"/>
+        <line x1="50" y1="20" x2="50" y2="165" stroke="#CBD5E1" stroke-width="1.5"/>
+        <line x1="50" y1="165" x2="310" y2="165" stroke="#CBD5E1" stroke-width="1.5"/>
+        <line x1="50" y1="60"  x2="310" y2="60"  stroke="#F1F5F9" stroke-width="1"/>
+        <line x1="50" y1="100" x2="310" y2="100" stroke="#F1F5F9" stroke-width="1"/>
+        <line x1="50" y1="140" x2="310" y2="140" stroke="#F1F5F9" stroke-width="1"/>
+        <!-- 수학선: 85,92,78,95,88 → x:50,110,170,230,290 y:(100-v)*1.3+35 -->
+        <polyline points="50,95 110,63 170,121 230,37 290,79" fill="none" stroke="#3B82F6" stroke-width="2.5"/>
+        <circle cx="50"  cy="95"  r="5" fill="#3B82F6"/>
+        <circle cx="110" cy="63"  r="5" fill="#3B82F6"/>
+        <circle cx="170" cy="121" r="5" fill="#3B82F6"/>
+        <circle cx="230" cy="37"  r="5" fill="#3B82F6"/>
+        <circle cx="290" cy="79"  r="5" fill="#3B82F6"/>
+        <!-- 영어선: 80,88,72,90,85 -->
+        <polyline points="50,109 110,79 170,135 230,63 290,95" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="5,3"/>
+        <rect x="47" cy="106" width="6" height="6" x="47" y="106" fill="#EF4444"/>
+        <rect x="107" y="76" width="6" height="6" fill="#EF4444"/>
+        <rect x="167" y="132" width="6" height="6" fill="#EF4444"/>
+        <rect x="227" y="60" width="6" height="6" fill="#EF4444"/>
+        <rect x="287" y="92" width="6" height="6" fill="#EF4444"/>
+        <!-- x축 레이블 -->
+        <text x="50"  y="178" font-size="10" fill="#64748B" text-anchor="middle">철수</text>
+        <text x="110" y="178" font-size="10" fill="#64748B" text-anchor="middle">영희</text>
+        <text x="170" y="178" font-size="10" fill="#64748B" text-anchor="middle">민준</text>
+        <text x="230" y="178" font-size="10" fill="#64748B" text-anchor="middle">지아</text>
+        <text x="290" y="178" font-size="10" fill="#64748B" text-anchor="middle">현우</text>
+        <!-- 범례 -->
+        <line x1="200" y1="30" x2="218" y2="30" stroke="#3B82F6" stroke-width="2.5"/>
+        <text x="222" y="34" font-size="10" fill="#475569">수학</text>
+        <line x1="250" y1="30" x2="268" y2="30" stroke="#EF4444" stroke-width="2.5" stroke-dasharray="4,2"/>
+        <text x="272" y="34" font-size="10" fill="#475569">영어</text>
+        <text x="180" y="13" font-size="11" fill="#1E293B" text-anchor="middle" font-weight="600">학생별 수학 vs 영어 점수</text>
+      </svg>
     </div>
   </div>
 
-  <!-- STEP 3: 히스토그램 -->
+  <!-- ════════════════ 3. 막대 그래프 ════════════════ -->
   <div class="content-section">
     <div class="section-label">
       <div class="section-num">3</div>
       <div>
-        <div class="section-title">히스토그램 (Histogram)</div>
-        <div class="section-desc">데이터의 분포 - "몇 점대에 학생이 몇 명?"</div>
+        <div class="section-title">막대 그래프 — plt.bar()</div>
+        <div class="section-desc">항목별 값의 크기를 비교할 때 사용합니다</div>
       </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-icon">💡</span>
+      <p><strong>막대 그래프</strong>는 높이로 값을 비교합니다.<br>
+      가로 방향은 <code>plt.barh()</code> 를 씁니다 (h = horizontal).</p>
     </div>
 
     <div class="code-wrap">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">03_histogram.py</span>
+        <span class="code-title">03_막대그래프.py</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">3</span>, figsize=(<span class="num">15</span>, <span class="num">5</span>))
-colors = [<span class="str">'#FF6B6B'</span>, <span class="str">'#4ECDC4'</span>, <span class="str">'#45B7D1'</span>]
+      <pre><code><span class="cm"># 세로 막대 그래프</span>
+plt.<span class="fn">bar</span>(이름, 수학, color=<span class="st">'steelblue'</span>)
 
-<span class="kw">for</span> ax, col, color <span class="kw">in</span> <span class="fn">zip</span>(axes, [<span class="str">'국어'</span>, <span class="str">'수학'</span>, <span class="str">'영어'</span>], colors):
-    ax.<span class="fn">hist</span>(df[col], bins=<span class="num">15</span>, color=color,
-            edgecolor=<span class="str">'white'</span>, alpha=<span class="num">0.85</span>)
+plt.<span class="fn">title</span>(<span class="st">'학생별 수학 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'이름'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>)
+plt.<span class="fn">ylim</span>(<span class="nm">0</span>, <span class="nm">100</span>)  <span class="cm"># y축 범위</span>
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
 
-    <span class="cmt"># 평균선 추가</span>
-    ax.<span class="fn">axvline</span>(df[col].<span class="fn">mean</span>(), color=<span class="str">'black'</span>,
-               linestyle=<span class="str">'--'</span>, linewidth=<span class="num">2</span>,
-               label=<span class="str">f"평균: {df[col].mean():.1f}"</span>)
+    <div class="tip-box info">
+      <span class="tip-icon">ℹ️</span>
+      <p><strong>가로 막대로 바꾸기</strong> → <code>plt.bar()</code> 대신 <code>plt.barh()</code> 를 씁니다.<br>
+      가로 막대는 항목 이름이 길 때 더 보기 좋습니다.</p>
+    </div>
 
-    ax.<span class="fn">set_title</span>(<span class="str">f'{col} 점수 분포'</span>, fontsize=<span class="num">14</span>, fontweight=<span class="str">'bold'</span>)
-    ax.<span class="fn">set_xlabel</span>(<span class="str">'점수'</span>); ax.<span class="fn">set_ylabel</span>(<span class="str">'학생 수'</span>)
-    ax.<span class="fn">legend</span>(); ax.<span class="fn">grid</span>(alpha=<span class="num">0.3</span>)
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">03_막대그래프_가로.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cm"># 가로 막대 그래프 (barh)</span>
+plt.<span class="fn">barh</span>(이름, 수학, color=<span class="st">'steelblue'</span>)
 
-plt.<span class="fn">tight_layout</span>(); plt.<span class="fn">show</span>()</code></pre>
+plt.<span class="fn">title</span>(<span class="st">'학생별 수학 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'점수'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'이름'</span>)
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+
+    <!-- 막대그래프 미리보기 -->
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:16px 20px;margin:14px 0;">
+      <p style="font-size:12px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">📊 그래프 모양</p>
+      <svg viewBox="0 0 340 200" style="width:100%;max-width:340px;display:block;margin:0 auto;" font-family="sans-serif">
+        <rect width="340" height="200" fill="#fff" rx="6"/>
+        <line x1="50" y1="20" x2="50" y2="165" stroke="#CBD5E1" stroke-width="1.5"/>
+        <line x1="50" y1="165" x2="310" y2="165" stroke="#CBD5E1" stroke-width="1.5"/>
+        <line x1="50"  y1="60"  x2="310" y2="60"  stroke="#F1F5F9" stroke-width="1"/>
+        <line x1="50"  y1="100" x2="310" y2="100" stroke="#F1F5F9" stroke-width="1"/>
+        <line x1="50"  y1="140" x2="310" y2="140" stroke="#F1F5F9" stroke-width="1"/>
+        <!-- 막대: 85,92,78,95,88 → y=165-(v-50)*1.4, h=(v-50)*1.4 -->
+        <rect x="58"  y="95"  width="38" height="70" fill="#3B82F6" opacity="0.85" rx="3"/>
+        <rect x="113" y="53"  width="38" height="112" fill="#3B82F6" opacity="0.85" rx="3"/>
+        <rect x="168" y="123" width="38" height="42" fill="#3B82F6" opacity="0.85" rx="3"/>
+        <rect x="223" y="37"  width="38" height="128" fill="#3B82F6" opacity="0.85" rx="3"/>
+        <rect x="278" y="79"  width="38" height="86" fill="#3B82F6" opacity="0.85" rx="3"/>
+        <!-- 막대 위 숫자 -->
+        <text x="77"  y="90"  font-size="10" fill="#1E293B" text-anchor="middle">85</text>
+        <text x="132" y="48"  font-size="10" fill="#1E293B" text-anchor="middle">92</text>
+        <text x="187" y="118" font-size="10" fill="#1E293B" text-anchor="middle">78</text>
+        <text x="242" y="32"  font-size="10" fill="#1E293B" text-anchor="middle">95</text>
+        <text x="297" y="74"  font-size="10" fill="#1E293B" text-anchor="middle">88</text>
+        <!-- x축 레이블 -->
+        <text x="77"  y="178" font-size="10" fill="#64748B" text-anchor="middle">철수</text>
+        <text x="132" y="178" font-size="10" fill="#64748B" text-anchor="middle">영희</text>
+        <text x="187" y="178" font-size="10" fill="#64748B" text-anchor="middle">민준</text>
+        <text x="242" y="178" font-size="10" fill="#64748B" text-anchor="middle">지아</text>
+        <text x="297" y="178" font-size="10" fill="#64748B" text-anchor="middle">현우</text>
+        <text x="180" y="13" font-size="11" fill="#1E293B" text-anchor="middle" font-weight="600">학생별 수학 점수</text>
+      </svg>
     </div>
   </div>
 
-  <!-- STEP 4: 산점도 -->
+  <!-- ════════════════ 4. 파이 차트 ════════════════ -->
   <div class="content-section">
     <div class="section-label">
       <div class="section-num">4</div>
       <div>
-        <div class="section-title">산점도 (Scatter Plot)</div>
-        <div class="section-desc">두 변수 사이의 관계(상관관계)를 시각화</div>
+        <div class="section-title">파이 차트 — plt.pie()</div>
+        <div class="section-desc">전체에서 각 항목이 차지하는 비율을 볼 때 사용합니다</div>
       </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-icon">💡</span>
+      <p><strong>파이 차트</strong>는 피자를 나눠 먹듯이 전체 비율을 보여줍니다.<br>
+      <code>autopct='%1.1f%%'</code> → 각 조각에 퍼센트 숫자를 자동으로 표시합니다.</p>
     </div>
 
     <div class="code-wrap">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">04_scatter.py</span>
+        <span class="code-title">04_파이차트.py</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code>fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">10</span>, <span class="num">7</span>))
+      <pre><code><span class="cm"># 새 데이터: 반 학생이 좋아하는 계절 투표</span>
+계절  = [<span class="st">'봄'</span>, <span class="st">'여름'</span>, <span class="st">'가을'</span>, <span class="st">'겨울'</span>]
+투표  = [<span class="nm">8</span>, <span class="nm">14</span>, <span class="nm">10</span>, <span class="nm">6</span>]
 
-<span class="cmt"># 정상/불량을 다른 색과 마커로 표시</span>
-normal = df_semi[df_semi[<span class="str">'불량여부'</span>] == <span class="num">0</span>]
-defect = df_semi[df_semi[<span class="str">'불량여부'</span>] == <span class="num">1</span>]
+<span class="cm"># autopct → 퍼센트 자동 표시</span>
+plt.<span class="fn">pie</span>(투표, labels=계절, autopct=<span class="st">'%1.1f%%'</span>)
 
-ax.<span class="fn">scatter</span>(normal[<span class="str">'온도(°C)'</span>], normal[<span class="str">'두께(nm)'</span>],
-           c=<span class="str">'#27AE60'</span>, alpha=<span class="num">0.7</span>, s=<span class="num">80</span>,
-           marker=<span class="str">'o'</span>, label=<span class="str">'✅ 정상 (0)'</span>)
-ax.<span class="fn">scatter</span>(defect[<span class="str">'온도(°C)'</span>], defect[<span class="str">'두께(nm)'</span>],
-           c=<span class="str">'#E74C3C'</span>, alpha=<span class="num">0.9</span>, s=<span class="num">100</span>,
-           marker=<span class="str">'X'</span>, label=<span class="str">'❌ 불량 (1)'</span>)
+plt.<span class="fn">title</span>(<span class="st">'좋아하는 계절 비율'</span>)
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
 
-<span class="cmt"># 상관계수 계산</span>
-corr = df_semi[<span class="str">'온도(°C)'</span>].<span class="fn">corr</span>(df_semi[<span class="str">'두께(nm)'</span>])
-ax.<span class="fn">set_title</span>(<span class="str">f'온도 vs 두께 (상관계수: {corr:.3f})'</span>, fontsize=<span class="num">15</span>)
-ax.<span class="fn">set_xlabel</span>(<span class="str">'온도 (°C)'</span>); ax.<span class="fn">set_ylabel</span>(<span class="str">'두께 (nm)'</span>)
-ax.<span class="fn">legend</span>(); ax.<span class="fn">grid</span>(alpha=<span class="num">0.3</span>)
-plt.<span class="fn">tight_layout</span>(); plt.<span class="fn">show</span>()</code></pre>
+    <div class="tip-box info">
+      <span class="tip-icon">ℹ️</span>
+      <p><strong>특정 조각 강조하기</strong> → <code>explode</code> 옵션으로 원하는 조각을 살짝 분리합니다.<br>
+      0이면 제자리, 0.1이면 약간 바깥으로 떨어집니다.</p>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">04_파이차트_강조.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cm"># explode: 각 조각을 얼마나 분리할지 (0=그대로, 0.1=살짝 분리)</span>
+분리 = [<span class="nm">0</span>, <span class="nm">0.1</span>, <span class="nm">0</span>, <span class="nm">0</span>]   <span class="cm"># 여름만 강조</span>
+
+plt.<span class="fn">pie</span>(투표, labels=계절,
+       autopct=<span class="st">'%1.1f%%'</span>,
+       explode=분리)
+
+plt.<span class="fn">title</span>(<span class="st">'좋아하는 계절 비율'</span>)
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+
+    <!-- 파이차트 미리보기 -->
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:16px 20px;margin:14px 0;">
+      <p style="font-size:12px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">📊 그래프 모양</p>
+      <svg viewBox="0 0 340 200" style="width:100%;max-width:340px;display:block;margin:0 auto;" font-family="sans-serif">
+        <rect width="340" height="200" fill="#fff" rx="6"/>
+        <text x="170" y="14" font-size="11" fill="#1E293B" text-anchor="middle" font-weight="600">좋아하는 계절 비율</text>
+        <!-- 파이 조각 (cx=140, cy=105, r=75) -->
+        <!-- 봄 21.1%: 0~75.9도 -->
+        <path d="M140,105 L140,30 A75,75 0 0,1 210.6,67.5 Z" fill="#4ADE80" opacity="0.85"/>
+        <!-- 여름 36.8%: 75.9~208.4도 (강조로 살짝 이동) -->
+        <path d="M147,119 L87.4,152 A75,75 0 1,1 210.6,67.5 Z" fill="#60A5FA" opacity="0.85"/>
+        <!-- 가을 26.3%: 208.4~303도 -->
+        <path d="M140,105 L87.4,152 A75,75 0 0,1 103.5,40.5 Z" fill="#FBBF24" opacity="0.85"/>
+        <!-- 겨울 15.8%: 303~360도 -->
+        <path d="M140,105 L103.5,40.5 A75,75 0 0,1 140,30 Z" fill="#F87171" opacity="0.85"/>
+        <!-- 퍼센트 텍스트 -->
+        <text x="174" y="65" font-size="10" fill="#fff" font-weight="700" text-anchor="middle">21.1%</text>
+        <text x="145" y="145" font-size="10" fill="#fff" font-weight="700" text-anchor="middle">36.8%</text>
+        <text x="105" y="108" font-size="10" fill="#fff" font-weight="700" text-anchor="middle">26.3%</text>
+        <text x="125" y="63" font-size="10" fill="#fff" font-weight="700" text-anchor="middle">15.8%</text>
+        <!-- 범례 -->
+        <rect x="230" y="65"  width="12" height="12" fill="#4ADE80" rx="2"/>
+        <text x="246" y="75" font-size="11" fill="#475569">봄</text>
+        <rect x="230" y="85"  width="12" height="12" fill="#60A5FA" rx="2"/>
+        <text x="246" y="95" font-size="11" fill="#475569">여름</text>
+        <rect x="230" y="105" width="12" height="12" fill="#FBBF24" rx="2"/>
+        <text x="246" y="115" font-size="11" fill="#475569">가을</text>
+        <rect x="230" y="125" width="12" height="12" fill="#F87171" rx="2"/>
+        <text x="246" y="135" font-size="11" fill="#475569">겨울</text>
+      </svg>
     </div>
   </div>
 
-  <!-- STEP 5: 대시보드 -->
+  <!-- ════════════════ 5. 박스 플롯 ════════════════ -->
   <div class="content-section">
     <div class="section-label">
       <div class="section-num">5</div>
       <div>
-        <div class="section-title">종합 대시보드 만들기</div>
-        <div class="section-desc">subplot으로 여러 그래프를 한 화면에 배치</div>
+        <div class="section-title">박스 플롯 — plt.boxplot()</div>
+        <div class="section-desc">데이터가 어떻게 퍼져 있는지 한 눈에 볼 때 사용합니다</div>
       </div>
+    </div>
+
+    <div class="analogy">
+      <span class="analogy-icon">💡</span>
+      <p><strong>박스 플롯</strong>은 상자 하나로 데이터의 분포를 보여줍니다.<br>
+      상자 안의 선 = 중앙값, 상자 = 절반의 데이터 범위, 수염 = 전체 범위</p>
+    </div>
+
+    <!-- 박스플롯 구조 설명 SVG -->
+    <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:18px 20px;margin:14px 0;">
+      <p style="font-size:12px;font-weight:700;color:#16A34A;margin-bottom:12px;">📦 박스 플롯 구조 읽는 법</p>
+      <svg viewBox="0 0 340 130" style="width:100%;max-width:340px;display:block;margin:0 auto;" font-family="sans-serif">
+        <rect width="340" height="130" fill="transparent"/>
+        <!-- 수염 (위) -->
+        <line x1="170" y1="15" x2="170" y2="40" stroke="#16A34A" stroke-width="2"/>
+        <line x1="150" y1="15" x2="190" y2="15" stroke="#16A34A" stroke-width="2"/>
+        <!-- 상자 -->
+        <rect x="130" y="40" width="80" height="55" fill="#86EFAC" stroke="#16A34A" stroke-width="2" rx="2"/>
+        <!-- 중앙값 선 -->
+        <line x1="130" y1="68" x2="210" y2="68" stroke="#15803D" stroke-width="3"/>
+        <!-- 수염 (아래) -->
+        <line x1="170" y1="95" x2="170" y2="115" stroke="#16A34A" stroke-width="2"/>
+        <line x1="150" y1="115" x2="190" y2="115" stroke="#16A34A" stroke-width="2"/>
+        <!-- 레이블 -->
+        <text x="218" y="19" font-size="11" fill="#475569">최대값</text>
+        <text x="218" y="45" font-size="11" fill="#475569">3사분위수 (75%)</text>
+        <text x="218" y="72" font-size="11" fill="#15803D" font-weight="700">중앙값 (50%)</text>
+        <text x="218" y="98" font-size="11" fill="#475569">1사분위수 (25%)</text>
+        <text x="218" y="119" font-size="11" fill="#475569">최솟값</text>
+        <!-- 화살표 선 -->
+        <line x1="210" y1="17" x2="215" y2="17" stroke="#94A3B8" stroke-width="1"/>
+        <line x1="210" y1="43" x2="215" y2="43" stroke="#94A3B8" stroke-width="1"/>
+        <line x1="210" y1="68" x2="215" y2="68" stroke="#94A3B8" stroke-width="1"/>
+        <line x1="210" y1="95" x2="215" y2="95" stroke="#94A3B8" stroke-width="1"/>
+        <line x1="210" y1="115" x2="215" y2="115" stroke="#94A3B8" stroke-width="1"/>
+      </svg>
     </div>
 
     <div class="code-wrap">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">05_dashboard.py</span>
+        <span class="code-title">05_박스플롯.py</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code>fig = plt.<span class="fn">figure</span>(figsize=(<span class="num">16</span>, <span class="num">12</span>))
-fig.<span class="fn">suptitle</span>(<span class="str">'📊 학생 성적 분석 대시보드'</span>, fontsize=<span class="num">20</span>, fontweight=<span class="str">'bold'</span>)
+      <pre><code><span class="cm"># 새 데이터: 국어·수학·영어 점수 목록</span>
+국어 = [<span class="nm">72</span>, <span class="nm">80</span>, <span class="nm">85</span>, <span class="nm">88</span>, <span class="nm">90</span>, <span class="nm">92</span>, <span class="nm">78</span>, <span class="nm">65</span>]
+수학 = [<span class="nm">60</span>, <span class="nm">75</span>, <span class="nm">82</span>, <span class="nm">88</span>, <span class="nm">95</span>, <span class="nm">70</span>, <span class="nm">55</span>, <span class="nm">90</span>]
+영어 = [<span class="nm">78</span>, <span class="nm">82</span>, <span class="nm">79</span>, <span class="nm">85</span>, <span class="nm">88</span>, <span class="nm">91</span>, <span class="nm">76</span>, <span class="nm">84</span>]
 
-<span class="cmt"># 2행 2열 배치 (2,2,1) = 2행 2열 중 첫 번째 위치</span>
-ax1 = fig.<span class="fn">add_subplot</span>(<span class="num">2</span>, <span class="num">2</span>, <span class="num">1</span>)  <span class="cmt"># 왼쪽 위</span>
-ax2 = fig.<span class="fn">add_subplot</span>(<span class="num">2</span>, <span class="num">2</span>, <span class="num">2</span>)  <span class="cmt"># 오른쪽 위</span>
-ax3 = fig.<span class="fn">add_subplot</span>(<span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>)  <span class="cmt"># 왼쪽 아래</span>
-ax4 = fig.<span class="fn">add_subplot</span>(<span class="num">2</span>, <span class="num">2</span>, <span class="num">4</span>)  <span class="cmt"># 오른쪽 아래</span>
+<span class="cm"># 세 과목을 한 번에 박스 플롯으로</span>
+plt.<span class="fn">boxplot</span>([국어, 수학, 영어],
+            labels=[<span class="st">'국어'</span>, <span class="st">'수학'</span>, <span class="st">'영어'</span>])
 
-<span class="cmt"># 각 ax에 원하는 그래프를 그립니다</span>
-ax1.<span class="fn">bar</span>(df[<span class="str">'이름'</span>], df[<span class="str">'평균'</span>], color=<span class="str">'#3498DB'</span>)
-ax1.<span class="fn">set_title</span>(<span class="str">'학생별 평균'</span>)
-
-<span class="cmt"># ... (ax2, ax3, ax4도 같은 방식으로)</span>
-
-<span class="cmt"># 파일로 저장 (dpi가 높을수록 고화질)</span>
-plt.<span class="fn">tight_layout</span>()
-plt.<span class="fn">savefig</span>(<span class="str">'dashboard.png'</span>, dpi=<span class="num">150</span>, bbox_inches=<span class="str">'tight'</span>)
+plt.<span class="fn">title</span>(<span class="st">'과목별 점수 분포'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>)
 plt.<span class="fn">show</span>()</code></pre>
     </div>
 
-    <div class="tip-box success">
-      <span class="tip-icon">💾</span>
-      <p><strong>savefig()로 파일 저장:</strong> 그래프를 PNG, JPG, PDF 등으로 저장할 수 있습니다. <code>dpi=150</code>은 해상도(높을수록 선명), <code>bbox_inches='tight'</code>는 여백 자동 조정입니다.</p>
+    <div class="tip-box info">
+      <span class="tip-icon">ℹ️</span>
+      <p><strong>상자에 색 넣기</strong> → <code>patch_artist=True</code> 옵션을 추가합니다.</p>
     </div>
-  </div>
 
-  <!-- 핵심 정리 -->
-  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-top: 40px;">
-    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px;">📚 필수 코드 패턴 - 그래프 꾸미기</h3>
-    <div class="code-wrap" style="margin: 0;">
+    <div class="code-wrap">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">template.py</span>
+        <span class="code-title">05_박스플롯_색추가.py</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code><span class="cmt">## 그래프 꾸미기 필수 요소 ##</span>
-plt.<span class="fn">title</span>(<span class="str">'제목'</span>, fontsize=<span class="num">16</span>, fontweight=<span class="str">'bold'</span>)  <span class="cmt"># 제목</span>
-plt.<span class="fn">xlabel</span>(<span class="str">'x축 레이블'</span>, fontsize=<span class="num">12</span>)              <span class="cmt"># x축 이름</span>
-plt.<span class="fn">ylabel</span>(<span class="str">'y축 레이블'</span>, fontsize=<span class="num">12</span>)              <span class="cmt"># y축 이름</span>
-plt.<span class="fn">legend</span>(fontsize=<span class="num">11</span>)                            <span class="cmt"># 범례 표시</span>
-plt.<span class="fn">grid</span>(alpha=<span class="num">0.3</span>)                                <span class="cmt"># 격자선</span>
-plt.<span class="fn">xlim</span>(<span class="num">0</span>, <span class="num">100</span>)                                   <span class="cmt"># x축 범위</span>
-plt.<span class="fn">ylim</span>(<span class="num">0</span>, <span class="num">100</span>)                                   <span class="cmt"># y축 범위</span>
-plt.<span class="fn">xticks</span>(rotation=<span class="num">45</span>)                            <span class="cmt"># x축 레이블 45도 회전</span>
-plt.<span class="fn">tight_layout</span>()                                 <span class="cmt"># 레이아웃 자동 조정</span>
-plt.<span class="fn">savefig</span>(<span class="str">'graph.png'</span>, dpi=<span class="num">150</span>)                 <span class="cmt"># 파일로 저장</span>
-plt.<span class="fn">show</span>()                                         <span class="cmt"># 화면 출력</span></code></pre>
+      <pre><code><span class="cm"># patch_artist=True → 상자 안을 색으로 채우기</span>
+bp = plt.<span class="fn">boxplot</span>([국어, 수학, 영어],
+                  labels=[<span class="st">'국어'</span>, <span class="st">'수학'</span>, <span class="st">'영어'</span>],
+                  patch_artist=<span class="nm">True</span>)
+
+<span class="cm"># 각 상자에 색 지정</span>
+색목록 = [<span class="st">'lightblue'</span>, <span class="st">'lightyellow'</span>, <span class="st">'lightgreen'</span>]
+<span class="kw">for</span> 상자, 색 <span class="kw">in</span> <span class="fn">zip</span>(bp[<span class="st">'boxes'</span>], 색목록):
+    상자.<span class="fn">set_facecolor</span>(색)
+
+plt.<span class="fn">title</span>(<span class="st">'과목별 점수 분포'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>)
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+
+    <!-- 박스플롯 미리보기 -->
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:16px 20px;margin:14px 0;">
+      <p style="font-size:12px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">📊 그래프 모양</p>
+      <svg viewBox="0 0 340 200" style="width:100%;max-width:340px;display:block;margin:0 auto;" font-family="sans-serif">
+        <rect width="340" height="200" fill="#fff" rx="6"/>
+        <line x1="40" y1="20" x2="40" y2="165" stroke="#CBD5E1" stroke-width="1.5"/>
+        <line x1="40" y1="165" x2="310" y2="165" stroke="#CBD5E1" stroke-width="1.5"/>
+        <line x1="40" y1="60"  x2="310" y2="60"  stroke="#F1F5F9" stroke-width="1"/>
+        <line x1="40" y1="100" x2="310" y2="100" stroke="#F1F5F9" stroke-width="1"/>
+        <line x1="40" y1="140" x2="310" y2="140" stroke="#F1F5F9" stroke-width="1"/>
+        <!-- y축 눈금 (65~95점 범위, 165=65, 20=95) -->
+        <text x="35" y="164" font-size="9" fill="#94A3B8" text-anchor="end">65</text>
+        <text x="35" y="130" font-size="9" fill="#94A3B8" text-anchor="end">75</text>
+        <text x="35" y="96"  font-size="9" fill="#94A3B8" text-anchor="end">85</text>
+        <text x="35" y="62"  font-size="9" fill="#94A3B8" text-anchor="end">95</text>
+        <!-- 국어 박스: min=65, q1=75.5, med=83, q3=89, max=92 -->
+        <!-- y: 165-(v-65)*4.67 -->
+        <line x1="85" y1="25" x2="85" y2="46" stroke="#374151" stroke-width="1.5"/>  <!-- 최대~q3 수염 -->
+        <line x1="72" y1="25" x2="98" y2="25" stroke="#374151" stroke-width="1.5"/>  <!-- 최대선 -->
+        <rect x="63" y="46" width="44" height="42" fill="#BAE6FD" stroke="#374151" stroke-width="1.5" rx="2"/>  <!-- 상자 -->
+        <line x1="63" y1="70" x2="107" y2="70" stroke="#374151" stroke-width="2.5"/> <!-- 중앙값 -->
+        <line x1="85" y1="88" x2="85" y2="117" stroke="#374151" stroke-width="1.5"/> <!-- q1~최소 수염 -->
+        <line x1="72" y1="117" x2="98" y2="117" stroke="#374151" stroke-width="1.5"/>
+        <!-- 수학 박스: min=55, q1=66, med=78.5, q3=89, max=95 -->
+        <line x1="170" y1="19" x2="170" y2="46" stroke="#374151" stroke-width="1.5"/>
+        <line x1="157" y1="19" x2="183" y2="19" stroke="#374151" stroke-width="1.5"/>
+        <rect x="148" y="46" width="44" height="43" fill="#FEF9C3" stroke="#374151" stroke-width="1.5" rx="2"/>
+        <line x1="148" y1="69" x2="192" y2="69" stroke="#374151" stroke-width="2.5"/>
+        <line x1="170" y1="89" x2="170" y2="140" stroke="#374151" stroke-width="1.5"/>
+        <line x1="157" y1="140" x2="183" y2="140" stroke="#374151" stroke-width="1.5"/>
+        <!-- 영어 박스: min=76, q1=79, med=83.5, q3=87.5, max=91 -->
+        <line x1="255" y1="30" x2="255" y2="50" stroke="#374151" stroke-width="1.5"/>
+        <line x1="242" y1="30" x2="268" y2="30" stroke="#374151" stroke-width="1.5"/>
+        <rect x="233" y="50" width="44" height="39" fill="#BBF7D0" stroke="#374151" stroke-width="1.5" rx="2"/>
+        <line x1="233" y1="69" x2="277" y2="69" stroke="#374151" stroke-width="2.5"/>
+        <line x1="255" y1="89" x2="255" y2="107" stroke="#374151" stroke-width="1.5"/>
+        <line x1="242" y1="107" x2="268" y2="107" stroke="#374151" stroke-width="1.5"/>
+        <!-- x축 레이블 -->
+        <text x="85"  y="180" font-size="11" fill="#64748B" text-anchor="middle">국어</text>
+        <text x="170" y="180" font-size="11" fill="#64748B" text-anchor="middle">수학</text>
+        <text x="255" y="180" font-size="11" fill="#64748B" text-anchor="middle">영어</text>
+        <text x="175" y="13" font-size="11" fill="#1E293B" text-anchor="middle" font-weight="600">과목별 점수 분포</text>
+      </svg>
     </div>
   </div>
 
+  <!-- ════════════════ 핵심 정리 ════════════════ -->
+  <div class="content-section">
+    <div class="section-label">
+      <div class="section-num" style="background:#64748B;">📚</div>
+      <div>
+        <div class="section-title">5가지 그래프 핵심 정리</div>
+        <div class="section-desc">언제 어떤 그래프를 쓰는지 한 눈에 확인하세요</div>
+      </div>
+    </div>
+
+    <table class="api-table">
+      <tr><th>그래프</th><th>코드</th><th>언제 쓰나요?</th></tr>
+      <tr>
+        <td>🔵 <strong>산점도</strong></td>
+        <td><code>plt.scatter(x, y)</code></td>
+        <td>두 값의 관계(상관관계) 확인</td>
+      </tr>
+      <tr>
+        <td>📈 <strong>선 그래프</strong></td>
+        <td><code>plt.plot(x, y)</code></td>
+        <td>시간에 따른 변화·추이 표현</td>
+      </tr>
+      <tr>
+        <td>📊 <strong>막대 그래프</strong></td>
+        <td><code>plt.bar(x, y)</code></td>
+        <td>항목별 크기 비교</td>
+      </tr>
+      <tr>
+        <td>🥧 <strong>파이 차트</strong></td>
+        <td><code>plt.pie(값, labels=항목)</code></td>
+        <td>전체에서 각 항목의 비율</td>
+      </tr>
+      <tr>
+        <td>📦 <strong>박스 플롯</strong></td>
+        <td><code>plt.boxplot([데이터...])</code></td>
+        <td>데이터 분포·이상값 확인</td>
+      </tr>
+    </table>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">공통_패턴.py — 모든 그래프에 공통으로 쓰는 코드</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cm"># 그래프 그리기 (종류에 맞는 명령어 선택)</span>
+plt.<span class="fn">scatter</span>(x, y)    <span class="cm"># 산점도</span>
+plt.<span class="fn">plot</span>(x, y)       <span class="cm"># 선 그래프</span>
+plt.<span class="fn">bar</span>(x, y)        <span class="cm"># 막대 그래프 (세로)</span>
+plt.<span class="fn">pie</span>(값, labels=항목)  <span class="cm"># 파이 차트</span>
+plt.<span class="fn">boxplot</span>([데이터])  <span class="cm"># 박스 플롯</span>
+
+<span class="cm"># 공통 꾸미기 옵션</span>
+plt.<span class="fn">title</span>(<span class="st">'제목'</span>)      <span class="cm"># 그래프 제목</span>
+plt.<span class="fn">xlabel</span>(<span class="st">'x축 이름'</span>)  <span class="cm"># x축 이름 (산점도·선·막대)</span>
+plt.<span class="fn">ylabel</span>(<span class="st">'y축 이름'</span>)  <span class="cm"># y축 이름</span>
+plt.<span class="fn">legend</span>()          <span class="cm"># 범례 (선이 2개 이상일 때)</span>
+plt.<span class="fn">grid</span>(<span class="nm">True</span>)        <span class="cm"># 격자선 표시</span>
+
+<span class="cm"># 출력 (마지막에 반드시!)</span>
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+  </div>
+
+  <!-- ════════════════ 연습 문제 ════════════════ -->
   <div class="quiz-section">
     <div class="quiz-title"><span class="icon">✏️</span>연습 문제</div>
-    <div class="quiz-item"><span class="quiz-num">Q1</span><div><p>df_semi의 '온도(°C)' 히스토그램을 bins=20으로 그리고 제목과 축 레이블을 추가하세요.</p></div></div>
-    <div class="quiz-item"><span class="quiz-num">Q2</span><div><p>df에서 학생별 총점 막대 그래프를 그리고, 각 막대 위에 총점 숫자를 표시해보세요.</p><div class="quiz-hint">힌트: plt.text() 또는 for 루프 활용</div></div></div>
-    <div class="quiz-item"><span class="quiz-num">Q3</span><div><p>df_semi의 '압력(Pa)'과 '두께(nm)'의 산점도를 그리고 상관계수를 제목에 포함시키세요.</p><div class="quiz-hint">힌트: corr = df['압력(Pa)'].corr(df['두께(nm)'])</div></div></div>
+
+    <div class="quiz-item">
+      <span class="quiz-num">Q1</span>
+      <div>
+        <p>아래 데이터로 <strong>산점도</strong>를 그리고, 점 크기를 <code>s=80</code>으로 설정해 보세요.</p>
+        <p style="margin-top:6px;font-size:13px;color:#94A3B8;">
+          키 = [165, 170, 158, 175, 168]<br>
+          몸무게 = [58, 65, 50, 72, 60]
+        </p>
+        <div class="quiz-hint">힌트: plt.scatter(키, 몸무게, s=80)</div>
+      </div>
+    </div>
+
+    <div class="quiz-item">
+      <span class="quiz-num">Q2</span>
+      <div>
+        <p>아래 데이터로 <strong>선 그래프</strong>를 그리고 제목과 x·y축 이름을 붙여보세요.</p>
+        <p style="margin-top:6px;font-size:13px;color:#94A3B8;">
+          요일 = ['월', '화', '수', '목', '금']<br>
+          판매량 = [30, 45, 28, 60, 50]
+        </p>
+        <div class="quiz-hint">힌트: plt.plot(요일, 판매량, marker='o')</div>
+      </div>
+    </div>
+
+    <div class="quiz-item">
+      <span class="quiz-num">Q3</span>
+      <div>
+        <p>아래 데이터로 <strong>막대 그래프</strong>를 그리고 색을 <code>'salmon'</code>으로 지정해 보세요.</p>
+        <p style="margin-top:6px;font-size:13px;color:#94A3B8;">
+          과목 = ['국어', '수학', '영어', '과학']<br>
+          점수 = [88, 75, 92, 83]
+        </p>
+        <div class="quiz-hint">힌트: plt.bar(과목, 점수, color='salmon')</div>
+      </div>
+    </div>
+
+    <div class="quiz-item">
+      <span class="quiz-num">Q4</span>
+      <div>
+        <p>아래 데이터로 <strong>파이 차트</strong>를 그리고 '치킨' 조각을 <code>explode=0.1</code> 로 강조해 보세요.</p>
+        <p style="margin-top:6px;font-size:13px;color:#94A3B8;">
+          음식 = ['치킨', '피자', '떡볶이', '라면']<br>
+          선호도 = [35, 25, 20, 20]
+        </p>
+        <div class="quiz-hint">힌트: explode = [0.1, 0, 0, 0] 으로 만들어서 plt.pie()에 전달</div>
+      </div>
+    </div>
+
+    <div class="quiz-item">
+      <span class="quiz-num">Q5</span>
+      <div>
+        <p>아래 두 반의 점수로 <strong>박스 플롯</strong>을 그려 어느 반의 점수가 더 고르게 분포하는지 확인해 보세요.</p>
+        <p style="margin-top:6px;font-size:13px;color:#94A3B8;">
+          A반 = [70, 75, 80, 82, 85, 88, 90, 92]<br>
+          B반 = [55, 60, 78, 80, 85, 92, 95, 98]
+        </p>
+        <div class="quiz-hint">힌트: plt.boxplot([A반, B반], labels=['A반', 'B반'])</div>
+      </div>
+    </div>
+
   </div>
 
 </section>
