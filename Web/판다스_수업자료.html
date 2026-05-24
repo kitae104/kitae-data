@@ -1114,10 +1114,9 @@ fontprop = fm.FontProperties(fname=<span class="st">'malgun.ttf'</span>)
       <pre><code><span class="cm"># x축: 수학 점수,  y축: 영어 점수</span>
 plt.<span class="fn">scatter</span>(수학, 영어)
 
-plt.<span class="fn">title</span>(<span class="st">'수학 점수 vs 영어 점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">xlabel</span>(<span class="st">'수학 점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">ylabel</span>(<span class="st">'영어 점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">xticks</span>(fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'수학 점수 vs 영어 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'수학 점수'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'영어 점수'</span>)
 plt.<span class="fn">show</span>()</code></pre>
     </div>
 
@@ -1137,12 +1136,12 @@ plt.<span class="fn">show</span>()</code></pre>
 <span class="cm"># 각 점 옆에 이름 붙이기</span>
 <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(이름)):
     plt.<span class="fn">annotate</span>(이름[i], (수학[i], 영어[i]),
-                textcoords=<span class="st">'offset points'</span>, xytext=(<span class="nm">5</span>, <span class="nm">5</span>),
-                fontproperties=fontprop)
+                textcoords=<span class="st">'offset points'</span>, xytext=(<span class="nm">5</span>, <span class="nm">5</span>)
+                )
 
-plt.<span class="fn">title</span>(<span class="st">'수학 점수 vs 영어 점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">xlabel</span>(<span class="st">'수학 점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">ylabel</span>(<span class="st">'영어 점수'</span>, fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'수학 점수 vs 영어 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'수학 점수'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'영어 점수'</span>)
 plt.<span class="fn">grid</span>(<span class="nm">True</span>)
 plt.<span class="fn">show</span>()</code></pre>
     </div>
@@ -1213,9 +1212,9 @@ plt.<span class="fn">show</span>()</code></pre>
 <span class="cm"># marker='o' → 각 데이터 위치에 점 표시</span>
 plt.<span class="fn">plot</span>(월, 기온, marker=<span class="st">'o'</span>, color=<span class="st">'tomato'</span>)
 
-plt.<span class="fn">title</span>(<span class="st">'월별 평균 기온'</span>, fontproperties=fontprop)
-plt.<span class="fn">xlabel</span>(<span class="st">'월'</span>, fontproperties=fontprop)
-plt.<span class="fn">ylabel</span>(<span class="st">'기온 (℃)'</span>, fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'월별 평균 기온'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'월'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'기온 (℃)'</span>)
 plt.<span class="fn">grid</span>(<span class="nm">True</span>)
 plt.<span class="fn">show</span>()</code></pre>
     </div>
@@ -1236,9 +1235,9 @@ plt.<span class="fn">show</span>()</code></pre>
 plt.<span class="fn">plot</span>(이름, 수학, marker=<span class="st">'o'</span>, label=<span class="st">'수학'</span>, color=<span class="st">'steelblue'</span>)
 plt.<span class="fn">plot</span>(이름, 영어, marker=<span class="st">'s'</span>, label=<span class="st">'영어'</span>, color=<span class="st">'tomato'</span>)
 
-plt.<span class="fn">title</span>(<span class="st">'학생별 수학 vs 영어 점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">xlabel</span>(<span class="st">'이름'</span>, fontproperties=fontprop)
-plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>, fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'학생별 수학 vs 영어 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'이름'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>)
 plt.<span class="fn">legend</span>(prop=fontprop)   <span class="cm"># 범례 표시</span>
 plt.<span class="fn">grid</span>(<span class="nm">True</span>)
 plt.<span class="fn">show</span>()</code></pre>
@@ -1309,10 +1308,9 @@ plt.<span class="fn">show</span>()</code></pre>
       <pre><code><span class="cm"># 세로 막대 그래프</span>
 plt.<span class="fn">bar</span>(이름, 수학, color=<span class="st">'steelblue'</span>)
 
-plt.<span class="fn">title</span>(<span class="st">'학생별 수학 점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">xlabel</span>(<span class="st">'이름'</span>, fontproperties=fontprop)
-plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">xticks</span>(fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'학생별 수학 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'이름'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>)
 plt.<span class="fn">ylim</span>(<span class="nm">0</span>, <span class="nm">100</span>)  <span class="cm"># y축 범위</span>
 plt.<span class="fn">show</span>()</code></pre>
     </div>
@@ -1332,10 +1330,9 @@ plt.<span class="fn">show</span>()</code></pre>
       <pre><code><span class="cm"># 가로 막대 그래프 (barh)</span>
 plt.<span class="fn">barh</span>(이름, 수학, color=<span class="st">'steelblue'</span>)
 
-plt.<span class="fn">title</span>(<span class="st">'학생별 수학 점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">xlabel</span>(<span class="st">'점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">ylabel</span>(<span class="st">'이름'</span>, fontproperties=fontprop)
-plt.<span class="fn">yticks</span>(fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'학생별 수학 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'점수'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'이름'</span>)
 plt.<span class="fn">show</span>()</code></pre>
     </div>
 
@@ -1402,7 +1399,7 @@ plt.<span class="fn">show</span>()</code></pre>
 plt.<span class="fn">pie</span>(투표, labels=계절, autopct=<span class="st">'%1.1f%%'</span>,
        textprops={<span class="st">'fontproperties'</span>: fontprop})
 
-plt.<span class="fn">title</span>(<span class="st">'좋아하는 계절 비율'</span>, fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'좋아하는 계절 비율'</span>)
 plt.<span class="fn">show</span>()</code></pre>
     </div>
 
@@ -1426,7 +1423,7 @@ plt.<span class="fn">pie</span>(투표, labels=계절,
        explode=분리,
        textprops={<span class="st">'fontproperties'</span>: fontprop})
 
-plt.<span class="fn">title</span>(<span class="st">'좋아하는 계절 비율'</span>, fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'좋아하는 계절 비율'</span>)
 plt.<span class="fn">show</span>()</code></pre>
     </div>
 
@@ -1524,9 +1521,8 @@ plt.<span class="fn">show</span>()</code></pre>
 plt.<span class="fn">boxplot</span>([국어, 수학, 영어],
             labels=[<span class="st">'국어'</span>, <span class="st">'수학'</span>, <span class="st">'영어'</span>])
 
-plt.<span class="fn">title</span>(<span class="st">'과목별 점수 분포'</span>, fontproperties=fontprop)
-plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">xticks</span>(fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'과목별 점수 분포'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>)
 plt.<span class="fn">show</span>()</code></pre>
     </div>
 
@@ -1551,9 +1547,8 @@ bp = plt.<span class="fn">boxplot</span>([국어, 수학, 영어],
 <span class="kw">for</span> 상자, 색 <span class="kw">in</span> <span class="fn">zip</span>(bp[<span class="st">'boxes'</span>], 색목록):
     상자.<span class="fn">set_facecolor</span>(색)
 
-plt.<span class="fn">title</span>(<span class="st">'과목별 점수 분포'</span>, fontproperties=fontprop)
-plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>, fontproperties=fontprop)
-plt.<span class="fn">xticks</span>(fontproperties=fontprop)
+plt.<span class="fn">title</span>(<span class="st">'과목별 점수 분포'</span>)
+plt.<span class="fn">ylabel</span>(<span class="st">'점수'</span>)
 plt.<span class="fn">show</span>()</code></pre>
     </div>
 
@@ -1656,9 +1651,9 @@ plt.<span class="fn">pie</span>(값, labels=항목)  <span class="cm"># 파이 �
 plt.<span class="fn">boxplot</span>([데이터])  <span class="cm"># 박스 플롯</span>
 
 <span class="cm"># 공통 꾸미기 옵션</span>
-plt.<span class="fn">title</span>(<span class="st">'제목'</span>, fontproperties=fontprop)         <span class="cm"># 그래프 제목</span>
-plt.<span class="fn">xlabel</span>(<span class="st">'x축 이름'</span>, fontproperties=fontprop)  <span class="cm"># x축 이름 (산점도·선·막대)</span>
-plt.<span class="fn">ylabel</span>(<span class="st">'y축 이름'</span>, fontproperties=fontprop)  <span class="cm"># y축 이름</span>
+plt.<span class="fn">title</span>(<span class="st">'제목'</span>)         <span class="cm"># 그래프 제목</span>
+plt.<span class="fn">xlabel</span>(<span class="st">'x축 이름'</span>)  <span class="cm"># x축 이름 (산점도·선·막대)</span>
+plt.<span class="fn">ylabel</span>(<span class="st">'y축 이름'</span>)  <span class="cm"># y축 이름</span>
 plt.<span class="fn">legend</span>(prop=fontprop)             <span class="cm"># 범례 (선이 2개 이상일 때)</span>
 plt.<span class="fn">grid</span>(<span class="nm">True</span>)        <span class="cm"># 격자선 표시</span>
 
