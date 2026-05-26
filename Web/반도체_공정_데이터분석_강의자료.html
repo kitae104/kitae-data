@@ -377,6 +377,7 @@
   <!-- 사이드바 TOC -->
   <nav class="toc">
     <div class="toc-title">목차</div>
+    <a href="#intro"><span class="step-num">🧭</span>시작 전에</a>
     <a href="#step1"><span class="step-num">1</span>라이브러리</a>
     <a href="#step2"><span class="step-num">2</span>데이터 탐색</a>
     <a href="#step3"><span class="step-num">3</span>결측값 처리</a>
@@ -384,11 +385,45 @@
     <a href="#step5"><span class="step-num">5</span>전처리</a>
     <a href="#step6"><span class="step-num">6</span>모델 학습</a>
     <a href="#step7"><span class="step-num">7</span>모델 평가</a>
+    <a href="#results"><span class="step-num">🧪</span>결과 해석</a>
     <a href="#summary"><span class="step-num">✓</span>정리</a>
   </nav>
 
   <!-- 메인 콘텐츠 -->
   <div class="content">
+
+    <!-- ─── 시작 전 : 데이터 분석이란 ───────────────────────── -->
+    <div class="section" id="intro" style="border-left: 4px solid var(--blue);">
+      <h2 style="font-size:18px; margin-bottom:14px;">🧭 시작 전에 — 데이터 분석이 처음이라면?</h2>
+      <p style="font-size:14.5px; color:var(--text-mid); margin-bottom:12px; line-height:1.85;">
+        데이터 분석은 <strong>"쌓여있는 숫자에서 의미 있는 패턴이나 답을 찾아내는 과정"</strong>입니다.
+        이번 강의의 목표는 반도체 공정 센서값(온도·압력·전력 등)을 보고 <strong>"이 제품은 합격일까, 불합격일까?"</strong>를 자동으로 예측하는 모델을 만드는 것입니다.
+      </p>
+
+      <h3 style="font-size:14px; margin: 14px 0 8px; color:var(--text);">📚 7단계에서 자주 등장할 용어</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>용어</th><th>쉬운 설명</th><th>이번 강의에서 예시</th></tr></thead>
+          <tbody>
+            <tr><td>DataFrame</td><td>엑셀 표처럼 행·열로 된 데이터 덩어리</td><td>200행 × 12열의 센서 측정 기록</td></tr>
+            <tr><td>특성 (Feature)</td><td>예측에 사용하는 <strong>입력 값</strong></td><td>온도, 압력, 전력, 두께 등</td></tr>
+            <tr><td>타겟 (Target)</td><td>예측하고자 하는 <strong>정답</strong></td><td>합격(1) / 불합격(-1)</td></tr>
+            <tr><td>모델 (Model)</td><td>특성을 받으면 타겟을 내놓는 수학식</td><td>"온도 X, 압력 Y → 합격"</td></tr>
+            <tr><td>학습 (Training)</td><td>과거 데이터로 모델을 똑똑하게 만드는 과정</td><td>160개 데이터로 패턴 학습</td></tr>
+            <tr><td>예측 (Prediction)</td><td>학습된 모델로 새 데이터의 답을 추측</td><td>40개 테스트 데이터로 답 맞히기</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">🗺️</span>
+        <div class="callout-body">
+          <strong>분석의 큰 흐름 한눈에 보기</strong>
+          ① 데이터 읽기 → ② 살펴보기 (EDA) → ③ 결측값 정리 → ④ 패턴 시각화 → ⑤ 전처리·분리 → ⑥ 모델 학습 → ⑦ 평가<br>
+          이 강의의 7단계는 위 흐름을 좀 더 잘게 나눈 것입니다. 막히면 "지금 어느 단계인가?"만 떠올려도 길을 잃지 않아요.
+        </div>
+      </div>
+    </div>
 
     <!-- ─── 데이터 소개 ─────────────────────────────────────── -->
     <div class="section" style="border-left: 4px solid var(--teal);">
@@ -498,6 +533,15 @@
         </div>
       </div>
 
+      <div class="callout callout-info">
+        <span class="callout-icon">📦</span>
+        <div class="callout-body">
+          <strong>DataFrame은 "엑셀 시트"라고 생각하세요</strong>
+          <code>pd.read_csv()</code>로 CSV 파일을 읽으면 pandas는 <strong>DataFrame</strong>이라는 표 형태 객체를 만듭니다. 행은 <strong>개별 측정 기록(샘플)</strong>, 열은 <strong>측정 항목(컬럼)</strong>입니다.
+          이 표에 대해 <code>.head()</code>, <code>.info()</code> 같은 명령을 붙이면 표의 모양·내용을 빠르게 살펴볼 수 있습니다.
+        </div>
+      </div>
+
       <div class="tbl-wrap">
         <table>
           <thead><tr><th>함수</th><th>역할</th><th>예시</th></tr></thead>
@@ -542,6 +586,15 @@ df[<span class="st">'합격여부'</span>].<span class="fn">value_counts</span>(
         <div>
           <div class="section-title">3단계 · 결측값(Missing Value) 처리</div>
           <div class="section-desc">비어있는 데이터를 채우거나 제거합니다</div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">🕳️</span>
+        <div class="callout-body">
+          <strong>결측값(NaN)이란?</strong>
+          센서가 잠깐 꺼지거나, 입력이 누락되면 그 칸은 <strong>"비어 있음"</strong> 상태가 됩니다. pandas에서는 이것을 <code>NaN</code>(Not a Number)으로 표시합니다.
+          비어 있는 값이 그대로 있으면 평균·표준편차 같은 계산이 깨지거나, 머신러닝 모델이 학습을 거부합니다. 그래서 분석 전에 반드시 채우거나 지워야 합니다.
         </div>
       </div>
 
@@ -639,6 +692,63 @@ plt.<span class="fn">show</span>()</pre>
           |r| ≥ 0.7 : 강한 상관 &nbsp;|&nbsp; 0.3 ≤ |r| &lt; 0.7 : 중간 상관 &nbsp;|&nbsp; |r| &lt; 0.3 : 약한 상관
         </div>
       </div>
+
+      <!-- ── 히트맵 읽는 법 상세 가이드 ── -->
+      <h3 style="font-size:15px; margin: 26px 0 12px; color:var(--text);">🔍 히트맵, 이렇게 읽으세요 — 단계별 가이드</h3>
+
+      <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:14px;">
+
+        <p style="font-size:14px; color:var(--text); font-weight:700; margin-bottom:6px;">① 행과 열에 같은 변수들이 같은 순서로 놓입니다</p>
+        <p style="font-size:13.5px; color:var(--text-mid); margin-bottom:14px; padding-left:14px;">
+          예를 들어 12개 변수가 있으면 12행 × 12열의 정사각형 표가 만들어집니다.
+          (i, j) 칸의 숫자는 <strong>i번째 변수와 j번째 변수의 상관계수</strong>를 뜻하고, 보통 −1.0 ~ +1.0 사이의 값입니다.
+        </p>
+
+        <p style="font-size:14px; color:var(--text); font-weight:700; margin-bottom:6px;">② 색깔로 관계의 방향과 세기를 한눈에 봅니다</p>
+        <div class="tbl-wrap" style="margin: 6px 0 14px 14px;">
+          <table>
+            <thead><tr><th>색</th><th>상관계수 범위</th><th>의미</th></tr></thead>
+            <tbody>
+              <tr><td><span style="background:#1a7f37; color:white; padding:3px 10px; border-radius:4px; font-weight:700;">진한 초록</span></td><td>+0.7 ~ +1.0</td><td>한 값이 커지면 다른 값도 함께 커진다 (강한 양의 상관)</td></tr>
+              <tr><td><span style="background:#a3d9a5; padding:3px 10px; border-radius:4px;">연한 초록</span></td><td>+0.3 ~ +0.7</td><td>같은 방향으로 어느 정도 움직인다 (중간 양의 상관)</td></tr>
+              <tr><td><span style="background:#fff7b3; padding:3px 10px; border-radius:4px;">연한 노랑·하양</span></td><td>−0.3 ~ +0.3</td><td>거의 관계 없음 (무관)</td></tr>
+              <tr><td><span style="background:#f4a3a3; padding:3px 10px; border-radius:4px;">연한 빨강</span></td><td>−0.7 ~ −0.3</td><td>한 값이 커지면 다른 값은 줄어든다 (중간 음의 상관)</td></tr>
+              <tr><td><span style="background:#cf222e; color:white; padding:3px 10px; border-radius:4px; font-weight:700;">진한 빨강</span></td><td>−1.0 ~ −0.7</td><td>한 값이 커지면 다른 값은 크게 줄어든다 (강한 음의 상관)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="font-size:14px; color:var(--text); font-weight:700; margin-bottom:6px;">③ 대각선은 항상 1.0이라 의미가 없습니다</p>
+        <p style="font-size:13.5px; color:var(--text-mid); margin-bottom:14px; padding-left:14px;">
+          (i, i) 칸은 변수 자기 자신과의 상관이라 무조건 1.0입니다. 분석할 때는 <strong>대각선 위/아래만</strong> 보면 충분합니다 (위·아래는 같은 값이라 한쪽만 봐도 됩니다).
+        </p>
+
+        <p style="font-size:14px; color:var(--text); font-weight:700; margin-bottom:6px;">④ "합격여부" 줄(또는 열) 한 줄에 집중하세요</p>
+        <p style="font-size:13.5px; color:var(--text-mid); padding-left:14px;">
+          이번 분석의 목표는 <strong>합격 여부를 예측</strong>하는 것이므로, 다른 변수가 합격여부와 얼마나 관련 있는지가 핵심입니다.
+          <strong>절댓값이 큰 변수</strong>(색이 진한 칸)일수록 예측에 큰 영향을 줍니다.
+        </p>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">📖</span>
+        <div class="callout-body">
+          <strong>예시로 손에 익히기</strong>
+          만약 히트맵의 "온도_섭씨 × 합격여부" 칸 값이 <strong>−0.42</strong>라면?<br>
+          • 부호가 음(−) → <strong>온도가 높을수록 불합격이 늘어나는</strong> 경향이 있다는 뜻<br>
+          • 절댓값 0.42 → <strong>중간 정도의 영향력</strong>이 있다는 뜻<br>
+          ⇒ 공정에서 온도를 잘 관리하는 것이 합격률에 중요할 가능성이 큽니다.
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>상관관계 ≠ 인과관계</strong>
+          "두 값이 같이 움직인다"는 사실이 곧 "한쪽이 다른 쪽의 원인이다"라는 뜻은 <strong>아닙니다</strong>.
+          숨겨진 다른 변수(계절, 장비 노후, 작업자 차이 등) 때문에 동시에 변하는 경우도 많아요. 상관관계는 <strong>"의심 가는 변수"</strong>를 찾는 출발점일 뿐, 결론은 실험·검증으로 확인해야 합니다.
+        </div>
+      </div>
     </div>
 
     <!-- ─── STEP 5 ─────────────────────────────────────────── -->
@@ -693,6 +803,52 @@ X_test_scaled  = scaler.<span class="fn">transform</span>(X_test)        <span c
           테스트 데이터로 fit()하면 미래 데이터의 정보가 모델에 유출됩니다 (데이터 누출, Data Leakage). 반드시 학습 데이터로만 fit하고, 테스트 데이터는 transform만 해야 합니다.
         </div>
       </div>
+
+      <!-- ── 사용된 함수 한 줄씩 풀어보기 ── -->
+      <h3 style="font-size:15px; margin: 26px 0 12px; color:var(--text);">🔧 위 코드에 등장한 함수 한 줄씩 풀기</h3>
+
+      <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px;">
+
+        <p style="font-weight:700; color:var(--text); margin-bottom:6px;">① <code style="color:var(--blue); font-family:monospace">df[numeric_cols].copy()</code></p>
+        <p style="font-size:13.5px; color:var(--text-mid); margin-bottom:14px; padding-left:14px;">
+          원본 DataFrame이 변하지 않도록 <strong>복사본</strong>을 만듭니다.
+          복사하지 않고 슬라이싱한 결과를 수정하면 원본도 같이 바뀌어 <code>SettingWithCopyWarning</code>이 뜨고, 디버깅이 까다로워집니다.
+        </p>
+
+        <p style="font-weight:700; color:var(--text); margin-bottom:6px;">② <code style="color:var(--blue); font-family:monospace">(df['합격여부'] == 1).astype(int)</code></p>
+        <p style="font-size:13.5px; color:var(--text-mid); margin-bottom:14px; padding-left:14px;">
+          원본은 합격=1 / 불합격=−1로 저장돼 있지만, 머신러닝에서는 <strong>0과 1</strong>로 다루는 것이 표준입니다.<br>
+          <code>== 1</code> → 각 행이 True/False가 되고, <code>.astype(int)</code>로 1/0 정수로 바꿉니다.
+        </p>
+
+        <p style="font-weight:700; color:var(--text); margin-bottom:6px;">③ <code style="color:var(--blue); font-family:monospace">train_test_split(X, y, ...)</code></p>
+        <p style="font-size:13.5px; color:var(--text-mid); margin-bottom:6px; padding-left:14px;">
+          전체 데이터를 학습용·테스트용으로 자동 분리합니다. 각 인자의 의미는 다음과 같습니다.
+        </p>
+        <ul style="font-size:13.5px; color:var(--text-mid); margin-bottom:14px; padding-left:34px; list-style:disc; line-height:1.85;">
+          <li><code>test_size=0.2</code> — 전체의 <strong>20% (40행)</strong>를 테스트용으로 떼어 둡니다.</li>
+          <li><code>random_state=42</code> — 무작위로 나누되 <strong>매번 같은 결과</strong>가 나오도록 시드를 고정합니다. (수업·실험 재현에 필수)</li>
+          <li><code>stratify=y</code> — 합격/불합격 비율을 학습·테스트 양쪽에 <strong>똑같이 유지</strong>합니다. 이 옵션이 없으면 우연히 테스트에 불합격이 0개일 수도 있어요.</li>
+        </ul>
+
+        <p style="font-weight:700; color:var(--text); margin-bottom:6px;">④ <code style="color:var(--blue); font-family:monospace">StandardScaler()</code> — 표준화</p>
+        <p style="font-size:13.5px; color:var(--text-mid); margin-bottom:6px; padding-left:14px;">
+          각 컬럼의 값에서 <strong>평균을 빼고 표준편차로 나눠</strong> 평균 0, 표준편차 1로 맞춥니다.
+        </p>
+        <p style="font-size:13.5px; color:var(--text-mid); margin-bottom:14px; padding-left:14px;">
+          <strong>왜 필요한가?</strong> 온도(290~310)와 압력(1000~1500)처럼 숫자의 크기 차이가 크면, 큰 단위의 변수가 모델에 과도하게 영향을 줍니다.
+          모두 같은 척도로 맞춰야 공정한 비교가 가능합니다. (특히 로지스틱 회귀, KNN, SVM 같은 모델은 스케일에 민감합니다.)
+        </p>
+
+        <p style="font-weight:700; color:var(--text); margin-bottom:6px;">⑤ <code style="color:var(--blue); font-family:monospace">fit_transform()</code> vs <code style="color:var(--blue); font-family:monospace">transform()</code></p>
+        <p style="font-size:13.5px; color:var(--text-mid); padding-left:14px;">
+          • <strong>fit()</strong>: "이 데이터의 평균과 표준편차를 계산해서 기억해 둬!"<br>
+          • <strong>transform()</strong>: "기억해 둔 값으로 실제로 변환해!"<br>
+          • <strong>fit_transform()</strong>: 위 두 가지를 한 번에 수행.<br>
+          학습 데이터에는 <code>fit_transform()</code> (계산 + 변환), 테스트 데이터에는 <code>transform()</code>만 적용합니다.
+          그래야 <strong>테스트 데이터의 통계 정보가 학습에 새지 않습니다</strong> (데이터 누출 방지).
+        </p>
+      </div>
     </div>
 
     <!-- ─── STEP 6 ─────────────────────────────────────────── -->
@@ -702,6 +858,67 @@ X_test_scaled  = scaler.<span class="fn">transform</span>(X_test)        <span c
         <div>
           <div class="section-title">6단계 · 머신러닝 모델 학습</div>
           <div class="section-desc">두 가지 모델을 학습하고 비교합니다</div>
+        </div>
+      </div>
+
+      <!-- 머신러닝 기초 -->
+      <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:16px;">
+        <h3 style="font-size:15px; margin-bottom:10px; color:var(--text);">🤖 머신러닝이 뭔가요? — 한 문장 정리</h3>
+        <p style="font-size:14px; color:var(--text-mid); line-height:1.85; margin-bottom:10px;">
+          머신러닝은 <strong>"과거 데이터의 패턴을 컴퓨터가 스스로 학습해서, 새로운 데이터를 예측하는 기술"</strong>입니다.
+        </p>
+        <p style="font-size:14px; color:var(--text-mid); line-height:1.85; margin-bottom:6px;">이번 6단계의 흐름은 단순합니다:</p>
+        <ol style="font-size:14px; color:var(--text-mid); margin-left:24px; line-height:2;">
+          <li>이미 답(합격/불합격)을 아는 <strong>학습 데이터 160개</strong>를 모델에 보여준다.</li>
+          <li>모델은 "어떤 센서값일 때 합격이지?"를 스스로 학습한다.</li>
+          <li>학습이 끝난 모델에 <strong>새 데이터(테스트 40개)</strong>의 입력만 주면, 합격/불합격을 예측한다.</li>
+        </ol>
+      </div>
+
+      <!-- 두 모델 동작 방식 -->
+      <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:16px;">
+        <h3 style="font-size:15px; margin-bottom:12px; color:var(--text);">📐 두 모델이 답을 찾는 방식</h3>
+
+        <p style="font-size:14px; font-weight:700; color:var(--blue); margin-bottom:6px;">📈 로지스틱 회귀 (Logistic Regression)</p>
+        <p style="font-size:13.5px; color:var(--text-mid); margin-bottom:14px; padding-left:14px;">
+          데이터 점들을 <strong>하나의 직선(또는 평면)</strong>으로 나눕니다. "이 점은 직선의 어느 쪽에 더 가깝나?"로 합격·불합격을 판단해요.<br>
+          → 결정 경계가 단순할 때 빠르고, <strong>결과 해석이 쉽습니다</strong>.
+        </p>
+
+        <p style="font-size:14px; font-weight:700; color:var(--green); margin-bottom:6px;">🌲 랜덤 포레스트 (Random Forest)</p>
+        <p style="font-size:13.5px; color:var(--text-mid); margin-bottom:8px; padding-left:14px;">
+          수많은 <strong>"질문 트리(decision tree)"</strong>를 만들어 <strong>다수결 투표</strong>로 답을 결정합니다. 한 트리는 다음과 같이 질문해 갑니다.
+        </p>
+        <div style="background:var(--bg2); padding:12px 14px; border-radius:6px; font-family:monospace; font-size:12.5px; line-height:1.8; margin: 0 14px 10px 14px;">
+          Q1. 온도 &gt; 305°C ? → Yes<br>
+          &nbsp;&nbsp;&nbsp;Q2. 두께 &gt; 103 nm ? → Yes → 🔴 <span style="color:var(--red); font-weight:700;">불합격</span><br>
+          &nbsp;&nbsp;&nbsp;Q2. 두께 &gt; 103 nm ? → No&nbsp; → 🟢 <span style="color:var(--green); font-weight:700;">합격</span>
+        </div>
+        <p style="font-size:13.5px; color:var(--text-mid); padding-left:14px;">
+          이런 트리 <strong>100개의 투표 결과</strong>로 최종 답을 결정합니다. 복잡한 패턴도 잡아내고 이상치에 강한 것이 장점이에요.
+        </p>
+      </div>
+
+      <!-- 하이퍼파라미터 표 -->
+      <h3 style="font-size:15px; margin: 6px 0 10px; color:var(--text);">⚙️ 모델 옵션(하이퍼파라미터) 풀이</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>옵션</th><th>의미</th><th>너무 작으면 / 너무 크면</th></tr></thead>
+          <tbody>
+            <tr><td><code style="font-family:monospace">n_estimators=100</code></td><td>만들 결정 트리의 개수</td><td>적으면 결과가 불안정, 많으면 학습 속도가 느려짐 (보통 100~500)</td></tr>
+            <tr><td><code style="font-family:monospace">max_depth=5</code></td><td>한 트리의 최대 깊이</td><td>깊을수록 복잡한 패턴까지 학습 / 너무 깊으면 학습 데이터만 외움 (과적합)</td></tr>
+            <tr><td><code style="font-family:monospace">random_state=42</code></td><td>난수 시드</td><td>같은 값이면 매번 같은 결과 → 재현 가능</td></tr>
+            <tr><td><code style="font-family:monospace">max_iter=1000</code></td><td>로지스틱 회귀의 최대 반복 학습 횟수</td><td>적으면 "수렴하지 못함" 경고가 발생</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">🪄</span>
+        <div class="callout-body">
+          <strong>fit()과 predict() 한 줄 요약</strong>
+          <code>model.fit(X_train, y_train)</code> → <strong>"이 데이터로 공부해!"</strong> (학습)<br>
+          <code>model.predict(X_test)</code> → <strong>"공부한 걸로 정답 맞춰봐!"</strong> (예측)
         </div>
       </div>
 
@@ -750,8 +967,20 @@ y_pred = rf_model.<span class="fn">predict</span>(X_test_scaled)</pre>
         </div>
       </div>
 
+      <div class="callout callout-info">
+        <span class="callout-icon">📚</span>
+        <div class="callout-body">
+          <strong>혼동행렬을 일상에 비유하면?</strong>
+          학교 시험에서 선생님이 학생을 "합격/불합격"으로 채점한다고 해 봅시다. 모델의 예측과 실제 정답을 짝지어 보면 네 가지 결과가 나옵니다.<br>
+          • <strong>TP (True Positive)</strong> — 합격이라 예측 → 진짜 합격 ✅<br>
+          • <strong>TN (True Negative)</strong> — 불합격이라 예측 → 진짜 불합격 ✅<br>
+          • <strong>FP (False Positive, 거짓 경보)</strong> — 합격이라 예측했는데 실제는 불합격 ❌<br>
+          • <strong>FN (False Negative, 놓침)</strong> — 불합격이라 예측했는데 실제는 합격 ❌
+        </div>
+      </div>
+
       <!-- 혼동행렬 설명 -->
-      <h3 style="font-size:15px; margin-bottom:12px; color:var(--text-dim);">📌 혼동행렬(Confusion Matrix) 읽는 법</h3>
+      <h3 style="font-size:15px; margin: 18px 0 12px; color:var(--text-dim);">📌 혼동행렬(Confusion Matrix) 읽는 법</h3>
       <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
         <div class="cm-grid">
           <div class="cm-cell cm-tn">
@@ -808,11 +1037,167 @@ importances = pd.<span class="fn">Series</span>(
 <span class="fn">print</span>(importances)</pre>
       </div>
 
+      <!-- 평가 지표 풀어쓰기 -->
+      <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px; margin: 14px 0;">
+        <h3 style="font-size:15px; margin-bottom:10px; color:var(--text);">🎯 평가 지표, 한 번 더 쉽게</h3>
+        <ul style="font-size:13.5px; color:var(--text-mid); padding-left:20px; line-height:2.1; list-style:disc;">
+          <li><strong style="color:var(--text)">Accuracy (정확도)</strong> — 전체 중 몇 %를 맞혔나? <span style="color:var(--text-dim)">불균형 데이터에서는 함정이 큼</span></li>
+          <li><strong style="color:var(--text)">Precision (정밀도)</strong> — "이건 양성!"이라고 외친 것 중 진짜 양성은 몇 %? <span style="color:var(--text-dim)">잘못된 알람을 줄이고 싶을 때</span></li>
+          <li><strong style="color:var(--text)">Recall (재현율)</strong> — 진짜 양성 중 몇 %를 모델이 잡아냈나? <span style="color:var(--text-dim)">놓치면 안 될 때 중요 (예: 불량품)</span></li>
+          <li><strong style="color:var(--text)">F1-Score</strong> — Precision과 Recall의 <strong>조화평균</strong>. 둘 다 균형 있게 높아야 1에 가까워짐</li>
+          <li><strong style="color:var(--text)">Support</strong> — 그 클래스에 속한 <strong>실제 데이터의 개수</strong></li>
+        </ul>
+      </div>
+
       <div class="callout callout-tip">
         <span class="callout-icon">💡</span>
         <div class="callout-body">
           <strong>반도체 공정에서는 Recall이 중요합니다!</strong>
           불합격 제품을 합격으로 예측하면(FN) 불량품이 출하됩니다. 이는 Precision이 낮은 것보다 훨씬 심각한 문제입니다. 따라서 이 도메인에서는 Recall을 최대화하는 방향으로 모델을 조정해야 합니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 실제 결과 해석 ───────────────────────────────── -->
+    <div class="section" id="results" style="border-left: 4px solid var(--red);">
+      <h2 style="font-size:18px; margin-bottom:8px;">🧪 실제로 나온 결과 해석하기</h2>
+      <p style="font-size:14px; color:var(--text-mid); margin-bottom:18px;">
+        앞 단계의 코드를 실행하면 다음과 같은 결과가 출력됩니다. 한 줄씩 천천히 풀어 봅니다.
+      </p>
+
+      <!-- classification_report 원문 -->
+      <h3 style="font-size:15px; margin-bottom:10px; color:var(--text);">📄 ① classification_report 출력</h3>
+      <div style="background:#0d1117; color:#e6edf3; border-radius:8px; padding:16px 18px; font-family:'JetBrains Mono', monospace; font-size:13px; line-height:1.9; margin-bottom:14px; overflow-x:auto; white-space:pre;">              precision    recall  f1-score   support
+
+      불합격(0)       1.00      0.75      0.86         4
+       합격(1)       0.97      1.00      0.99        36
+
+    accuracy                           0.97        40
+   macro avg       0.99      0.88      0.92        40
+weighted avg       0.98      0.97      0.97        40</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>항목</th><th>값</th><th>풀어서 읽기</th></tr></thead>
+          <tbody>
+            <tr><td>support — 불합격</td><td>4</td><td>테스트 40개 중 실제 불합격은 <strong>4개</strong></td></tr>
+            <tr><td>support — 합격</td><td>36</td><td>테스트 40개 중 실제 합격은 <strong>36개</strong> (10:90 불균형!)</td></tr>
+            <tr><td>precision — 불합격</td><td><span class="badge badge-green">1.00</span></td><td>"불합격"이라고 예측한 것은 모두 진짜 불합격 → <strong>거짓 경보 0건</strong></td></tr>
+            <tr><td>recall — 불합격</td><td><span class="badge badge-orange">0.75</span></td><td>실제 불합격 4개 중 <strong>3개만 찾아냄 → 1개를 놓침</strong></td></tr>
+            <tr><td>f1-score — 불합격</td><td>0.86</td><td>precision과 recall의 조화평균. 균형이 깨지면 낮아짐</td></tr>
+            <tr><td>precision — 합격</td><td>0.97</td><td>"합격"이라 예측한 37개 중 36개가 진짜 합격, 1개는 사실 불합격 (= 위의 FN 1개)</td></tr>
+            <tr><td>recall — 합격</td><td>1.00</td><td>실제 합격 36개를 <strong>전부</strong> 정확히 찾아냄</td></tr>
+            <tr><td>accuracy</td><td>0.97</td><td>전체 40개 중 <strong>39개 정답, 1개 오답</strong></td></tr>
+            <tr><td>macro avg</td><td>0.99 / 0.88 / 0.92</td><td>두 클래스 점수의 <strong>단순 평균</strong>. 불균형 데이터에서는 이 값이 더 정직함</td></tr>
+            <tr><td>weighted avg</td><td>0.98 / 0.97 / 0.97</td><td>클래스 개수로 가중평균. 다수 클래스(합격) 점수가 더 크게 반영됨</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-icon">🚨</span>
+        <div class="callout-body">
+          <strong>겉보기 97% 정확도에 숨은 함정</strong>
+          Accuracy 0.97은 매우 높아 보이지만, <strong>불합격 4개 중 1개를 놓쳤습니다 (Recall = 0.75)</strong>.
+          반도체 공정에서는 불량품을 합격으로 판정하면 출하 사고로 직결되므로, 이 모델은 <strong>아직 충분히 안전하지 않습니다</strong>. 개선 방향:<br>
+          ① 예측 임계값을 낮춰 불합격을 더 적극적으로 잡기<br>
+          ② <code>class_weight='balanced'</code> 옵션으로 불합격에 가중치 부여<br>
+          ③ SMOTE 등으로 불합격 샘플을 오버샘플링해 학습
+        </div>
+      </div>
+
+      <!-- 특성 중요도 -->
+      <h3 style="font-size:15px; margin: 28px 0 10px; color:var(--text);">🏆 ② 특성 중요도 (Feature Importance)</h3>
+      <p style="font-size:14px; color:var(--text-mid); margin-bottom:12px;">
+        랜덤 포레스트는 각 변수가 예측에 얼마나 기여했는지를 0~1 값으로 알려줍니다. <strong>전체 합은 1.0 (= 100%)</strong>이에요.
+      </p>
+
+      <!-- 원본 출력 -->
+      <div style="background:#0d1117; color:#e6edf3; border-radius:8px; padding:14px 18px; font-family:'JetBrains Mono', monospace; font-size:13px; line-height:1.85; margin-bottom:14px; overflow-x:auto; white-space:pre;">온도_섭씨        0.229766
+가스유량_slm     0.205917
+두께_nm        0.171642
+압력_Pa        0.128405
+진공도_mTorr    0.107105
+전력_W         0.078165
+처리시간_sec     0.027937
+냉각수온도_섭씨     0.020072
+진동_mm_s      0.019540
+습도_pct       0.011450</div>
+
+      <!-- 시각 막대 -->
+      <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px;">
+        <p style="font-size:13px; color:var(--text-dim); margin-bottom:12px;">📊 막대 길이는 영향력의 상대 비율 (가장 큰 23.0%를 100%로 환산)</p>
+        <div style="display:grid; grid-template-columns: 140px 1fr 70px; gap:8px 12px; align-items:center; font-size:13px;">
+          <span>온도_섭씨</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:100%; height:100%; background:var(--red); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--red);">23.0%</span>
+
+          <span>가스유량_slm</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:89.5%; height:100%; background:var(--orange); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--orange);">20.6%</span>
+
+          <span>두께_nm</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:74.7%; height:100%; background:var(--orange); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--orange);">17.2%</span>
+
+          <span>압력_Pa</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:55.9%; height:100%; background:var(--yellow); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--yellow);">12.8%</span>
+
+          <span>진공도_mTorr</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:46.6%; height:100%; background:var(--green); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--green);">10.7%</span>
+
+          <span>전력_W</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:34.0%; height:100%; background:var(--green); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--green);">7.8%</span>
+
+          <span>처리시간_sec</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:12.2%; height:100%; background:var(--blue); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--blue);">2.8%</span>
+
+          <span>냉각수온도_섭씨</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:8.7%; height:100%; background:var(--blue); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--blue);">2.0%</span>
+
+          <span>진동_mm_s</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:8.5%; height:100%; background:var(--blue); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--blue);">2.0%</span>
+
+          <span>습도_pct</span>
+          <div style="background:#eaeef2; border-radius:4px; height:18px;">
+            <div style="width:5.0%; height:100%; background:var(--text-dim); border-radius:4px;"></div>
+          </div>
+          <span style="text-align:right; font-family:monospace; font-weight:700; color:var(--text-dim);">1.1%</span>
+        </div>
+      </div>
+
+      <div class="callout callout-tip" style="margin-top:14px;">
+        <span class="callout-icon">🧭</span>
+        <div class="callout-body">
+          <strong>이 결과로 무엇을 알 수 있나?</strong>
+          • 상위 5개 변수(<strong>온도 · 가스유량 · 두께 · 압력 · 진공도</strong>)가 <strong>전체 영향력의 약 84%</strong>를 차지합니다.<br>
+          • 즉, 공정 현장에서는 이 다섯 가지를 우선적으로 모니터링·제어하는 것이 합격률 향상에 가장 효과적입니다.<br>
+          • 진동(2.0%), 습도(1.1%) 같은 변수는 영향이 매우 작아 <strong>다음 모델에서는 제외해 학습 속도를 높일 수 있습니다</strong>.<br>
+          • 단, "중요도가 낮음"이 곧 "절대 불필요"는 아닙니다. 다른 모델·다른 데이터에서는 결과가 달라질 수 있으니 검증 후 제거하세요.
         </div>
       </div>
     </div>

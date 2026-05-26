@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>파이썬 기초 — 리스트와 딕셔너리</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --py-blue:   #306998;
+  --py-blue-d: #1F4E79;
+  --py-blue-pale:#E6F0FA;
+  --py-yellow: #FFD43B;
+  --py-yellow-d:#C99700;
+  --py-yellow-pale:#FFF9DB;
+  --green:     #16A34A;
+  --green-pale:#DCFCE7;
+  --orange:    #EA580C;
+  --orange-pale:#FFEDD5;
+  --purple:    #7C3AED;
+  --purple-pale:#EDE9FE;
+  --bg:        #F7F9FC;
+  --surface:   #FFFFFF;
+  --border:    #E2E8F0;
+  --border2:   #CBD5E1;
+  --text:      #0F172A;
+  --text2:     #334155;
+  --text3:     #64748B;
+  --text4:     #94A3B8;
+  --code-bg:   #1E293B;
+  --shadow-sm: 0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-md: 0 4px 14px rgba(15,23,42,.08), 0 2px 4px rgba(15,23,42,.04);
+  --radius:    14px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 15.5px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hero {
+  background: linear-gradient(135deg, #1F4E79 0%, #306998 55%, #4584B6 100%);
+  color: white;
+  padding: 56px 32px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '🐍';
+  position: absolute;
+  right: -20px; top: -30px;
+  font-size: 260px;
+  opacity: 0.08;
+  line-height: 1;
+}
+.hero-inner { max-width: 920px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,212,59,0.18);
+  border: 1px solid rgba(255,212,59,0.45);
+  color: #FFD43B;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 22px;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: clamp(26px, 4vw, 44px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+.hero h1 span { color: var(--py-yellow); }
+.hero p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.82);
+  max-width: 620px;
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+.hero-stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.h-stat {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.20);
+  border-radius: 10px;
+  padding: 7px 14px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.92);
+  font-weight: 500;
+}
+.h-stat strong { color: var(--py-yellow); font-weight: 700; }
+
+.nav-bar {
+  background: white;
+  border-bottom: 2px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 10px rgba(15,23,42,0.04);
+}
+.nav-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  overflow-x: auto;
+  gap: 4px;
+  padding: 0 20px;
+  scrollbar-width: thin;
+}
+.nav-inner::-webkit-scrollbar { height: 4px; }
+.nav-inner::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+.nav-link {
+  padding: 13px 14px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text3);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.nav-link:hover { color: var(--py-blue); background: var(--py-blue-pale); }
+.nav-link.active { color: var(--py-blue); border-bottom-color: var(--py-blue); font-weight: 700; }
+
+.main { max-width: 920px; margin: 0 auto; padding: 36px 20px 70px; }
+
+.goals {
+  background: linear-gradient(135deg, var(--py-blue-pale), #F0F7FC);
+  border: 1px solid #BBD9F0;
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin-bottom: 36px;
+  box-shadow: var(--shadow-sm);
+}
+.goals h3 {
+  font-size: 13px; font-weight: 700;
+  color: var(--py-blue);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.goals ul { list-style: none; display: grid; gap: 7px; }
+.goals li {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 14px; color: var(--py-blue-d);
+}
+.goals li::before {
+  content: '✓';
+  background: var(--py-blue);
+  color: white;
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  flex-shrink: 0; margin-top: 3px;
+}
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 5px; height: 100%;
+}
+.section.list::before { background: var(--py-blue); }
+.section.dict::before { background: var(--py-yellow); }
+.section.combo::before { background: var(--purple); }
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 18px;
+}
+.s-badge {
+  width: 42px; height: 42px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 21px; flex-shrink: 0;
+}
+.s-badge.b1 { background: var(--py-blue-pale); }
+.s-badge.b2 { background: var(--py-yellow-pale); }
+.s-badge.b3 { background: var(--purple-pale); }
+.s-title {
+  font-size: 21px; font-weight: 800;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.s-desc {
+  font-size: 13.5px;
+  color: var(--text3);
+}
+
+.sub { margin-top: 22px; }
+.sub-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.sub-num {
+  width: 25px; height: 25px;
+  background: var(--text);
+  color: white;
+  border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.sub-title {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.analogy {
+  background: var(--py-yellow-pale);
+  border: 1px solid #F0D04A;
+  border-left: 4px solid var(--py-yellow-d);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 16px;
+  margin: 12px 0;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.analogy-icon { font-size: 20px; flex-shrink: 0; }
+.analogy p { font-size: 14px; color: #6B5800; line-height: 1.65; margin: 0; }
+.analogy strong { color: #5A4400; font-weight: 700; }
+
+.callout {
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin: 12px 0;
+  display: flex; gap: 12px;
+  font-size: 13.5px; line-height: 1.65;
+}
+.callout-info  { background: var(--py-blue-pale); border: 1px solid #BBD9F0; color: var(--py-blue-d); }
+.callout-warn  { background: var(--orange-pale); border: 1px solid #FDBA74; color: #9A3412; }
+.callout-good  { background: var(--green-pale); border: 1px solid #86EFAC; color: #166534; }
+.callout-icon { font-size: 19px; flex-shrink: 0; line-height: 1; }
+.callout strong { display: block; margin-bottom: 3px; font-weight: 700; }
+
+.code-wrap {
+  background: var(--code-bg);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin: 12px 0;
+  box-shadow: 0 2px 6px rgba(15,23,42,.10);
+}
+.code-head {
+  background: #0F172A;
+  border-bottom: 1px solid #334155;
+  padding: 9px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.code-dots { display: flex; gap: 6px; }
+.code-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.dr { background: #EF4444; } .dy { background: #FBBF24; } .dg { background: #22C55E; }
+.code-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px; color: #94A3B8;
+  font-weight: 500;
+}
+.copy-btn {
+  background: #1E293B;
+  border: 1px solid #334155;
+  color: #94A3B8;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.copy-btn:hover { color: white; background: #334155; }
+.copy-btn.ok { color: #22C55E; background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.35); }
+pre {
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.85;
+}
+code {
+  font-family: 'JetBrains Mono', monospace;
+  color: #E2E8F0;
+}
+.kw  { color: #F472B6; font-weight: 600; }
+.fn  { color: #60A5FA; }
+.st  { color: #A7F3D0; }
+.cm  { color: #64748B; font-style: italic; }
+.nm  { color: #FBBF24; }
+.bl  { color: #C084FC; }
+.op  { color: #67E8F9; }
+
+.output {
+  background: #0F172A;
+  border-top: 1px solid #334155;
+  padding: 12px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: #94A3B8;
+  white-space: pre;
+  overflow-x: auto;
+}
+.output-label {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748B;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.code-wrap + .output {
+  margin-top: -12px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+
+.tbl-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin: 12px 0;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: white; }
+thead th {
+  background: var(--py-blue);
+  color: white;
+  text-align: left;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+}
+tbody td {
+  padding: 9px 14px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+}
+tbody tr:nth-child(even) td { background: #F8FAFC; }
+tbody td code {
+  background: #F1F5F9;
+  color: var(--py-blue-d);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.visual {
+  background: #F8FAFC;
+  border: 1px dashed var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin: 12px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text2);
+  overflow-x: auto;
+}
+.visual .label {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text4);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.cells { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.cell {
+  background: white;
+  border: 2px solid var(--py-blue);
+  border-radius: 6px;
+  padding: 7px 12px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 54px;
+}
+.cell-i { font-size: 10px; color: var(--text4); font-family: 'JetBrains Mono', monospace; margin-bottom: 2px; }
+.cell-v { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.cell.highlight { border-color: var(--py-yellow-d); background: var(--py-yellow-pale); }
+.cell.added { border-color: var(--green); background: var(--green-pale); }
+
+.exercise {
+  background: linear-gradient(135deg, #1F4E79, #2D5F8F);
+  border-radius: var(--radius);
+  padding: 24px 26px;
+  color: white;
+  margin: 24px 0 0;
+  box-shadow: var(--shadow-md);
+}
+.exercise h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.ex-item {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 11px;
+}
+.ex-item:last-child { margin-bottom: 0; }
+.ex-num {
+  display: inline-block;
+  background: var(--py-yellow);
+  color: #1F4E79;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  letter-spacing: .5px;
+}
+.ex-item p { font-size: 14px; color: rgba(255,255,255,0.92); line-height: 1.6; }
+.ex-toggle {
+  display: inline-block;
+  margin-top: 9px;
+  font-size: 12px;
+  color: var(--py-yellow);
+  background: rgba(255,212,59,0.10);
+  border: 1px solid rgba(255,212,59,0.35);
+  padding: 4px 12px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+}
+.ex-toggle:hover { background: rgba(255,212,59,0.20); }
+.ex-answer {
+  display: none;
+  margin-top: 9px;
+  background: #0F172A;
+  border: 1px solid #1E293B;
+  border-radius: 6px;
+  padding: 11px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #E2E8F0;
+  white-space: pre;
+  overflow-x: auto;
+}
+.ex-answer.show { display: block; }
+
+.project-callout {
+  background: linear-gradient(135deg, #4C1D95, #6D28D9);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  color: white;
+  margin-top: 20px;
+  box-shadow: var(--shadow-md);
+}
+.project-callout h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--py-yellow);
+}
+.project-callout p {
+  font-size: 14px;
+  color: rgba(255,255,255,0.90);
+  line-height: 1.65;
+}
+
+footer {
+  text-align: center;
+  padding: 28px;
+  color: var(--text3);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: white;
+}
+footer strong { color: var(--py-blue); }
+
+@media (max-width: 640px) {
+  .hero { padding: 36px 18px; }
+  .main { padding: 24px 14px; }
+  .section { padding: 20px 16px; }
+  .s-title { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">🐍 Python 기초 · 자료구조</div>
+    <h1>리스트와 딕셔너리로<br><span>학생 점수 관리 만들기</span></h1>
+    <p>리스트·딕셔너리·슬라이싱·for·함수를 차근차근 익힌 뒤, 마지막에 배운 것을 모두 모아 <strong>학생 점수 관리 시스템</strong>을 직접 만듭니다.</p>
+    <div class="hero-stats">
+      <div class="h-stat">📋 <strong>리스트</strong> 기본 + 슬라이싱</div>
+      <div class="h-stat">📔 <strong>딕셔너리</strong> 핵심</div>
+      <div class="h-stat">🔄 <strong>for · if</strong></div>
+      <div class="h-stat">🛠️ <strong>함수</strong></div>
+      <div class="h-stat">🎯 미니 프로젝트</div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a class="nav-link active" href="#intro">시작</a>
+    <a class="nav-link" href="#list">1. 리스트</a>
+    <a class="nav-link" href="#slice">2. 슬라이싱</a>
+    <a class="nav-link" href="#dict">3. 딕셔너리</a>
+    <a class="nav-link" href="#combo">4. for · 함수</a>
+    <a class="nav-link" href="#project">5. 미니 프로젝트</a>
+  </div>
+</nav>
+
+<main class="main">
+
+<div id="intro" class="goals">
+  <h3>🎯 이 강의의 흐름</h3>
+  <ul>
+    <li>리스트에 값을 담고 <strong>추가·삭제</strong>하는 방법을 익힌다 → 학생 명단의 토대</li>
+    <li><strong>슬라이싱</strong>으로 일부 구간을 잘라내고 거꾸로 뒤집는다 → 일부 점수만 보기</li>
+    <li>딕셔너리로 <strong>이름표가 붙은 데이터</strong>(이름·학년·점수)를 다룬다 → 학생 한 명의 정보</li>
+    <li><code>for</code>와 <code>if</code>로 리스트·딕셔너리를 <strong>순회·조건 처리</strong>한다 → 평균·합격자 찾기</li>
+    <li><strong>함수</strong>로 묶어 같은 작업을 재사용한다 → 학생 추가·삭제·조회 기능</li>
+    <li>모든 것을 모아 <strong>학생 점수 관리 시스템</strong>을 만든다 🎓</li>
+  </ul>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     1. 리스트
+═══════════════════════════════════════════ -->
+<section id="list" class="section list">
+  <div class="section-header">
+    <div class="s-badge b1">📋</div>
+    <div>
+      <div class="s-title">1. 리스트 — 여러 값을 한 줄에 담기</div>
+      <div class="s-desc">대괄호 <code>[ ]</code>로 만들고 인덱스로 값을 꺼낸다</div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <span class="analogy-icon">📦</span>
+    <p><strong>리스트 = 칸이 여러 개인 사물함</strong>입니다. 각 칸에는 0번부터 번호(인덱스)가 붙어 있어요. 미니 프로젝트에서는 <strong>학생 명단</strong>을 리스트로 다룹니다.</p>
+  </div>
+
+  <div class="sub">
+    <div class="sub-header"><span class="sub-num">1</span><span class="sub-title">만들기 · 값 꺼내기 · 기본 함수</span></div>
+    <div class="code-wrap">
+      <div class="code-head">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-name">list_basic.py</span>
+        <button class="copy-btn" onclick="cp(this)">복사</button>
+      </div>
+<pre><code><span class="cm"># 값이 들어있는 리스트</span>
+fruits = [<span class="st">"사과"</span>, <span class="st">"바나나"</span>, <span class="st">"포도"</span>, <span class="st">"수박"</span>]
+scores = [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>, <span class="nm">95</span>, <span class="nm">88</span>]
+
+<span class="cm"># 값 꺼내기 — 인덱스는 0부터 시작!</span>
+<span class="fn">print</span>(fruits[<span class="nm">0</span>])     <span class="cm"># 사과</span>
+<span class="fn">print</span>(fruits[<span class="op">-</span><span class="nm">1</span>])    <span class="cm"># 수박 (뒤에서 첫 번째)</span>
+
+<span class="cm"># 자주 쓰는 함수들 — 미니 프로젝트의 평균 계산에 사용</span>
+<span class="fn">print</span>(<span class="bl">len</span>(scores))    <span class="cm"># 5  (개수)</span>
+<span class="fn">print</span>(<span class="bl">sum</span>(scores))    <span class="cm"># 438</span>
+<span class="fn">print</span>(<span class="bl">max</span>(scores))    <span class="cm"># 95</span>
+<span class="fn">print</span>(<span class="bl">min</span>(scores))    <span class="cm"># 78</span>
+
+<span class="cm"># 평균 = 합계 / 개수</span>
+average = <span class="bl">sum</span>(scores) / <span class="bl">len</span>(scores)
+<span class="fn">print</span>(average)       <span class="cm"># 87.6</span></code></pre>
+    </div>
+
+    <div class="visual">
+      <div class="label">📋 인덱스 시각화</div>
+      <div class="cells">
+        <div class="cell"><span class="cell-i">[0]</span><span class="cell-v">사과</span></div>
+        <div class="cell"><span class="cell-i">[1]</span><span class="cell-v">바나나</span></div>
+        <div class="cell"><span class="cell-i">[2]</span><span class="cell-v">포도</span></div>
+        <div class="cell"><span class="cell-i">[3]</span><span class="cell-v">수박</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-header"><span class="sub-num">2</span><span class="sub-title">추가하기 — append · insert</span></div>
+    <div class="code-wrap">
+      <div class="code-head">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-name">list_add.py</span>
+        <button class="copy-btn" onclick="cp(this)">복사</button>
+      </div>
+<pre><code>fruits = [<span class="st">"사과"</span>, <span class="st">"바나나"</span>]
+
+<span class="cm"># append(x) — 맨 끝에 한 개 추가 (가장 많이 씀)</span>
+fruits.<span class="fn">append</span>(<span class="st">"수박"</span>)
+<span class="fn">print</span>(fruits)       <span class="cm"># ['사과', '바나나', '수박']</span>
+
+<span class="cm"># insert(i, x) — 원하는 위치에 끼워넣기</span>
+fruits.<span class="fn">insert</span>(<span class="nm">1</span>, <span class="st">"포도"</span>)
+<span class="fn">print</span>(fruits)       <span class="cm"># ['사과', '포도', '바나나', '수박']</span></code></pre>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>append는 미니 프로젝트의 핵심</strong>
+        새 학생을 명단 끝에 추가할 때 <code>students.append(new_student)</code> 형태로 사용합니다.
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-header"><span class="sub-num">3</span><span class="sub-title">삭제하기 — pop · remove</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>방법</th><th>기준</th><th>반환값</th><th>언제 쓰나?</th></tr></thead>
+        <tbody>
+          <tr><td><code>list.pop(i)</code></td><td>인덱스</td><td>삭제된 값</td><td>꺼내서 다시 쓸 때</td></tr>
+          <tr><td><code>list.remove(값)</code></td><td>값 자체</td><td>없음</td><td>위치 모를 때</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-head">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-name">list_delete.py</span>
+        <button class="copy-btn" onclick="cp(this)">복사</button>
+      </div>
+<pre><code>fruits = [<span class="st">"사과"</span>, <span class="st">"바나나"</span>, <span class="st">"포도"</span>, <span class="st">"수박"</span>]
+
+<span class="cm"># pop(i) — 꺼내면서 삭제 (반환값 있음!)</span>
+removed = fruits.<span class="fn">pop</span>(<span class="nm">1</span>)
+<span class="fn">print</span>(removed)      <span class="cm"># 바나나</span>
+<span class="fn">print</span>(fruits)       <span class="cm"># ['사과', '포도', '수박']</span>
+
+<span class="cm"># remove(값) — 값을 직접 지정해 삭제</span>
+fruits.<span class="fn">remove</span>(<span class="st">"포도"</span>)
+<span class="fn">print</span>(fruits)       <span class="cm"># ['사과', '수박']</span></code></pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     2. 슬라이싱
+═══════════════════════════════════════════ -->
+<section id="slice" class="section list">
+  <div class="section-header">
+    <div class="s-badge b1">✂️</div>
+    <div>
+      <div class="s-title">2. 슬라이싱 — 원하는 구간만 잘라내기</div>
+      <div class="s-desc"><code>[시작 : 끝 : 간격]</code> 문법으로 부분 리스트 만들기</div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <span class="analogy-icon">🍞</span>
+    <p><strong>슬라이싱 = 식빵 자르기</strong>입니다. <code>[2:5]</code>는 "2번 칼선부터 5번 칼선까지" 자르는 것. 끝 번호는 <strong>포함되지 않습니다</strong>(2, 3, 4까지만).</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-head">
+      <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+      <span class="code-name">slice.py</span>
+      <button class="copy-btn" onclick="cp(this)">복사</button>
+    </div>
+<pre><code>scores = [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>, <span class="nm">95</span>, <span class="nm">88</span>, <span class="nm">76</span>, <span class="nm">91</span>, <span class="nm">83</span>]
+<span class="cm">#          0   1   2   3   4   5   6   7   ← 인덱스</span>
+
+<span class="cm"># [시작 : 끝]  — 끝은 포함 안 됨!</span>
+<span class="fn">print</span>(scores[<span class="nm">2</span>:<span class="nm">5</span>])    <span class="cm"># [78, 95, 88]  (2,3,4번)</span>
+
+<span class="cm"># 시작 생략 → 0부터 / 끝 생략 → 끝까지</span>
+<span class="fn">print</span>(scores[:<span class="nm">3</span>])     <span class="cm"># [85, 92, 78]  (앞에서 3개)</span>
+<span class="fn">print</span>(scores[<span class="nm">5</span>:])     <span class="cm"># [76, 91, 83]  (5번부터 끝까지)</span>
+
+<span class="cm"># 음수 인덱스 — 뒤에서부터</span>
+<span class="fn">print</span>(scores[<span class="op">-</span><span class="nm">3</span>:])    <span class="cm"># [76, 91, 83]  (마지막 3개)</span>
+<span class="fn">print</span>(scores[:<span class="op">-</span><span class="nm">2</span>])    <span class="cm"># 마지막 2개 빼고 다</span>
+
+<span class="cm"># [시작 : 끝 : 간격]</span>
+<span class="fn">print</span>(scores[::<span class="nm">2</span>])    <span class="cm"># [85, 78, 88, 91]  (2칸씩)</span>
+
+<span class="cm"># 거꾸로 뒤집기 — 음수 간격</span>
+<span class="fn">print</span>(scores[::<span class="op">-</span><span class="nm">1</span>])   <span class="cm"># [83, 91, 76, 88, 95, 78, 92, 85]</span>
+
+<span class="cm"># 전체 복사 — 원본과 분리된 새 리스트</span>
+copied = scores[:]
+copied[<span class="nm">0</span>] = <span class="nm">0</span>
+<span class="fn">print</span>(scores[<span class="nm">0</span>])     <span class="cm"># 85  (원본은 그대로!)</span></code></pre>
+  </div>
+
+  <div class="visual">
+    <div class="label">📐 슬라이싱 시각 가이드</div>
+    <div style="font-family:'Noto Sans KR',sans-serif;font-size:13.5px;color:var(--text2);line-height:1.95;">
+      <div style="font-family:'JetBrains Mono',monospace;color:var(--text);">scores = [85, 92, 78, 95, 88, 76, 91, 83]</div>
+      <div style="font-family:'JetBrains Mono',monospace;color:var(--text4);font-size:12px;">인덱스:   [ 0,  1,  2,  3,  4,  5,  6,  7]</div>
+      <div style="margin-top:8px;">
+        <code style="background:var(--py-blue-pale);color:var(--py-blue-d);padding:2px 8px;border-radius:4px;">[2:5]</code> → 2,3,4번 (<strong>5번 미포함</strong>)<br>
+        <code style="background:var(--py-blue-pale);color:var(--py-blue-d);padding:2px 8px;border-radius:4px;">[::-1]</code> → 거꾸로 뒤집기<br>
+        <code style="background:var(--py-blue-pale);color:var(--py-blue-d);padding:2px 8px;border-radius:4px;">[:3]</code> → 앞에서 3개만
+      </div>
+    </div>
+  </div>
+
+  <div class="project-callout">
+    <h4>🎯 미니 프로젝트와의 연결</h4>
+    <p>미니 프로젝트에서 한 학생의 점수 리스트 <code>scores = [85, 92, 78]</code>가 있을 때, <code>scores[:2]</code>로 <strong>처음 두 과목만</strong> 잘라 그 평균을 구하거나, <code>scores[-1]</code>로 마지막 과목 점수만 꺼낼 수 있습니다.</p>
+  </div>
+
+  <div class="exercise">
+    <h3>✏️ 리스트 · 슬라이싱 연습</h3>
+
+    <div class="ex-item">
+      <span class="ex-num">Q1</span>
+      <p><code>colors = ["빨강", "파랑"]</code>에 <strong>"노랑"</strong>은 맨 끝에, <strong>"초록"</strong>은 1번 위치에 추가하세요.</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">colors = ["빨강", "파랑"]
+colors.append("노랑")
+colors.insert(1, "초록")
+print(colors)   # ['빨강', '초록', '파랑', '노랑']</pre>
+    </div>
+
+    <div class="ex-item">
+      <span class="ex-num">Q2</span>
+      <p><code>numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</code>를 슬라이싱으로 <strong>(a) 앞에서 5개</strong>, <strong>(b) 뒤에서 3개</strong>, <strong>(c) 거꾸로 뒤집은 것</strong>을 각각 출력하세요.</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+print(numbers[:5])    # [1, 2, 3, 4, 5]
+print(numbers[-3:])   # [8, 9, 10]
+print(numbers[::-1])  # [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</pre>
+    </div>
+
+    <div class="ex-item">
+      <span class="ex-num">Q3</span>
+      <p><code>scores = [85, 92, 78, 95, 88]</code>에서 <strong>처음 세 과목의 평균</strong>을 슬라이싱으로 구하세요.</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">scores = [85, 92, 78, 95, 88]
+first_three = scores[:3]
+average = sum(first_three) / len(first_three)
+print(average)   # 85.0</pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     3. 딕셔너리
+═══════════════════════════════════════════ -->
+<section id="dict" class="section dict">
+  <div class="section-header">
+    <div class="s-badge b2">📔</div>
+    <div>
+      <div class="s-title">3. 딕셔너리 — 이름표(key)가 붙은 값(value)</div>
+      <div class="s-desc">중괄호 <code>{ }</code>와 콜론 <code>:</code>으로 만드는 "사전" 형태</div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <span class="analogy-icon">📖</span>
+    <p><strong>딕셔너리 = 진짜 사전</strong>입니다. 리스트는 0, 1, 2 같은 <strong>번호</strong>로 값을 꺼냈지만, 딕셔너리는 <strong>이름(키)</strong>으로 꺼냅니다. 미니 프로젝트에서는 <strong>학생 한 명</strong>의 이름·학년·점수를 딕셔너리로 묶습니다.</p>
+  </div>
+
+  <div class="sub">
+    <div class="sub-header"><span class="sub-num">1</span><span class="sub-title">만들기 · 값 꺼내기</span></div>
+    <div class="code-wrap">
+      <div class="code-head">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-name">dict_basic.py</span>
+        <button class="copy-btn" onclick="cp(this)">복사</button>
+      </div>
+<pre><code><span class="cm"># 학생 한 명을 딕셔너리로 표현 — 미니 프로젝트의 기본 구조!</span>
+student = {
+    <span class="st">"name"</span>: <span class="st">"민준"</span>,
+    <span class="st">"grade"</span>: <span class="nm">1</span>,
+    <span class="st">"scores"</span>: [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>]
+}
+
+<span class="cm"># 값 꺼내기 — [키] 사용</span>
+<span class="fn">print</span>(student[<span class="st">"name"</span>])       <span class="cm"># 민준</span>
+<span class="fn">print</span>(student[<span class="st">"scores"</span>])     <span class="cm"># [85, 92, 78]</span>
+<span class="fn">print</span>(student[<span class="st">"scores"</span>][<span class="nm">0</span>])  <span class="cm"># 85 (리스트의 첫 값)</span>
+
+<span class="cm"># 키 존재 여부 확인 — in 연산자</span>
+<span class="fn">print</span>(<span class="st">"name"</span> <span class="kw">in</span> student)    <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="st">"gender"</span> <span class="kw">in</span> student)  <span class="cm"># False</span>
+
+<span class="cm"># 안전하게 꺼내기 — get() (없는 키여도 에러 X)</span>
+<span class="fn">print</span>(student.<span class="fn">get</span>(<span class="st">"gender"</span>, <span class="st">"미입력"</span>))  <span class="cm"># 미입력</span></code></pre>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>없는 키 → KeyError</strong>
+        <code>student["gender"]</code>처럼 없는 키를 대괄호로 꺼내면 에러가 납니다. 확실하지 않다면 <code>get()</code> 또는 <code>in</code>으로 먼저 확인하세요.
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-header"><span class="sub-num">2</span><span class="sub-title">추가 · 수정 · 삭제</span></div>
+    <div class="code-wrap">
+      <div class="code-head">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-name">dict_crud.py</span>
+        <button class="copy-btn" onclick="cp(this)">복사</button>
+      </div>
+<pre><code>student = {<span class="st">"name"</span>: <span class="st">"민준"</span>, <span class="st">"grade"</span>: <span class="nm">1</span>}
+
+<span class="cm"># 추가 — 새 키에 값 대입</span>
+student[<span class="st">"scores"</span>] = [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>]
+<span class="fn">print</span>(student)
+<span class="cm"># {'name': '민준', 'grade': 1, 'scores': [85, 92, 78]}</span>
+
+<span class="cm"># 수정 — 같은 문법, 이미 있는 키면 덮어쓰기</span>
+student[<span class="st">"grade"</span>] = <span class="nm">2</span>
+
+<span class="cm"># 삭제 — del 또는 pop</span>
+<span class="kw">del</span> student[<span class="st">"grade"</span>]
+<span class="fn">print</span>(student)         <span class="cm"># {'name': '민준', 'scores': [...]}</span>
+
+<span class="cm"># pop — 꺼내면서 삭제 (반환값 있음)</span>
+removed = student.<span class="fn">pop</span>(<span class="st">"scores"</span>)
+<span class="fn">print</span>(removed)         <span class="cm"># [85, 92, 78]</span></code></pre>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>같은 문법, 다른 동작</strong>
+        <code>student["키"] = 값</code>은 키가 <strong>없으면 추가</strong>, <strong>있으면 수정</strong>이 됩니다.
+      </div>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <h3>✏️ 딕셔너리 연습</h3>
+
+    <div class="ex-item">
+      <span class="ex-num">Q1</span>
+      <p>학생 딕셔너리 <code>student = {"name":"민준", "grade":1}</code>에 <strong>점수 리스트</strong> <code>scores: [85, 92, 78]</code>를 추가하세요.</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">student = {"name":"민준", "grade":1}
+student["scores"] = [85, 92, 78]
+print(student)
+# {'name': '민준', 'grade': 1, 'scores': [85, 92, 78]}</pre>
+    </div>
+
+    <div class="ex-item">
+      <span class="ex-num">Q2</span>
+      <p>위 학생에서 <strong>"scores" 키가 있으면 평균</strong>을 출력하고, 없으면 <strong>"점수 없음"</strong>을 출력하세요.</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">if "scores" in student:
+    s = student["scores"]
+    print(sum(s) / len(s))   # 85.0
+else:
+    print("점수 없음")</pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     4. for · 함수
+═══════════════════════════════════════════ -->
+<section id="combo" class="section combo">
+  <div class="section-header">
+    <div class="s-badge b3">🔗</div>
+    <div>
+      <div class="s-title">4. 종합 — for 반복 · 함수로 묶기</div>
+      <div class="s-desc">리스트·딕셔너리를 for로 순회하고 함수로 재사용한다</div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-header"><span class="sub-num">for</span><span class="sub-title">리스트 순회 + if로 골라내기</span></div>
+    <div class="code-wrap">
+      <div class="code-head">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-name">for_list.py</span>
+        <button class="copy-btn" onclick="cp(this)">복사</button>
+      </div>
+<pre><code>scores = [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>, <span class="nm">95</span>, <span class="nm">88</span>]
+
+<span class="cm"># 모든 점수 출력</span>
+<span class="kw">for</span> s <span class="kw">in</span> scores:
+    <span class="fn">print</span>(s)
+
+<span class="cm"># 합계와 평균 구하기 — 미니 프로젝트의 핵심 패턴</span>
+total = <span class="nm">0</span>
+<span class="kw">for</span> s <span class="kw">in</span> scores:
+    total += s
+average = total / <span class="bl">len</span>(scores)
+<span class="fn">print</span>(<span class="st">f"합계 {total}, 평균 {average:.1f}"</span>)
+
+<span class="cm"># 조건에 맞는 값만 골라 새 리스트로 모으기</span>
+high = []
+<span class="kw">for</span> s <span class="kw">in</span> scores:
+    <span class="kw">if</span> s >= <span class="nm">85</span>:
+        high.<span class="fn">append</span>(s)
+<span class="fn">print</span>(high)         <span class="cm"># [85, 92, 95, 88]</span></code></pre>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-header"><span class="sub-num">for</span><span class="sub-title">딕셔너리 순회 — items()</span></div>
+    <div class="code-wrap">
+      <div class="code-head">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-name">for_dict.py</span>
+        <button class="copy-btn" onclick="cp(this)">복사</button>
+      </div>
+<pre><code>score_table = {
+    <span class="st">"민준"</span>: <span class="nm">85</span>,
+    <span class="st">"서연"</span>: <span class="nm">92</span>,
+    <span class="st">"지호"</span>: <span class="nm">78</span>,
+}
+
+<span class="cm"># 키와 값을 함께 — items()</span>
+<span class="kw">for</span> name, score <span class="kw">in</span> score_table.<span class="fn">items</span>():
+    <span class="fn">print</span>(<span class="st">f"{name}: {score}점"</span>)
+
+<span class="cm"># 조건에 맞는 항목만 추리기</span>
+passers = []
+<span class="kw">for</span> name, score <span class="kw">in</span> score_table.<span class="fn">items</span>():
+    <span class="kw">if</span> score >= <span class="nm">80</span>:
+        passers.<span class="fn">append</span>(name)
+<span class="fn">print</span>(passers)      <span class="cm"># ['민준', '서연']</span></code></pre>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-header"><span class="sub-num">def</span><span class="sub-title">함수로 묶기 — 같은 작업을 이름 하나로 재사용</span></div>
+
+    <div class="analogy">
+      <span class="analogy-icon">🛠️</span>
+      <p><strong>함수 = 자판기</strong>입니다. 동전(인자)을 넣으면 음료(반환값)가 나오죠. 미니 프로젝트의 모든 기능은 함수로 만듭니다.</p>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-head">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-name">func.py</span>
+        <button class="copy-btn" onclick="cp(this)">복사</button>
+      </div>
+<pre><code><span class="cm"># 점수 리스트를 받아 평균을 돌려주는 함수</span>
+<span class="kw">def</span> <span class="fn">get_average</span>(score_list):
+    <span class="kw">if</span> <span class="bl">len</span>(score_list) == <span class="nm">0</span>:
+        <span class="kw">return</span> <span class="nm">0</span>
+    <span class="kw">return</span> <span class="bl">sum</span>(score_list) / <span class="bl">len</span>(score_list)
+
+<span class="fn">print</span>(<span class="fn">get_average</span>([<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>]))   <span class="cm"># 85.0</span>
+<span class="fn">print</span>(<span class="fn">get_average</span>([]))               <span class="cm"># 0</span>
+
+
+<span class="cm"># 평균 점수를 받아 등급을 돌려주는 함수</span>
+<span class="kw">def</span> <span class="fn">get_grade</span>(avg):
+    <span class="kw">if</span>   avg >= <span class="nm">90</span>: <span class="kw">return</span> <span class="st">"A"</span>
+    <span class="kw">elif</span> avg >= <span class="nm">80</span>: <span class="kw">return</span> <span class="st">"B"</span>
+    <span class="kw">elif</span> avg >= <span class="nm">70</span>: <span class="kw">return</span> <span class="st">"C"</span>
+    <span class="kw">else</span>:             <span class="kw">return</span> <span class="st">"F"</span>
+
+<span class="fn">print</span>(<span class="fn">get_grade</span>(<span class="nm">85</span>))   <span class="cm"># B</span>
+<span class="fn">print</span>(<span class="fn">get_grade</span>(<span class="nm">95</span>))   <span class="cm"># A</span></code></pre>
+    </div>
+
+    <div class="project-callout">
+      <h4>🎯 이 두 함수가 곧 미니 프로젝트의 부품</h4>
+      <p>다음 섹션의 학생 점수 관리 시스템은 <code>get_average</code>와 <code>get_grade</code>를 그대로 가져다 쓰면서, 학생 추가·삭제·전체 출력 함수를 위에 얹는 구조입니다.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <h3>✏️ 종합 연습</h3>
+
+    <div class="ex-item">
+      <span class="ex-num">Q1</span>
+      <p><code>ages = [15, 22, 17, 30, 19, 25]</code>에서 <strong>20세 이상인 사람만</strong> 골라 새 리스트로 만드세요.</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">ages = [15, 22, 17, 30, 19, 25]
+adults = []
+for a in ages:
+    if a >= 20:
+        adults.append(a)
+print(adults)   # [22, 30, 25]</pre>
+    </div>
+
+    <div class="ex-item">
+      <span class="ex-num">Q2</span>
+      <p>점수 리스트를 받아 <strong>(평균, 최댓값, 최솟값)</strong>을 한 번에 돌려주는 함수 <code>analyze(score_list)</code>를 만드세요.</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">def analyze(score_list):
+    avg = sum(score_list) / len(score_list)
+    return avg, max(score_list), min(score_list)
+
+avg, hi, lo = analyze([85, 92, 78, 95, 88])
+print(f"평균 {avg:.1f}, 최대 {hi}, 최소 {lo}")
+# 평균 87.6, 최대 95, 최소 78</pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     5. 미니 프로젝트
+═══════════════════════════════════════════ -->
+<section id="project" class="section combo">
+  <div class="section-header">
+    <div class="s-badge b3">🎯</div>
+    <div>
+      <div class="s-title">5. 미니 프로젝트 — 학생 점수 관리 시스템</div>
+      <div class="s-desc">지금까지 배운 것을 모두 모아 작은 프로그램을 만든다</div>
+    </div>
+  </div>
+
+  <p style="font-size:14.5px;color:var(--text2);margin-bottom:14px;">
+    학생들의 정보를 <strong>딕셔너리의 리스트</strong>로 저장하고, 추가·삭제·검색·통계 기능을 함수로 만듭니다.
+    이 패턴은 실제 데이터 분석에서 CSV 한 줄 한 줄을 다룰 때와 똑같은 구조입니다.
+  </p>
+
+  <div class="callout callout-info">
+    <span class="callout-icon">🧩</span>
+    <div>
+      <strong>여기까지의 부품 점검</strong>
+      ① 리스트 <code>append</code>·<code>pop</code> → 학생 추가·삭제 &nbsp;|&nbsp; ② 슬라이싱 → 일부 학생/점수만 보기 &nbsp;|&nbsp; ③ 딕셔너리 <code>[키]</code> → 학생 한 명의 정보 꺼내기 &nbsp;|&nbsp; ④ <code>for</code>+<code>if</code> → 명단 순회·합격자 찾기 &nbsp;|&nbsp; ⑤ <code>def</code> → 기능을 함수로 묶기
+    </div>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-head">
+      <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+      <span class="code-name">project_grades.py</span>
+      <button class="copy-btn" onclick="cp(this)">복사</button>
+    </div>
+<pre><code><span class="cm"># 학생 정보 = 리스트(명단) + 딕셔너리(학생 한 명)</span>
+students = [
+    {<span class="st">"name"</span>: <span class="st">"민준"</span>, <span class="st">"grade"</span>: <span class="nm">1</span>, <span class="st">"scores"</span>: [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>]},
+    {<span class="st">"name"</span>: <span class="st">"서연"</span>, <span class="st">"grade"</span>: <span class="nm">2</span>, <span class="st">"scores"</span>: [<span class="nm">95</span>, <span class="nm">88</span>, <span class="nm">90</span>]},
+    {<span class="st">"name"</span>: <span class="st">"지호"</span>, <span class="st">"grade"</span>: <span class="nm">1</span>, <span class="st">"scores"</span>: [<span class="nm">72</span>, <span class="nm">68</span>, <span class="nm">75</span>]},
+]
+
+
+<span class="cm"># ─── 함수 1: 학생 추가 ────────────────────</span>
+<span class="kw">def</span> <span class="fn">add_student</span>(student_list, name, grade, scores):
+    new_student = {<span class="st">"name"</span>: name, <span class="st">"grade"</span>: grade, <span class="st">"scores"</span>: scores}
+    student_list.<span class="fn">append</span>(new_student)
+    <span class="fn">print</span>(<span class="st">f"✅ {name} 학생을 추가했습니다."</span>)
+
+
+<span class="cm"># ─── 함수 2: 학생 삭제 (이름으로 찾기) ─────</span>
+<span class="kw">def</span> <span class="fn">remove_student</span>(student_list, name):
+    <span class="kw">for</span> i, s <span class="kw">in</span> <span class="bl">enumerate</span>(student_list):
+        <span class="kw">if</span> s[<span class="st">"name"</span>] == name:
+            student_list.<span class="fn">pop</span>(i)
+            <span class="fn">print</span>(<span class="st">f"🗑️ {name} 학생을 삭제했습니다."</span>)
+            <span class="kw">return</span>
+    <span class="fn">print</span>(<span class="st">f"⚠️ {name} 학생을 찾을 수 없습니다."</span>)
+
+
+<span class="cm"># ─── 함수 3: 학생 찾기 ────────────────────</span>
+<span class="kw">def</span> <span class="fn">find_student</span>(student_list, name):
+    <span class="kw">for</span> s <span class="kw">in</span> student_list:
+        <span class="kw">if</span> s[<span class="st">"name"</span>] == name:
+            <span class="kw">return</span> s
+    <span class="kw">return</span> <span class="kw">None</span>
+
+
+<span class="cm"># ─── 함수 4: 평균 + 등급 (앞 섹션 부품 재사용) ─</span>
+<span class="kw">def</span> <span class="fn">get_average</span>(score_list):
+    <span class="kw">return</span> <span class="bl">sum</span>(score_list) / <span class="bl">len</span>(score_list)
+
+<span class="kw">def</span> <span class="fn">get_grade</span>(avg):
+    <span class="kw">if</span>   avg >= <span class="nm">90</span>: <span class="kw">return</span> <span class="st">"A"</span>
+    <span class="kw">elif</span> avg >= <span class="nm">80</span>: <span class="kw">return</span> <span class="st">"B"</span>
+    <span class="kw">elif</span> avg >= <span class="nm">70</span>: <span class="kw">return</span> <span class="st">"C"</span>
+    <span class="kw">else</span>:             <span class="kw">return</span> <span class="st">"F"</span>
+
+
+<span class="cm"># ─── 함수 5: 전체 명단 출력 ────────────────</span>
+<span class="kw">def</span> <span class="fn">print_all</span>(student_list):
+    <span class="fn">print</span>(<span class="st">"\n📋 학생 명단"</span>)
+    <span class="fn">print</span>(<span class="st">"─"</span> * <span class="nm">42</span>)
+    <span class="kw">for</span> s <span class="kw">in</span> student_list:
+        avg = <span class="fn">get_average</span>(s[<span class="st">"scores"</span>])
+        <span class="fn">print</span>(<span class="st">f"{s['name']:&lt;6} | {s['grade']}학년 | "</span>
+              <span class="st">f"평균 {avg:5.1f} | 등급 {get_grade(avg)}"</span>)
+
+
+<span class="cm"># ─── 함수 6: 슬라이싱 활용 — 상위 N명 미리보기 ─</span>
+<span class="kw">def</span> <span class="fn">preview</span>(student_list, n=<span class="nm">2</span>):
+    <span class="fn">print</span>(<span class="st">f"\n👀 처음 {n}명 미리보기"</span>)
+    <span class="kw">for</span> s <span class="kw">in</span> student_list[:n]:        <span class="cm"># ← 슬라이싱!</span>
+        <span class="fn">print</span>(<span class="st">f"  - {s['name']} ({s['grade']}학년)"</span>)
+
+
+<span class="cm"># ─── 실행 ────────────────────────────────</span>
+<span class="fn">print_all</span>(students)
+
+<span class="fn">add_student</span>(students, <span class="st">"예린"</span>, <span class="nm">3</span>, [<span class="nm">88</span>, <span class="nm">91</span>, <span class="nm">85</span>])
+<span class="fn">remove_student</span>(students, <span class="st">"지호"</span>)
+
+<span class="fn">print_all</span>(students)
+<span class="fn">preview</span>(students, <span class="nm">2</span>)
+
+found = <span class="fn">find_student</span>(students, <span class="st">"서연"</span>)
+<span class="fn">print</span>(<span class="st">f"\n🔍 서연 정보: {found}"</span>)</code></pre>
+  </div>
+
+  <div class="output">
+<span class="output-label">실행 결과</span>
+📋 학생 명단
+──────────────────────────────────────────
+민준   | 1학년 | 평균  85.0 | 등급 B
+서연   | 2학년 | 평균  91.0 | 등급 A
+지호   | 1학년 | 평균  71.7 | 등급 C
+✅ 예린 학생을 추가했습니다.
+🗑️ 지호 학생을 삭제했습니다.
+
+📋 학생 명단
+──────────────────────────────────────────
+민준   | 1학년 | 평균  85.0 | 등급 B
+서연   | 2학년 | 평균  91.0 | 등급 A
+예린   | 3학년 | 평균  88.0 | 등급 B
+
+👀 처음 2명 미리보기
+  - 민준 (1학년)
+  - 서연 (2학년)
+
+🔍 서연 정보: {'name': '서연', 'grade': 2, 'scores': [95, 88, 90]}</div>
+
+  <div class="callout callout-good" style="margin-top:18px;">
+    <span class="callout-icon">🎓</span>
+    <div>
+      <strong>이 작은 프로그램에 모든 것이 들어있습니다</strong>
+      • <strong>리스트</strong>: 학생 명단 + <code>append</code>/<code>pop</code>으로 추가·삭제<br>
+      • <strong>슬라이싱</strong>: <code>students[:n]</code>으로 처음 n명만 미리보기<br>
+      • <strong>딕셔너리</strong>: 학생 한 명의 정보(<code>name</code>, <code>grade</code>, <code>scores</code>)<br>
+      • <strong>for + if</strong>: 명단 순회, 이름 일치 검사<br>
+      • <strong>함수</strong>: 각 기능을 이름으로 묶어 재사용
+    </div>
+  </div>
+
+  <div class="exercise">
+    <h3>🚀 도전 과제 — 위 코드를 확장해 보세요</h3>
+
+    <div class="ex-item">
+      <span class="ex-num">CHALLENGE 1</span>
+      <p>학생의 점수를 새 리스트로 갈아끼우는 함수 <code>update_scores(student_list, name, new_scores)</code>를 만드세요.</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">def update_scores(student_list, name, new_scores):
+    for s in student_list:
+        if s["name"] == name:
+            s["scores"] = new_scores
+            return
+    print(f"⚠️ {name} 학생 없음")
+
+update_scores(students, "민준", [100, 95, 90])
+print_all(students)</pre>
+    </div>
+
+    <div class="ex-item">
+      <span class="ex-num">CHALLENGE 2</span>
+      <p>슬라이싱으로 <strong>각 학생의 마지막 시험 점수</strong>만 모아 출력하세요. (<code>scores[-1]</code>)</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">for s in students:
+    last_score = s["scores"][-1]
+    print(f"{s['name']}: {last_score}")</pre>
+    </div>
+
+    <div class="ex-item">
+      <span class="ex-num">CHALLENGE 3</span>
+      <p>평균이 가장 높은 학생의 이름을 돌려주는 함수 <code>top_student(student_list)</code>를 만드세요.</p>
+      <span class="ex-toggle" onclick="toggle(this)">정답 보기</span>
+      <pre class="ex-answer">def top_student(student_list):
+    top_name = ""
+    top_avg = -1
+    for s in student_list:
+        avg = get_average(s["scores"])
+        if avg > top_avg:
+            top_avg = avg
+            top_name = s["name"]
+    return top_name
+
+print(top_student(students))   # 서연</pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>🐍 <strong>파이썬 기초</strong> — 리스트와 딕셔너리로 학생 점수 관리 만들기</p>
+  <p style="margin-top:6px; font-size:12px; color:var(--text4);">데이터 분석으로 넘어가기 전, 자료구조를 탄탄하게 다지는 입문 과정</p>
+</footer>
+
+<script>
+function cp(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('ok'); }, 1800);
+  });
+}
+
+function toggle(btn) {
+  const ans = btn.nextElementSibling;
+  if (ans && ans.classList.contains('ex-answer')) {
+    ans.classList.toggle('show');
+    btn.textContent = ans.classList.contains('show') ? '정답 닫기' : '정답 보기';
+  }
+}
+
+const links = document.querySelectorAll('.nav-link');
+const sections = [...document.querySelectorAll('section.section, #intro')];
+window.addEventListener('scroll', () => {
+  let cur = 'intro';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 140) cur = s.id;
+  });
+  links.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+  });
+});
+</script>
+</body>
+</html>
