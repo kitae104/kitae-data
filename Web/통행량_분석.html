@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통행량 데이터 분석 | 시간대별·요일별 분석 가이드</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --pass: #0EA5E9;
+  --pass-d: #0369A1;
+  --pass-pale: #E0F2FE;
+  --woman: #EC4899;
+  --young: #F59E0B;
+  --accent: #0891B2;
+  --accent-d: #155E75;
+  --accent-pale: #ECFEFF;
+  --blue: #3B82F6;
+  --blue-pale: #EFF6FF;
+  --amber: #D97706;
+  --amber-pale: #FFFBEB;
+  --bg: #F0FdFF;
+  --surface: #FFFFFF;
+  --border: #BAE6FD;
+  --border2: #E2E8F0;
+  --text: #0F172A;
+  --text2: #374151;
+  --text3: #9CA3AF;
+  --code-bg: #0D1117;
+  --radius: 12px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+
+/* ── 헤더 ─────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, #0C4A6E 0%, #0891B2 55%, #06B6D4 100%);
+  color: white; padding: 56px 40px 48px; position: relative; overflow: hidden;
+}
+.hero::after {
+  content: '🚶';
+  position: absolute; right: 60px; bottom: -10px;
+  font-size: 140px; opacity: 0.12; line-height: 1;
+}
+.hero-inner { max-width: 940px; margin: 0 auto; position: relative; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  color: white; font-size: 12px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 20px; margin-bottom: 20px;
+}
+.hero h1 { font-size: clamp(24px, 4vw, 44px); font-weight: 700; line-height: 1.2; margin-bottom: 14px; }
+.hero h1 em { font-style: normal; color: #BAE6FD; }
+.hero p { font-size: 16px; color: rgba(255,255,255,0.88); max-width: 640px; line-height: 1.65; margin-bottom: 28px; }
+.hero-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+.badge {
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+  color: white; font-size: 13px; padding: 5px 14px; border-radius: 20px;
+}
+
+/* ── 진행 트랙 ─────────────────────── */
+.track-bar {
+  background: white; border-bottom: 2px solid var(--border);
+  position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.track-inner {
+  max-width: 940px; margin: 0 auto;
+  display: flex; overflow-x: auto; gap: 0;
+}
+.track-step {
+  flex: 1; min-width: 100px; display: flex; flex-direction: column;
+  align-items: center; padding: 12px 10px; cursor: pointer;
+  border-bottom: 3px solid transparent; transition: all 0.2s;
+  text-decoration: none;
+}
+.track-step:hover { background: var(--accent-pale); }
+.track-step.active { border-bottom-color: var(--accent); }
+.step-circle {
+  width: 28px; height: 28px; border-radius: 50%; border: 2px solid #CBD5E1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #94A3B8;
+  margin-bottom: 4px; transition: all 0.2s;
+}
+.track-step.active .step-circle { background: var(--accent); border-color: var(--accent); color: white; }
+.step-label { font-size: 11px; color: #6B7280; text-align: center; line-height: 1.3; }
+.track-step.active .step-label { color: var(--accent); font-weight: 600; }
+
+/* ── 메인 ─────────────────────────── */
+.main { max-width: 940px; margin: 0 auto; padding: 40px 20px 80px; }
+
+/* ── 스텝 섹션 ──────────────────── */
+.phase {
+  margin-top: 52px; margin-bottom: 0;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+}
+.phase-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(90deg, var(--accent) 0%, #06B6D4 100%);
+  color: white;
+}
+.phase:first-child { margin-top: 0; }
+.ph-num {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700; flex-shrink: 0;
+}
+.ph-info h2 { font-size: 19px; font-weight: 700; margin-bottom: 2px; }
+.ph-info p { font-size: 13px; color: rgba(255,255,255,0.85); }
+.phase-body { padding: 24px; }
+
+/* ── 코드 블록 ─────────────────────── */
+.cb {
+  background: var(--code-bg); border-radius: var(--radius);
+  overflow: hidden; margin: 16px 0; border: 1px solid rgba(255,255,255,0.06);
+}
+.ch {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.dots { display: flex; gap: 5px; }
+.dots span { width: 11px; height: 11px; border-radius: 50%; }
+.dr { background: #FF5F57; } .dy { background: #FEBC2E; } .dg { background: #28C840; }
+.clabel { font-size: 11px; color: #64748B; font-family: 'JetBrains Mono', monospace; }
+.cpbtn {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  color: #94A3B8; font-size: 11px; padding: 3px 10px; border-radius: 5px;
+  cursor: pointer; font-family: 'Noto Sans KR'; transition: all 0.15s;
+}
+.cpbtn:hover { color: white; background: rgba(255,255,255,0.13); }
+.cpbtn.ok { color: #34D399; background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); }
+pre { padding: 18px 20px; overflow-x: auto; margin: 0; font-size: 13.5px; line-height: 1.85; }
+code { font-family: 'JetBrains Mono', monospace; color: #CBD5E1; }
+.kw { color: #C792EA; }
+.fn { color: #82AAFF; }
+.st { color: #C3E88D; }
+.cm { color: #5A6678; font-style: italic; }
+.nm { color: #F78C6C; }
+.op { color: #89DDFF; }
+
+/* ── 출력 영역 ─────────────────────── */
+.out {
+  background: #F8FAFC; border: 1px solid #E2E8F0;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 13px 18px; font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px; color: #334155; white-space: pre; overflow-x: auto;
+}
+.cb + .out { margin-top: -16px; }
+
+/* ── 설명·팁 박스 ─────────────────── */
+.explain {
+  background: #F9FAFB; border: 1px solid #E5E7EB;
+  border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 18px; margin: 14px 0; font-size: 14px; color: var(--text2);
+}
+.explain strong { color: var(--text); }
+.tip-box {
+  border-radius: var(--radius); padding: 14px 18px;
+  margin: 12px 0; display: flex; gap: 12px; align-items: flex-start; font-size: 14px;
+}
+.tip-box.info { background: var(--blue-pale); border: 1px solid #BFDBFE; }
+.tip-box.warn { background: var(--amber-pale); border: 1px solid #FDE68A; }
+.tip-box.good { background: var(--accent-pale); border: 1px solid #A5F3FC; }
+.tip-box.info p { color: #1E40AF; }
+.tip-box.warn p { color: #92400E; }
+.tip-box.good p { color: #155E75; }
+.ti { font-size: 18px; flex-shrink: 0; }
+.tip-box p { margin: 0; line-height: 1.65; }
+
+/* ── 데이터 구조 표 ────────── */
+.diff-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 14px 0; }
+.diff-table th { background: #1E293B; color: white; padding: 9px 14px; text-align: left; font-weight: 600; }
+.diff-table td { padding: 9px 14px; border-bottom: 1px solid var(--border2); }
+.diff-table tr:nth-child(even) td { background: #F8FAFC; }
+.new { color: var(--accent-d); font-family: 'JetBrains Mono', monospace; font-size: 12.5px; font-weight: 700; }
+
+/* ── 최종 코드 통합 박스 ────────────── */
+.full-code-box {
+  background: linear-gradient(135deg, #0C4A6E, #155E75);
+  border-radius: var(--radius); padding: 24px; margin-top: 16px;
+}
+.full-code-box h3 { color: #BAE6FD; font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.full-code-box .cb { border-color: rgba(255,255,255,0.1); }
+
+/* ── 핵심 정리 ─────────────────────── */
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+.sum-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 14px 16px;
+}
+.sum-card .fn-name {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600;
+  background: var(--accent-pale); color: var(--accent-d);
+  padding: 2px 8px; border-radius: 5px; display: inline-block; margin-bottom: 7px;
+}
+.sum-card p { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+/* ── 연습 ─────────────────────────── */
+.exercise-box {
+  background: linear-gradient(135deg, #0C4A6E, #155E75);
+  border-radius: var(--radius); padding: 28px; color: white; margin-top: 16px;
+}
+.exercise-box h3 { font-size: 17px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.ex-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; font-size: 14px; }
+.ex-item:last-child { margin-bottom: 0; }
+.ex-num { font-weight: 700; color: #BAE6FD; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.ex-item p { color: rgba(255,255,255,0.92); line-height: 1.6; }
+.ex-hint { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 5px; font-style: italic; }
+
+/* ── 미리보기 범례 ─────────── */
+.legend {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; color: #6B7280; font-weight: 600;
+  padding: 2px 10px; border-radius: 12px; background: #F1F5F9;
+  margin-right: 6px;
+}
+.legend .dot { width: 10px; height: 10px; border-radius: 3px; }
+.legend.pass .dot { background: var(--pass); }
+.legend.woman .dot { background: var(--woman); }
+.legend.young .dot { background: var(--young); }
+
+/* ── 인사이트 카드 ─────────── */
+.insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 12px; margin: 14px 0; }
+.insight-card { background: white; border: 1px solid var(--border2); border-radius: var(--radius); padding: 16px; text-align: center; }
+.insight-card .big { font-size: 26px; font-weight: 700; color: var(--accent-d); }
+.insight-card .lbl { font-size: 12px; color: #6B7280; margin-top: 4px; }
+
+footer { background: #0C4A6E; color: #BAE6FD; text-align: center; padding: 28px; font-size: 13px; margin-top: 60px; }
+@media (max-width: 640px) { .hero { padding: 36px 18px; } .main { padding: 28px 14px; } }
+</style>
+</head>
+<body>
+
+<!-- ─── 헤더 ─────────────────────────── -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">🚶 데이터 분석 프로젝트</div>
+    <h1>특정 지점 <em>통행량</em> 분석<br>시간대별 · 요일별 분석 가이드</h1>
+    <p>7일 동안 24시간 내내 기록한 통행량 데이터(passby_data.csv)를 pandas로 불러와, <em>시간대별 통행량</em>과 <em>요일별 통행량</em>을 분석합니다. 통행자·여성·청년 세 그룹을 한 그래프에서 비교해, 언제·어떤 요일에 누가 많이 다니는지 한눈에 봅니다. 초보자도 따라 할 수 있게 꼭 필요한 코드만 담았습니다.</p>
+    <div class="hero-badges">
+      <span class="badge">📝 4단계 구성</span>
+      <span class="badge">7일 × 24시간 = 168행</span>
+      <span class="badge">통행자·여성·청년 비교</span>
+      <span class="badge">선그래프 비교</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─── 진행 바 ─────────────────────────── -->
+<nav class="track-bar">
+  <div class="track-inner">
+    <a class="track-step active" href="#p1">
+      <div class="step-circle">1</div>
+      <div class="step-label">데이터<br>이해하기</div>
+    </a>
+    <a class="track-step" href="#p2">
+      <div class="step-circle">2</div>
+      <div class="step-label">파일 읽기 &<br>시간·요일 만들기</div>
+    </a>
+    <a class="track-step" href="#p3">
+      <div class="step-circle">3</div>
+      <div class="step-label">시간대별<br>통행량</div>
+    </a>
+    <a class="track-step" href="#p4">
+      <div class="step-circle">4</div>
+      <div class="step-label">요일별 통행량<br>& 완성</div>
+    </a>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ════════════════════════════════════
+  완성 목표 소개
+════════════════════════════════════ -->
+<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+  <h3 style="font-size:16px;font-weight:700;color:var(--accent-d);margin-bottom:12px;">🎯 우리가 만들 분석 결과는 이런 모습입니다</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:14px;color:#374151;">
+    <div>
+      <p style="font-weight:600;margin-bottom:6px;">📥 입력</p>
+      <p>168줄(7일 × 24시간)의 통행 기록 CSV<br>→ 통행자·여성·청년 3가지 숫자</p>
+    </div>
+    <div>
+      <p style="font-weight:600;margin-bottom:6px;">📤 출력 (최종 그래프 2개)</p>
+      <p><strong>① 시간대별 통행량</strong> — 3그룹 선그래프<br><strong>② 요일별 통행량</strong> — 3그룹 선그래프</p>
+    </div>
+  </div>
+
+  <!-- 미리보기 ①: 시간대별 선그래프 (3그룹 합계) -->
+  <div style="background:#F8FAFC;border-radius:8px;padding:16px;margin-top:14px;">
+    <p style="font-size:12px;color:#6B7280;margin-bottom:8px;font-weight:600;text-align:center;">미리보기 ①: 시간대별 통행량 합계 (0시~23시) — 통행자·여성·청년 비교</p>
+    <div style="text-align:center;margin-bottom:6px;">
+      <span class="legend pass"><span class="dot"></span>통행자</span>
+      <span class="legend woman"><span class="dot"></span>여성</span>
+      <span class="legend young"><span class="dot"></span>청년</span>
+    </div>
+    <svg viewBox="0 0 740 250" style="width:100%;display:block;font-family:'Noto Sans KR',sans-serif;">
+      <line x1="40" y1="235" x2="720" y2="235" stroke="#CBD5E1" stroke-width="1"/>
+      <!-- 통행자 (파랑) HP -->
+      <polyline fill="none" stroke="#0EA5E9" stroke-width="2.2"
+        points="40.0,221.7 69.6,235 99.1,235 128.7,235 158.3,235 187.8,208.5 217.4,212.9 247.0,105.2 276.5,65.4 306.1,130.3 335.7,198.1 365.2,30.0 394.8,56.6 424.4,155.4 453.9,139.1 483.5,106.7 513.0,139.1 542.6,146.5 572.2,55.1 601.7,78.7 631.3,121.4 660.9,180.4 690.4,167.2 720.0,193.7"/>
+      <!-- 청년 (주황) HY -->
+      <polyline fill="none" stroke="#F59E0B" stroke-width="2.2"
+        points="40.0,221.7 69.6,235 99.1,235 128.7,235 158.3,235 187.8,209.9 217.4,214.4 247.0,130.3 276.5,106.7 306.1,137.7 335.7,202.6 365.2,58.0 394.8,83.1 424.4,226.2 453.9,212.9 483.5,202.6 513.0,223.2 542.6,156.8 572.2,75.7 601.7,105.2 631.3,127.3 660.9,187.8 690.4,173.1 720.0,199.6"/>
+      <!-- 여성 (분홍) HW -->
+      <polyline fill="none" stroke="#EC4899" stroke-width="2.2"
+        points="40.0,232.1 69.6,235 99.1,235 128.7,235 158.3,235 187.8,220.3 217.4,224.7 247.0,207.0 276.5,155.4 306.1,189.3 335.7,217.3 365.2,134.7 394.8,136.2 424.4,214.4 453.9,152.4 483.5,125.9 513.0,152.4 542.6,196.7 572.2,152.4 601.7,158.3 631.3,184.9 660.9,207.0 690.4,202.6 720.0,209.9"/>
+      <!-- x labels -->
+      <text x="40.0"  y="248" font-size="9" fill="#6B7280" text-anchor="middle">0</text>
+      <text x="128.7" y="248" font-size="9" fill="#6B7280" text-anchor="middle">3</text>
+      <text x="217.4" y="248" font-size="9" fill="#6B7280" text-anchor="middle">6</text>
+      <text x="306.1" y="248" font-size="9" fill="#6B7280" text-anchor="middle">9</text>
+      <text x="365.2" y="248" font-size="9" fill="#0369A1" font-weight="700" text-anchor="middle">11</text>
+      <text x="394.8" y="248" font-size="9" fill="#6B7280" text-anchor="middle">12</text>
+      <text x="483.5" y="248" font-size="9" fill="#BE185D" font-weight="700" text-anchor="middle">15</text>
+      <text x="572.2" y="248" font-size="9" fill="#6B7280" text-anchor="middle">18</text>
+      <text x="660.9" y="248" font-size="9" fill="#6B7280" text-anchor="middle">21</text>
+      <text x="720.0" y="248" font-size="9" fill="#6B7280" text-anchor="middle">23</text>
+    </svg>
+  </div>
+
+  <!-- 미리보기 ②: 요일별 선그래프 (3그룹) -->
+  <div style="background:#F8FAFC;border-radius:8px;padding:16px;margin-top:12px;">
+    <p style="font-size:12px;color:#6B7280;margin-bottom:8px;font-weight:600;text-align:center;">미리보기 ②: 요일별 통행량 합계 (월~일) — 통행자·여성·청년 비교</p>
+    <div style="text-align:center;margin-bottom:6px;">
+      <span class="legend pass"><span class="dot"></span>통행자</span>
+      <span class="legend woman"><span class="dot"></span>여성</span>
+      <span class="legend young"><span class="dot"></span>청년</span>
+    </div>
+    <svg viewBox="0 0 560 230" style="width:100%;max-width:560px;display:block;margin:0 auto;font-family:'Noto Sans KR',sans-serif;">
+      <line x1="40" y1="200" x2="540" y2="200" stroke="#CBD5E1" stroke-width="1"/>
+      <!-- 통행자 (파랑) DP -->
+      <polyline fill="none" stroke="#0EA5E9" stroke-width="2.2"
+        points="60,34.5 133.3,24.9 206.7,37.9 280,47.5 353.3,20.1 426.7,144.6 500,168.5"/>
+      <!-- 청년 (주황) DY -->
+      <polyline fill="none" stroke="#F59E0B" stroke-width="2.2"
+        points="60,85.1 133.3,75.5 206.7,85.8 280,82.4 353.3,68.0 426.7,153.5 500,179.5"/>
+      <!-- 여성 (분홍) DW -->
+      <polyline fill="none" stroke="#EC4899" stroke-width="2.2"
+        points="60,113.1 133.3,98.1 206.7,123.4 280,128.9 353.3,100.8 426.7,174.7 500,185.0"/>
+      <!-- 점 (통행자) -->
+      <circle cx="60" cy="34.5" r="3" fill="#0EA5E9"/><circle cx="133.3" cy="24.9" r="3" fill="#0EA5E9"/><circle cx="206.7" cy="37.9" r="3" fill="#0EA5E9"/><circle cx="280" cy="47.5" r="3" fill="#0EA5E9"/><circle cx="353.3" cy="20.1" r="3" fill="#0EA5E9"/><circle cx="426.7" cy="144.6" r="3" fill="#0EA5E9"/><circle cx="500" cy="168.5" r="3" fill="#0EA5E9"/>
+      <!-- day labels -->
+      <text x="60"    y="214" font-size="11" fill="#374151" text-anchor="middle">월</text>
+      <text x="133.3" y="214" font-size="11" fill="#374151" text-anchor="middle">화</text>
+      <text x="206.7" y="214" font-size="11" fill="#374151" text-anchor="middle">수</text>
+      <text x="280"   y="214" font-size="11" fill="#374151" text-anchor="middle">목</text>
+      <text x="353.3" y="214" font-size="11" fill="#0369A1" font-weight="700" text-anchor="middle">금</text>
+      <text x="426.7" y="214" font-size="11" fill="#374151" text-anchor="middle">토</text>
+      <text x="500"   y="214" font-size="11" fill="#374151" text-anchor="middle">일</text>
+      <text x="290" y="227" font-size="10" fill="#374151" text-anchor="middle">평일은 붐비고 금요일이 정점, 주말은 한산함</text>
+    </svg>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+  PHASE 1. 데이터 이해
+════════════════════════════════════ -->
+<section id="p1" class="phase">
+  <div class="phase-header">
+    <div class="ph-num">1</div>
+    <div class="ph-info">
+      <h2>데이터 이해하기 — passby_data.csv는 어떤 데이터인가?</h2>
+      <p>분석을 시작하기 전에 데이터가 어떻게 생겼는지부터 봅니다</p>
+    </div>
+  </div>
+  <div class="phase-body">
+
+    <div class="explain">
+      passby_data.csv는 어떤 지점을 지나간 사람 수를 <strong>1시간 단위</strong>로 기록한 데이터입니다.
+      <strong>7일 × 24시간 = 168줄</strong>이 위에서부터 차례대로 들어 있고, 각 줄마다 그 1시간 동안의
+      <strong>통행자 수(passenger)</strong>, 그중 <strong>여성(woman)</strong>, <strong>청년(young)</strong> 수가 담겨 있습니다.
+    </div>
+
+    <!-- 구조 표 -->
+    <table class="diff-table">
+      <tr><th>항목</th><th>내용</th></tr>
+      <tr><td>전체 행(row) 수</td><td><span class="new">168행</span> = 7일 × 24시간</td></tr>
+      <tr><td>열(column) 수</td><td><span class="new">3열</span> — passenger, woman, young</td></tr>
+      <tr><td>한 줄의 의미</td><td><span class="new">1시간</span> 동안의 통행량 (맨 윗줄 = 1일차 0시)</td></tr>
+      <tr><td>passenger</td><td>그 시간에 지나간 <span class="new">전체 통행자 수</span></td></tr>
+      <tr><td>woman / young</td><td>그중 <span class="new">여성 / 청년</span> 수 (통행자에 포함, 서로 겹칠 수 있음)</td></tr>
+      <tr><td>파일 인코딩</td><td><span class="new">utf-8</span> (영문 컬럼명 → 별도 옵션 불필요)</td></tr>
+    </table>
+
+    <!-- CSV 미리보기 -->
+    <div class="cb">
+      <div class="ch">
+        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="clabel">passby_data.csv — 맨 윗부분 미리보기</span>
+      </div>
+      <pre><code><span class="cm">passenger,woman,young</span>
+0,0,0        <span class="cm"># 1일차 0시 — 새벽이라 0명</span>
+0,0,0        <span class="cm"># 1일차 1시</span>
+...
+7,5,6        <span class="cm"># 1일차 5시 — 사람이 보이기 시작</span>
+4,1,3        <span class="cm"># 1일차 6시</span>
+20,1,16      <span class="cm"># 1일차 7시 — 출근 시간대</span>
+...</code></pre>
+    </div>
+
+    <!-- 다운로드 -->
+    <div style="background:linear-gradient(135deg,#ECFEFF,#CFFAFE);border:1px solid #A5F3FC;border-radius:var(--radius);padding:16px 20px;margin:14px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:220px;">
+        <p style="font-size:14px;font-weight:700;color:var(--accent-d);margin-bottom:4px;">📥 passby_data.csv 다운로드</p>
+        <p style="font-size:13px;color:#155E75;line-height:1.55;">이 가이드에서 사용하는 데이터 파일(7일 × 24시간, 168행)을 내려받아 직접 실습해 볼 수 있습니다. <b>utf-8 인코딩</b>이라 별도 옵션 없이 바로 읽힙니다.</p>
+      </div>
+      <a href="passby_data.csv" download="passby_data.csv"
+         style="background:var(--accent);color:white;text-decoration:none;font-size:13px;font-weight:700;padding:10px 18px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 6px rgba(8,145,178,0.3);transition:transform 0.15s,box-shadow 0.15s;"
+         onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 10px rgba(8,145,178,0.4)';"
+         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 6px rgba(8,145,178,0.3)';"
+         onfocus="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 10px rgba(8,145,178,0.4)';"
+         onblur="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 6px rgba(8,145,178,0.3)';">
+        ⬇️ CSV 다운로드
+      </a>
+    </div>
+
+    <div class="tip-box good">
+      <span class="ti">💡</span>
+      <p><strong>핵심은 "줄 번호 = 시간"이라는 점!</strong><br>
+      날짜·시간 컬럼이 따로 없지만, 줄 순서가 곧 시간 순서입니다. 그래서 <strong>줄 번호만 가지고</strong> "몇 시인지", "며칠째인지"를 계산해 낼 수 있습니다. 이게 2단계의 핵심이에요.</p>
+    </div>
+
+    <div class="tip-box info">
+      <span class="ti">🧮</span>
+      <p><strong>줄 번호로 시간·요일 알아내기 (미리 보기)</strong><br>
+      0번째 줄 = 1일차 0시, 23번째 줄 = 1일차 23시, 24번째 줄 = 2일차 0시 … 이렇게 24개씩 끊어집니다.<br>
+      → <strong>시간 = 줄번호 ÷ 24의 나머지</strong>, <strong>요일 = 줄번호 ÷ 24의 몫</strong></p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+  PHASE 2. 파일 읽기 & 시간·요일 만들기
+════════════════════════════════════ -->
+<section id="p2" class="phase">
+  <div class="phase-header">
+    <div class="ph-num">2</div>
+    <div class="ph-info">
+      <h2>파일 읽기 & 시간·요일 컬럼 만들기</h2>
+      <p>줄 번호(index)로 '시간'과 '요일'을 계산해 새 컬럼으로 추가합니다</p>
+    </div>
+  </div>
+  <div class="phase-body">
+
+    <div class="explain">
+      pandas로 CSV를 읽으면 각 줄에 <strong>0, 1, 2 … 167</strong>번 번호(index)가 자동으로 붙습니다.<br>
+      이 번호를 <code>% 24</code>(나머지)와 <code>// 24</code>(몫)로 계산하면 <strong>시간(0~23)</strong>과 <strong>요일(0~6)</strong>을 만들 수 있습니다.
+    </div>
+
+    <div class="cb">
+      <div class="ch">
+        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="clabel">step1_load.py — 파일 읽기 & 컬럼 추가</span>
+        <button class="cpbtn" onclick="cp(this)">복사</button>
+      </div>
+      <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="cm"># ① CSV 불러오기 (168행 × 3열)</span>
+df = pd.<span class="fn">read_csv</span>(<span class="st">'passby_data.csv'</span>)
+
+<span class="cm"># ② 줄 번호(0~167)로 '시간'과 '요일' 컬럼 만들기</span>
+df[<span class="st">'시간'</span>] = df.index <span class="op">%</span> <span class="nm">24</span>    <span class="cm"># 나머지 → 0~23 (몇 시)</span>
+df[<span class="st">'요일'</span>] = df.index <span class="op">//</span> <span class="nm">24</span>   <span class="cm"># 몫 → 0~6 (며칠째)</span>
+
+<span class="fn">print</span>(df.<span class="fn">head</span>(<span class="nm">8</span>))</code></pre>
+    </div>
+    <div class="out">   passenger  woman  young  시간  요일
+0          0      0      0   0   0
+1          0      0      0   1   0
+2          0      0      0   2   0
+3          0      0      0   3   0
+4          0      0      0   4   0
+5          7      5      6   5   0
+6          4      1      3   6   0
+7         20      1     16   7   0</div>
+
+    <div class="tip-box good">
+      <span class="ti">✅</span>
+      <p><code>%</code>(나머지)와 <code>//</code>(몫)만 알면 끝!<br>
+      줄 7번 → <code>7 % 24 = 7</code>(7시), <code>7 // 24 = 0</code>(첫째 날).<br>
+      줄 30번 → <code>30 % 24 = 6</code>(6시), <code>30 // 24 = 1</code>(둘째 날). 이렇게 모든 줄에 시간·요일이 붙습니다.</p>
+    </div>
+
+    <div class="tip-box info">
+      <span class="ti">💡</span>
+      <p><strong>이제 groupby가 핵심 도구입니다.</strong> '시간'과 '요일' 컬럼이 생겼으니, 같은 시간끼리(또는 같은 요일끼리) 묶어서 <strong>합계(sum)</strong>를 내면 분석 끝! 그 도구가 바로 <code>df.groupby()</code>입니다. 3·4단계에서 바로 써 봅니다.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+  PHASE 3. 시간대별 통행량 (선그래프)
+════════════════════════════════════ -->
+<section id="p3" class="phase">
+  <div class="phase-header">
+    <div class="ph-num">3</div>
+    <div class="ph-info">
+      <h2>시간대별 통행량 — 하루 중 언제 가장 붐빌까?</h2>
+      <p>groupby('시간').sum()으로 합계를 구해 3그룹을 선그래프로 비교합니다</p>
+    </div>
+  </div>
+  <div class="phase-body">
+
+    <div class="explain">
+      <strong>아이디어:</strong> 7일치 데이터에서 <strong>같은 시간끼리 묶어 합계</strong>를 내면, "7일 동안 0시엔 모두 몇 명, 11시엔 모두 몇 명" 하는 <strong>하루의 통행 패턴</strong>이 보입니다.<br>
+      통행자·여성·청년 <strong>세 컬럼을 한 번에</strong> 묶으려면 대괄호를 <strong>두 번</strong> 씁니다 → <code>[['passenger','woman','young']]</code>
+    </div>
+
+    <div class="cb">
+      <div class="ch">
+        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="clabel">step2_hourly.py — 시간대별 합계 구하기</span>
+        <button class="cpbtn" onclick="cp(this)">복사</button>
+      </div>
+      <pre><code><span class="cm"># 같은 '시간'끼리 묶어서 세 그룹의 합계 내기</span>
+시간대별 = df.<span class="fn">groupby</span>(<span class="st">'시간'</span>)[[<span class="st">'passenger'</span>, <span class="st">'woman'</span>, <span class="st">'young'</span>]].<span class="fn">sum</span>()
+
+<span class="fn">print</span>(시간대별)</code></pre>
+    </div>
+    <div class="out">    passenger  woman  young
+시간
+0           9      2      9
+5          18     10     17
+7          88     19     71
+8         115     54     87
+11        139     68    120      ← 통행자·청년 최고
+12        121     67    103
+15         87     74     56      ← 여성 최고
+18        122     56    108
+...</div>
+
+    <div class="explain" style="border-left-color:var(--pass);">
+      이제 합계를 <strong>선그래프(plot)</strong>로 그려 세 그룹을 한눈에 비교합니다. 선은 시간 흐름에 따른 변화를 볼 때 가장 좋습니다. 한글이 깨지지 않도록 <code>malgun.ttf</code> 폰트를 지정합니다.
+    </div>
+
+    <div class="cb">
+      <div class="ch">
+        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="clabel">step3_hourly_plot.py — 시간대별 선그래프 (3그룹 비교)</span>
+        <button class="cpbtn" onclick="cp(this)">복사</button>
+      </div>
+      <pre><code><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib.font_manager <span class="kw">as</span> fm
+fontprop = fm.<span class="fn">FontProperties</span>(fname=<span class="st">'malgun.ttf'</span>)   <span class="cm"># 한글 폰트</span>
+
+plt.<span class="fn">figure</span>(figsize=(<span class="nm">12</span>, <span class="nm">5</span>))
+
+<span class="cm"># 세 그룹을 같은 그래프에 선으로 겹쳐 그리기</span>
+plt.<span class="fn">plot</span>(시간대별.index, 시간대별[<span class="st">'passenger'</span>], marker=<span class="st">'o'</span>, label=<span class="st">'통행자'</span>)
+plt.<span class="fn">plot</span>(시간대별.index, 시간대별[<span class="st">'woman'</span>],     marker=<span class="st">'o'</span>, label=<span class="st">'여성'</span>)
+plt.<span class="fn">plot</span>(시간대별.index, 시간대별[<span class="st">'young'</span>],     marker=<span class="st">'o'</span>, label=<span class="st">'청년'</span>)
+
+plt.<span class="fn">title</span>(<span class="st">'시간대별 통행량 (7일 합계)'</span>, fontproperties=fontprop, fontsize=<span class="nm">14</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'시간 (시)'</span>, fontproperties=fontprop)
+plt.<span class="fn">ylabel</span>(<span class="st">'통행량 합계 (명)'</span>, fontproperties=fontprop)
+plt.<span class="fn">xticks</span>(<span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">24</span>))            <span class="cm"># 0~23시 모두 표시</span>
+plt.<span class="fn">legend</span>(prop=fontprop)             <span class="cm"># 범례도 한글 폰트!</span>
+plt.<span class="fn">grid</span>(alpha=<span class="nm">0.3</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+
+    <div class="tip-box warn">
+      <span class="ti">⚠️</span>
+      <p><strong>범례(legend)는 한글 폰트를 따로 지정!</strong><br>
+      <code>plt.legend(prop=fontprop)</code> 처럼 <code>prop=</code>으로 넘겨야 '통행자·여성·청년' 글자가 깨지지 않습니다. (제목·축은 <code>fontproperties=</code>, 범례는 <code>prop=</code> 으로 이름이 다른 점만 주의!)</p>
+    </div>
+
+    <div class="tip-box good">
+      <span class="ti">📊</span>
+      <p><strong>선그래프에서 읽어낼 수 있는 것</strong><br>
+      ① 세 그룹 모두 <strong>새벽 1~4시는 0명</strong>, 점심·퇴근 시간에 봉우리가 생깁니다.<br>
+      ② <strong>통행자·청년</strong>은 <strong>11시(139명·120명)</strong>에 가장 높고, 18시에 다시 솟습니다 — 패턴이 거의 겹칩니다.<br>
+      ③ 흥미롭게도 <strong>여성</strong>은 <strong>15시(74명)</strong>에 가장 높습니다. 다른 두 그룹과 봉우리 위치가 달라요!</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+  PHASE 4. 요일별 통행량 & 완성
+════════════════════════════════════ -->
+<section id="p4" class="phase">
+  <div class="phase-header">
+    <div class="ph-num">4</div>
+    <div class="ph-info">
+      <h2>요일별 통행량 & 최종 완성</h2>
+      <p>groupby('요일').sum()으로 요일별 합계를 구해 3그룹을 선그래프로 비교합니다</p>
+    </div>
+  </div>
+  <div class="phase-body">
+
+    <div class="explain">
+      이번엔 <strong>같은 요일끼리 묶어 합계</strong>를 냅니다. 요일별로 세 그룹을 비교하면 평일·주말 차이가 한눈에 보입니다.<br>
+      <code>요일</code> 컬럼은 0~6 숫자이므로, 보기 좋게 <strong>'월~일' 이름표</strong>를 X축에 붙여줍니다.
+    </div>
+
+    <div class="cb">
+      <div class="ch">
+        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="clabel">step4_daily.py — 요일별 합계 & 선그래프 (3그룹 비교)</span>
+        <button class="cpbtn" onclick="cp(this)">복사</button>
+      </div>
+      <pre><code><span class="cm"># 같은 '요일'끼리 묶어서 세 그룹의 합계</span>
+요일별 = df.<span class="fn">groupby</span>(<span class="st">'요일'</span>)[[<span class="st">'passenger'</span>, <span class="st">'woman'</span>, <span class="st">'young'</span>]].<span class="fn">sum</span>()
+요일이름 = [<span class="st">'월'</span>, <span class="st">'화'</span>, <span class="st">'수'</span>, <span class="st">'목'</span>, <span class="st">'금'</span>, <span class="st">'토'</span>, <span class="st">'일'</span>]
+
+<span class="fn">print</span>(요일별)
+
+<span class="cm"># 막대 3개를 나란히 그리기 위해 x 위치를 조금씩 옮김</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+x = np.<span class="fn">arange</span>(<span class="nm">7</span>)          <span class="cm"># [0,1,2,3,4,5,6] 요일 위치</span>
+w = <span class="nm">0.25</span>                  <span class="cm"># 막대 하나의 너비</span>
+
+plt.<span class="fn">figure</span>(figsize=(<span class="nm">10</span>, <span class="nm">5</span>))
+plt.<span class="fn">plot</span>(x, 요일별[<span class="st">'passenger'</span>], label=<span class="st">'통행자'</span>)
+plt.<span class="fn">plot</span>(x, 요일별[<span class="st">'woman'</span>],  label=<span class="st">'여성'</span>)
+plt.<span class="fn">plot</span>(x, 요일별[<span class="st">'young'</span>],      label=<span class="st">'청년'</span>)
+
+plt.<span class="fn">title</span>(<span class="st">'요일별 통행량 (7일 합계)'</span>, fontproperties=fontprop, fontsize=<span class="nm">14</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'요일'</span>, fontproperties=fontprop)
+plt.<span class="fn">ylabel</span>(<span class="st">'통행량 합계 (명)'</span>, fontproperties=fontprop)
+plt.<span class="fn">xticks</span>(x, 요일이름, fontproperties=fontprop)   <span class="cm"># 0~6 → 월~일</span>
+plt.<span class="fn">legend</span>(prop=fontprop)
+plt.<span class="fn">grid</span>(axis=<span class="st">'y'</span>, alpha=<span class="nm">0.3</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+    <div class="out">    passenger  woman  young
+요일
+0         242    127    168    (월)
+1         256    149    182    (화)
+2         237    112    167    (수)
+3         223    104    172    (목)
+4         263    145    193    (금) ← 가장 많음
+5          81     37     68    (토)
+6          46     22     30    (일) ← 가장 적음</div>
+
+    <div class="tip-box good">
+      <span class="ti">📊</span>
+      <p><strong>요일 선그래프에서 읽어낼 수 있는 것</strong><br>
+      ① 세 그룹 모두 <strong>금요일</strong>(통행자 263·여성 145·청년 193)에 가장 붐빕니다.<br>
+      ② <strong>평일 평균 244명</strong> vs <strong>주말 평균 64명</strong> — 평일이 약 <strong>4배</strong>! 출퇴근·업무 통행이 많은 지점으로 보입니다.<br>
+      ③ 어느 요일이든 <strong>청년 선이 여성 선보다 위에 있습니다</strong> — 이 지점은 청년 통행이 더 많아요.</p>
+    </div>
+
+    <!-- 인사이트 요약 -->
+    <h3 style="font-size:16px;font-weight:700;margin:24px 0 6px;color:var(--accent-d);">🔎 한눈에 보는 분석 결과</h3>
+    <div class="insight-grid">
+      <div class="insight-card"><div class="big">11시</div><div class="lbl">통행자가 가장 많은 시간<br>(합계 139명)</div></div>
+      <div class="insight-card"><div class="big">15시</div><div class="lbl">여성이 가장 많은 시간<br>(합계 74명)</div></div>
+      <div class="insight-card"><div class="big">금요일</div><div class="lbl">가장 붐비는 요일<br>(통행자 263명)</div></div>
+      <div class="insight-card"><div class="big">1,348명</div><div class="lbl">7일 전체 통행자<br>(여성 696·청년 980)</div></div>
+    </div>
+
+    <!-- 최종 완성 코드 -->
+    <div class="full-code-box">
+      <h3>🎯 최종 완성 코드 (전체 통합) — 그래프 2개</h3>
+      <div class="cb">
+        <div class="ch">
+          <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+          <span class="clabel">통행량_분석.py</span>
+          <button class="cpbtn" onclick="cp(this)">복사</button>
+        </div>
+        <pre><code><span class="cm"># ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 통행량 분석 (passby_data.csv) — 시간대별 · 요일별
+# 통행자 · 여성 · 청년 세 그룹 비교
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib.font_manager <span class="kw">as</span> fm
+
+<span class="cm"># ① 한글 폰트 설정</span>
+fontprop = fm.<span class="fn">FontProperties</span>(fname=<span class="st">'malgun.ttf'</span>)
+
+<span class="cm"># ② 데이터 불러오기 + 시간·요일 컬럼 만들기</span>
+df = pd.<span class="fn">read_csv</span>(<span class="st">'passby_data.csv'</span>)
+df[<span class="st">'시간'</span>] = df.index <span class="op">%</span> <span class="nm">24</span>
+df[<span class="st">'요일'</span>] = df.index <span class="op">//</span> <span class="nm">24</span>
+
+<span class="cm"># ③ 시간대별 통행량 (합계) — 선그래프</span>
+시간대별 = df.<span class="fn">groupby</span>(<span class="st">'시간'</span>)[[<span class="st">'passenger'</span>, <span class="st">'woman'</span>, <span class="st">'young'</span>]].<span class="fn">sum</span>()
+
+plt.<span class="fn">figure</span>(figsize=(<span class="nm">12</span>, <span class="nm">5</span>))
+plt.<span class="fn">plot</span>(시간대별.index, 시간대별[<span class="st">'passenger'</span>], marker=<span class="st">'o'</span>, label=<span class="st">'통행자'</span>)
+plt.<span class="fn">plot</span>(시간대별.index, 시간대별[<span class="st">'woman'</span>],     marker=<span class="st">'o'</span>, label=<span class="st">'여성'</span>)
+plt.<span class="fn">plot</span>(시간대별.index, 시간대별[<span class="st">'young'</span>],     marker=<span class="st">'o'</span>, label=<span class="st">'청년'</span>)
+plt.<span class="fn">title</span>(<span class="st">'시간대별 통행량 (7일 합계)'</span>, fontproperties=fontprop, fontsize=<span class="nm">14</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'시간 (시)'</span>, fontproperties=fontprop)
+plt.<span class="fn">ylabel</span>(<span class="st">'통행량 합계 (명)'</span>, fontproperties=fontprop)
+plt.<span class="fn">xticks</span>(<span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">24</span>))
+plt.<span class="fn">legend</span>(prop=fontprop)
+plt.<span class="fn">grid</span>(alpha=<span class="nm">0.3</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()
+
+<span class="cm"># ④ 요일별 통행량 (합계) — 선그래프</span>
+요일별 = df.<span class="fn">groupby</span>(<span class="st">'요일'</span>)[[<span class="st">'passenger'</span>, <span class="st">'woman'</span>, <span class="st">'young'</span>]].<span class="fn">sum</span>()
+요일이름 = [<span class="st">'월'</span>, <span class="st">'화'</span>, <span class="st">'수'</span>, <span class="st">'목'</span>, <span class="st">'금'</span>, <span class="st">'토'</span>, <span class="st">'일'</span>]
+
+x = np.<span class="fn">arange</span>(<span class="nm">7</span>)
+w = <span class="nm">0.25</span>
+plt.<span class="fn">figure</span>(figsize=(<span class="nm">10</span>, <span class="nm">5</span>))
+plt.<span class="fn">plot</span>(x, 요일별[<span class="st">'passenger'</span>], label=<span class="st">'통행자'</span>)
+plt.<span class="fn">plot</span>(x, 요일별[<span class="st">'woman'</span>],  label=<span class="st">'여성'</span>)
+plt.<span class="fn">plot</span>(x, 요일별[<span class="st">'young'</span>],      label=<span class="st">'청년'</span>)
+plt.<span class="fn">title</span>(<span class="st">'요일별 통행량 (7일 합계)'</span>, fontproperties=fontprop, fontsize=<span class="nm">14</span>)
+plt.<span class="fn">xlabel</span>(<span class="st">'요일'</span>, fontproperties=fontprop)
+plt.<span class="fn">ylabel</span>(<span class="st">'통행량 합계 (명)'</span>, fontproperties=fontprop)
+plt.<span class="fn">xticks</span>(x, 요일이름, fontproperties=fontprop)
+plt.<span class="fn">legend</span>(prop=fontprop)
+plt.<span class="fn">grid</span>(axis=<span class="st">'y'</span>, alpha=<span class="nm">0.3</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+      </div>
+    </div>
+
+    <!-- 핵심 정리 -->
+    <h3 style="font-size:16px;font-weight:700;margin:28px 0 14px;color:var(--accent-d);">📚 이번 분석 핵심 정리</h3>
+    <div class="summary-grid">
+      <div class="sum-card">
+        <div class="fn-name">df.index % 24</div>
+        <p>줄 번호의 나머지 → 시간(0~23)</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">df.index // 24</div>
+        <p>줄 번호의 몫 → 요일(0~6)</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">groupby('시간')[[...]].sum()</div>
+        <p>같은 시간끼리 묶어 세 그룹 합계</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">groupby('요일')[[...]].sum()</div>
+        <p>같은 요일끼리 묶어 세 그룹 합계</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">plt.plot(marker='o')</div>
+        <p>선그래프 — 시간 흐름·추세 비교</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">plt.plot(x, 요일별[...])</div>
+        <p>요일별도 선그래프로 세 그룹 비교</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">plt.xticks(x, 요일이름)</div>
+        <p>0~6 숫자를 월~일 이름으로 표시</p>
+      </div>
+      <div class="sum-card">
+        <div class="fn-name">prop=fontprop</div>
+        <p>범례(legend)의 한글 폰트 지정</p>
+      </div>
+    </div>
+
+    <!-- 연습 문제 -->
+    <div class="exercise-box">
+      <h3>✏️ 도전 과제</h3>
+
+      <div class="ex-item">
+        <div class="ex-num">과제 1</div>
+        <p>시간대별 선그래프에서 <strong>여성의 봉우리(15시)</strong>가 통행자·청년(11시)과 왜 다를지 생각해 보고, 15시 전후의 값을 직접 출력해 확인해 보세요.</p>
+        <div class="ex-hint">힌트: 시간대별.loc[13:17] 로 13~17시만 잘라서 보기</div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-num">과제 2</div>
+        <p>요일별 그래프를 <strong>합계(sum)</strong> 대신 <strong>평균(mean)</strong>으로 바꿔 보세요. 모양이 어떻게 달라지나요?</p>
+        <div class="ex-hint">힌트: .sum() 을 .mean() 으로만 바꾸면 됩니다</div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-num">과제 3</div>
+        <p>전체 통행자 중 <strong>청년 비율</strong>(young ÷ passenger × 100)을 구해 출력해 보세요.</p>
+        <div class="ex-hint">힌트: df['young'].sum() / df['passenger'].sum() * 100</div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-num">과제 4 (심화)</div>
+        <p><strong>평일(월~금)</strong>과 <strong>주말(토·일)</strong>로 나눠 각각 시간대별 통행자 합계를 구하고, 두 선을 한 그래프에 그려 비교해 보세요.</p>
+        <div class="ex-hint">힌트: df[df['요일'] < 5] (평일), df[df['요일'] >= 5] (주말)로 나눠 각각 groupby('시간')['passenger'].sum()</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>🚶 통행량 데이터 분석 수업자료 | passby_data.csv (7일 × 24시간 통행 기록)</p>
+</footer>
+
+<script>
+function cp(btn) {
+  const pre = btn.closest('.cb').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+
+const steps = document.querySelectorAll('.track-step');
+const phases = document.querySelectorAll('section.phase');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  phases.forEach(s => { if (window.scrollY >= s.offsetTop - 130) cur = s.id; });
+  steps.forEach(s => {
+    s.classList.toggle('active', s.getAttribute('href') === '#' + cur);
+  });
+});
+</script>
+</body>
+</html>

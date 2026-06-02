@@ -739,34 +739,22 @@ top5 = df.<span class="fn">nlargest</span>(<span class="num">5</span>, <span cla
 
     <div class="sub-step">
       <div class="sub-step-title">6-1. 합격/불합격 막대 그래프</div>
+      <p class="explain">막대 그래프(bar chart)는 <strong>카테고리별 개수나 값을 비교</strong>할 때 가장 기본이 되는 그래프입니다. <code>value_counts()</code>로 개수를 센 다음 <code>.plot.bar()</code> 한 줄만 붙이면 됩니다.</p>
       <div class="code-block">
         <div class="code-block-header">
           <span class="lang">Python</span>
           <button class="copy-btn" onclick="copyCode(this)">복사</button>
         </div>
-        <pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">12</span>, <span class="num">5</span>))
-
-<span class="cm"># ① 합격/불합격 막대 그래프</span>
+        <pre><code><span class="cm"># 합격/불합격 인원수 세기</span>
 counts = df[<span class="str">'test'</span>].<span class="fn">value_counts</span>()
-colors = [<span class="str">'#2563eb'</span>, <span class="str">'#ef4444'</span>]
-counts.<span class="fn">plot</span>.<span class="fn">bar</span>(ax=axes[<span class="num">0</span>], color=colors, rot=<span class="num">0</span>, edgecolor=<span class="str">'white'</span>)
-axes[<span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'합격/불합격 인원'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
-axes[<span class="num">0</span>].<span class="fn">set_xlabel</span>(<span class="str">''</span>)
-axes[<span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'인원 수'</span>)
-<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(counts):
-    axes[<span class="num">0</span>].<span class="fn">text</span>(i, v + <span class="num">0.2</span>, <span class="fn">str</span>(v) + <span class="str">'명'</span>, ha=<span class="str">'center'</span>, fontweight=<span class="str">'bold'</span>)
 
-<span class="cm"># ② 등급별 막대 그래프</span>
-grade_counts = df[<span class="str">'grade'</span>].<span class="fn">value_counts</span>().<span class="fn">sort_index</span>()
-grade_colors = [<span class="str">'#f59e0b'</span>, <span class="str">'#10b981'</span>, <span class="str">'#6b7280'</span>]
-grade_counts.<span class="fn">plot</span>.<span class="fn">bar</span>(ax=axes[<span class="num">1</span>], color=grade_colors, rot=<span class="num">0</span>, edgecolor=<span class="str">'white'</span>)
-axes[<span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'성적 등급별 인원'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
-axes[<span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">''</span>)
-axes[<span class="num">1</span>].<span class="fn">set_ylabel</span>(<span class="str">'인원 수'</span>)
-<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(grade_counts):
-    axes[<span class="num">1</span>].<span class="fn">text</span>(i, v + <span class="num">0.1</span>, <span class="fn">str</span>(v) + <span class="str">'명'</span>, ha=<span class="str">'center'</span>, fontweight=<span class="str">'bold'</span>)
+<span class="cm"># 막대 그래프 그리기</span>
+counts.<span class="fn">plot</span>.<span class="fn">bar</span>(color=[<span class="str">'#2563eb'</span>, <span class="str">'#ef4444'</span>], figsize=(<span class="num">7</span>, <span class="num">5</span>))
 
-plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">title</span>(<span class="str">'합격/불합격 인원'</span>)
+plt.<span class="fn">xlabel</span>(<span class="str">''</span>)
+plt.<span class="fn">ylabel</span>(<span class="str">'인원 수'</span>)
+plt.<span class="fn">xticks</span>(rotation=<span class="num">0</span>)
 plt.<span class="fn">show</span>()</code></pre>
       </div>
     </div>
@@ -774,23 +762,28 @@ plt.<span class="fn">show</span>()</code></pre>
     <hr class="divider">
 
     <div class="sub-step">
-      <div class="sub-step-title">6-2. 반별 과목 평균 비교 (그룹 막대)</div>
+      <div class="sub-step-title">6-2. 합계 점수 히스토그램</div>
+      <p class="explain">히스토그램(histogram)은 <strong>점수가 어느 구간에 얼마나 모여 있는지</strong> 한눈에 보여주는 그래프입니다. 평균만 봐서는 알 수 없는 '분포의 모양'을 드러내 줍니다.</p>
       <div class="code-block">
         <div class="code-block-header">
           <span class="lang">Python</span>
           <button class="copy-btn" onclick="copyCode(this)">복사</button>
         </div>
-        <pre><code>class_mean = df.<span class="fn">groupby</span>(<span class="str">'nclass'</span>)[[<span class="str">'math'</span>, <span class="str">'eng'</span>, <span class="str">'science'</span>]].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
+        <pre><code><span class="cm"># 합계 점수 분포 히스토그램</span>
+df[<span class="str">'tot'</span>].<span class="fn">plot</span>.<span class="fn">hist</span>(bins=<span class="num">8</span>, color=<span class="str">'#2563eb'</span>,
+                     edgecolor=<span class="str">'white'</span>, figsize=(<span class="num">8</span>, <span class="num">5</span>))
 
-ax = class_mean.<span class="fn">plot</span>.<span class="fn">bar</span>(figsize=(<span class="num">10</span>, <span class="num">5</span>), rot=<span class="num">0</span>, width=<span class="num">0.7</span>,
-                        color=[<span class="str">'#3b82f6'</span>, <span class="str">'#10b981'</span>, <span class="str">'#f59e0b'</span>])
-ax.<span class="fn">set_title</span>(<span class="str">'반별 과목 평균 점수 비교'</span>, fontsize=<span class="num">14</span>, fontweight=<span class="str">'bold'</span>)
-ax.<span class="fn">set_xlabel</span>(<span class="str">'반'</span>)
-ax.<span class="fn">set_ylabel</span>(<span class="str">'평균 점수'</span>)
-ax.<span class="fn">legend</span>([<span class="str">'수학'</span>, <span class="str">'영어'</span>, <span class="str">'과학'</span>])
-ax.<span class="fn">set_ylim</span>(<span class="num">0</span>, <span class="num">100</span>)
-plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">title</span>(<span class="str">'합계 점수 분포'</span>)
+plt.<span class="fn">xlabel</span>(<span class="str">'합계 점수'</span>)
+plt.<span class="fn">ylabel</span>(<span class="str">'인원 수'</span>)
 plt.<span class="fn">show</span>()</code></pre>
+      </div>
+      <div class="callout info" style="margin-top: 1rem;">
+        <div class="callout-icon">💡</div>
+        <div>
+          <strong>bins가 뭐예요?</strong><br>
+          막대를 몇 칸으로 나눌지 정하는 숫자입니다. <code>bins=8</code>이면 전체 점수 범위를 8등분해서 그려요. 너무 적으면 뭉뚱그려지고, 너무 많으면 들쭉날쭉합니다.
+        </div>
       </div>
     </div>
 
@@ -798,113 +791,31 @@ plt.<span class="fn">show</span>()</code></pre>
 
     <div class="sub-step">
       <div class="sub-step-title">6-3. 공부 시간 vs 합계 점수 산점도</div>
-      <p class="explain">산점도(scatter plot)는 두 변수 간의 관계를 파악할 때 사용합니다.</p>
+      <p class="explain">산점도(scatter plot)는 <strong>두 변수가 같이 움직이는지(관계가 있는지)</strong>를 볼 때 사용합니다. 공부 시간이 늘면 점수도 함께 올라가는지 확인해 봅시다. 합격/불합격은 색으로 구분합니다.</p>
       <div class="code-block">
         <div class="code-block-header">
           <span class="lang">Python</span>
           <button class="copy-btn" onclick="copyCode(this)">복사</button>
         </div>
-        <pre><code>fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">8</span>, <span class="num">6</span>))
+        <pre><code><span class="cm"># 합격은 파랑, 불합격은 빨강으로 색 지정</span>
+colors = df[<span class="str">'test'</span>].<span class="fn">map</span>({<span class="str">'Pass'</span>: <span class="str">'#2563eb'</span>, <span class="str">'Fail'</span>: <span class="str">'#ef4444'</span>})
 
-<span class="cm"># 합격/불합격 색상 구분</span>
-colors_map = {<span class="str">'Pass'</span>: <span class="str">'#2563eb'</span>, <span class="str">'Fail'</span>: <span class="str">'#ef4444'</span>}
-<span class="kw">for</span> label, group <span class="kw">in</span> df.<span class="fn">groupby</span>(<span class="str">'test'</span>):
-    ax.<span class="fn">scatter</span>(group[<span class="str">'hours'</span>], group[<span class="str">'tot'</span>],
-               c=colors_map[label], label=label,
-               s=<span class="num">80</span>, alpha=<span class="num">0.8</span>, edgecolors=<span class="str">'white'</span>)
+<span class="cm"># 산점도 그리기</span>
+df.<span class="fn">plot</span>.<span class="fn">scatter</span>(x=<span class="str">'hours'</span>, y=<span class="str">'tot'</span>,
+                c=colors, s=<span class="num">80</span>, alpha=<span class="num">0.8</span>,
+                figsize=(<span class="num">8</span>, <span class="num">6</span>))
 
-ax.<span class="fn">set_title</span>(<span class="str">'공부 시간 vs 합계 점수'</span>, fontsize=<span class="num">14</span>, fontweight=<span class="str">'bold'</span>)
-ax.<span class="fn">set_xlabel</span>(<span class="str">'공부 시간 (시간)'</span>)
-ax.<span class="fn">set_ylabel</span>(<span class="str">'합계 점수'</span>)
-ax.<span class="fn">legend</span>(title=<span class="str">'합격 여부'</span>)
-ax.<span class="fn">grid</span>(<span class="num">True</span>, alpha=<span class="num">0.3</span>)
-plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">title</span>(<span class="str">'공부 시간 vs 합계 점수'</span>)
+plt.<span class="fn">xlabel</span>(<span class="str">'공부 시간 (시간)'</span>)
+plt.<span class="fn">ylabel</span>(<span class="str">'합계 점수'</span>)
 plt.<span class="fn">show</span>()</code></pre>
       </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="sub-step">
-      <div class="sub-step-title">6-4. 과목별 점수 분포 박스플롯 + 히스토그램</div>
-      <div class="code-block">
-        <div class="code-block-header">
-          <span class="lang">Python</span>
-          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      <div class="callout info" style="margin-top: 1rem;">
+        <div class="callout-icon">🔍</div>
+        <div>
+          <strong>점들이 우상향으로 모이나요?</strong><br>
+          그렇다면 "공부 시간이 길수록 점수가 높다"는 양의 관계가 있는 것입니다. 그리고 빨간 점(불합격)들이 그래프의 어느 쪽에 모여 있는지도 확인해 보세요.
         </div>
-        <pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">14</span>, <span class="num">5</span>))
-
-<span class="cm"># ① 박스플롯: 과목별 점수 분포</span>
-df[[<span class="str">'math'</span>, <span class="str">'eng'</span>, <span class="str">'science'</span>]].<span class="fn">plot</span>.<span class="fn">box</span>(
-    ax=axes[<span class="num">0</span>],
-    patch_artist=<span class="num">True</span>,
-    boxprops=<span class="fn">dict</span>(facecolor=<span class="str">'#eff6ff'</span>),
-    medianprops=<span class="fn">dict</span>(color=<span class="str">'#2563eb'</span>, linewidth=<span class="num">2</span>)
-)
-axes[<span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'과목별 점수 분포 (박스플롯)'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
-axes[<span class="num">0</span>].<span class="fn">set_xticklabels</span>([<span class="str">'수학'</span>, <span class="str">'영어'</span>, <span class="str">'과학'</span>])
-axes[<span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'점수'</span>)
-axes[<span class="num">0</span>].<span class="fn">grid</span>(<span class="num">True</span>, alpha=<span class="num">0.3</span>)
-
-<span class="cm"># ② 히스토그램: 합계 점수 분포</span>
-df[<span class="str">'tot'</span>].<span class="fn">plot</span>.<span class="fn">hist</span>(ax=axes[<span class="num">1</span>], bins=<span class="num">8</span>, color=<span class="str">'#2563eb'</span>,
-                 edgecolor=<span class="str">'white'</span>, alpha=<span class="num">0.8</span>)
-axes[<span class="num">1</span>].<span class="fn">axvline</span>(df[<span class="str">'tot'</span>].<span class="fn">mean</span>(), color=<span class="str">'#ef4444'</span>,
-               linestyle=<span class="str">'--'</span>, linewidth=<span class="num">2</span>, label=<span class="str">f"평균: {df['tot'].mean():.0f}"</span>)
-axes[<span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'합계 점수 분포 (히스토그램)'</span>, fontsize=<span class="num">13</span>, fontweight=<span class="str">'bold'</span>)
-axes[<span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">'합계 점수'</span>)
-axes[<span class="num">1</span>].<span class="fn">set_ylabel</span>(<span class="str">'인원 수'</span>)
-axes[<span class="num">1</span>].<span class="fn">legend</span>()
-plt.<span class="fn">tight_layout</span>()
-plt.<span class="fn">show</span>()</code></pre>
-      </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="sub-step">
-      <div class="sub-step-title">6-5. 종합 대시보드 (한 화면에 4개 그래프)</div>
-      <div class="code-block">
-        <div class="code-block-header">
-          <span class="lang">Python</span>
-          <button class="copy-btn" onclick="copyCode(this)">복사</button>
-        </div>
-        <pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">2</span>, <span class="num">2</span>, figsize=(<span class="num">14</span>, <span class="num">10</span>))
-fig.<span class="fn">suptitle</span>(<span class="str">'학생 성적 데이터 종합 분석 대시보드'</span>, fontsize=<span class="num">16</span>, fontweight=<span class="str">'bold'</span>)
-
-<span class="cm"># [0,0] 반별 합계 평균 막대</span>
-class_tot = df.<span class="fn">groupby</span>(<span class="str">'nclass'</span>)[<span class="str">'tot'</span>].<span class="fn">mean</span>().<span class="fn">round</span>(<span class="num">1</span>)
-class_tot.<span class="fn">plot</span>.<span class="fn">bar</span>(ax=axes[<span class="num">0</span>, <span class="num">0</span>], color=<span class="str">'#3b82f6'</span>, rot=<span class="num">0</span>, edgecolor=<span class="str">'white'</span>)
-axes[<span class="num">0</span>, <span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'반별 합계 평균'</span>)
-axes[<span class="num">0</span>, <span class="num">0</span>].<span class="fn">set_xlabel</span>(<span class="str">'반'</span>); axes[<span class="num">0</span>, <span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'평균 점수'</span>)
-
-<span class="cm"># [0,1] 합격/불합격 파이차트</span>
-counts = df[<span class="str">'test'</span>].<span class="fn">value_counts</span>()
-axes[<span class="num">0</span>, <span class="num">1</span>].<span class="fn">pie</span>(counts, labels=counts.<span class="attr">index</span>, autopct=<span class="str">'%1.1f%%'</span>,
-              colors=[<span class="str">'#2563eb'</span>, <span class="str">'#ef4444'</span>], startangle=<span class="num">90</span>)
-axes[<span class="num">0</span>, <span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'합격/불합격 비율'</span>)
-
-<span class="cm"># [1,0] 공부 시간 vs 합계 산점도</span>
-colors_map = {<span class="str">'Pass'</span>: <span class="str">'#2563eb'</span>, <span class="str">'Fail'</span>: <span class="str">'#ef4444'</span>}
-<span class="kw">for</span> label, group <span class="kw">in</span> df.<span class="fn">groupby</span>(<span class="str">'test'</span>):
-    axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">scatter</span>(group[<span class="str">'hours'</span>], group[<span class="str">'tot'</span>],
-                      c=colors_map[label], label=label, s=<span class="num">70</span>, alpha=<span class="num">0.8</span>)
-axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'공부 시간 vs 합계 점수'</span>)
-axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">set_xlabel</span>(<span class="str">'공부 시간'</span>); axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">set_ylabel</span>(<span class="str">'합계'</span>)
-axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">legend</span>(); axes[<span class="num">1</span>, <span class="num">0</span>].<span class="fn">grid</span>(<span class="num">True</span>, alpha=<span class="num">0.3</span>)
-
-<span class="cm"># [1,1] 등급 수평 막대</span>
-grade_counts = df[<span class="str">'grade'</span>].<span class="fn">value_counts</span>().<span class="fn">sort_index</span>()
-grade_counts.<span class="fn">plot</span>.<span class="fn">barh</span>(ax=axes[<span class="num">1</span>, <span class="num">1</span>],
-                       color=[<span class="str">'#f59e0b'</span>, <span class="str">'#10b981'</span>, <span class="str">'#6b7280'</span>],
-                       edgecolor=<span class="str">'white'</span>)
-axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">'성적 등급 분포'</span>)
-axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">set_xlabel</span>(<span class="str">'인원 수'</span>)
-<span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(grade_counts):
-    axes[<span class="num">1</span>, <span class="num">1</span>].<span class="fn">text</span>(v + <span class="num">0.05</span>, i, <span class="fn">str</span>(v) + <span class="str">'명'</span>, va=<span class="str">'center'</span>)
-
-plt.<span class="fn">tight_layout</span>()
-plt.<span class="fn">show</span>()</code></pre>
       </div>
     </div>
   </section>
@@ -918,7 +829,7 @@ plt.<span class="fn">show</span>()</code></pre>
       <div class="summary-item"><strong>🔍 필터링</strong>조건식 [] / &amp; | / isin() / query()</div>
       <div class="summary-item"><strong>📦 그룹 분석</strong>groupby() / agg() / crosstab()</div>
       <div class="summary-item"><strong>✨ 파생변수</strong>새 열 할당 / np.where() 중첩 조건</div>
-      <div class="summary-item"><strong>📈 시각화</strong>bar / scatter / box / hist / pie</div>
+      <div class="summary-item"><strong>📈 시각화</strong>plot.bar() / plot.hist() / plot.scatter()</div>
     </div>
   </div>
 
