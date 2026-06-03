@@ -651,12 +651,13 @@ pop  = []               <span class="cm"># 각 나이별 인구를 담을 빈 �
           <p style="font-size:14px;color:#374151;margin-bottom:10px;">0~100세 모든 연령을 그대로 1세 단위로 그립니다.</p>
           <div class="cb">
             <div class="ch"><div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span class="clabel">step4_chart_basic.py — 1세 단위 기본 버전</span><button class="cpbtn" onclick="cp(this)">복사</button></div>
-            <pre><code><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
-<span class="kw">import</span> matplotlib
+            <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> matplotlib.font_manager <span class="kw">as</span> fm
 
-matplotlib.rc(<span class="st">'font'</span>, family=<span class="st">'Malgun Gothic'</span>)   <span class="cm"># Windows</span>
-<span class="cm"># Mac: matplotlib.rc('font', family='AppleGothic')</span>
-matplotlib.rcParams[<span class="st">'axes.unicode_minus'</span>] = <span class="nm">False</span>
+<span class="cm"># ① 한글 폰트 설정 (malgun.ttf 파일을 직접 지정)</span>
+fontprop = fm.<span class="fn">FontProperties</span>(fname=<span class="st">'malgun.ttf'</span>)
+plt.rcParams[<span class="st">'axes.unicode_minus'</span>] = <span class="nm">False</span>
 
 fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="nm">10</span>, <span class="nm">10</span>))
 
@@ -664,9 +665,9 @@ fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="nm">10</spa
 ax.<span class="fn">barh</span>(ages, pop, color=<span class="st">'#059669'</span>, alpha=<span class="nm">0.8</span>)
 
 ax.<span class="fn">set_title</span>(region_name + <span class="st">" 연령별 인구 분포"</span>,
-            fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>)
-ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>)
-ax.<span class="fn">set_ylabel</span>(<span class="st">'나이 (세)'</span>)
+            fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>, fontproperties=fontprop)
+ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>, fontproperties=fontprop)
+ax.<span class="fn">set_ylabel</span>(<span class="st">'나이 (세)'</span>, fontproperties=fontprop)
 ax.<span class="fn">grid</span>(axis=<span class="st">'x'</span>, alpha=<span class="nm">0.3</span>)
 plt.<span class="fn">tight_layout</span>()
 plt.<span class="fn">show</span>()</code></pre>
@@ -703,8 +704,9 @@ bars = ax.<span class="fn">barh</span>(group_labels, group_pop,
             <span class="st">f'{val:,}'</span>, va=<span class="st">'center'</span>, fontsize=<span class="nm">9</span>)
 
 ax.<span class="fn">set_title</span>(region_name + <span class="st">" 연령대별 인구 분포 (10세 단위)"</span>,
-            fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>)
-ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>)
+            fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>, fontproperties=fontprop)
+ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>, fontproperties=fontprop)
+ax.<span class="fn">set_yticklabels</span>(group_labels, fontproperties=fontprop)   <span class="cm"># 세로축 한글 라벨</span>
 ax.<span class="fn">grid</span>(axis=<span class="st">'x'</span>, alpha=<span class="nm">0.3</span>)
 plt.<span class="fn">tight_layout</span>()
 plt.<span class="fn">show</span>()</code></pre>
@@ -728,19 +730,11 @@ plt.<span class="fn">show</span>()</code></pre>
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
 <span class="kw">import</span> pandas <span class="kw">as</span> pd
 <span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
-<span class="kw">import</span> matplotlib
-<span class="kw">import</span> platform
+<span class="kw">import</span> matplotlib.font_manager <span class="kw">as</span> fm
 
-<span class="cm"># ① 한글 폰트 설정</span>
-<span class="kw">if</span> platform.<span class="fn">system</span>() == <span class="st">'Windows'</span>:
-    matplotlib.rc(<span class="st">'font'</span>, family=<span class="st">'Malgun Gothic'</span>)
-<span class="kw">elif</span> platform.<span class="fn">system</span>() == <span class="st">'Darwin'</span>:
-    matplotlib.rc(<span class="st">'font'</span>, family=<span class="st">'AppleGothic'</span>)
-<span class="kw">else</span>:   <span class="cm"># Google Colab / Linux</span>
-    <span class="kw">import</span> subprocess
-    subprocess.<span class="fn">run</span>([<span class="st">'apt-get'</span>, <span class="st">'-qq'</span>, <span class="st">'install'</span>, <span class="st">'fonts-nanum'</span>], capture_output=<span class="nm">True</span>)
-    matplotlib.rc(<span class="st">'font'</span>, family=<span class="st">'NanumGothic'</span>)
-matplotlib.rcParams[<span class="st">'axes.unicode_minus'</span>] = <span class="nm">False</span>
+<span class="cm"># ① 한글 폰트 설정 (malgun.ttf 파일을 직접 지정)</span>
+fontprop = fm.<span class="fn">FontProperties</span>(fname=<span class="st">'malgun.ttf'</span>)
+plt.rcParams[<span class="st">'axes.unicode_minus'</span>] = <span class="nm">False</span>
 
 <span class="cm"># ② 데이터 불러오기 (숫자에 쉼표 없음 → thousands 옵션 불필요)</span>
 df = pd.<span class="fn">read_csv</span>(<span class="st">'data1.csv'</span>, encoding=<span class="st">'cp949'</span>)
@@ -793,9 +787,10 @@ matched  = df[df[<span class="st">'행정구역'</span>].<span class="fn">str</s
                 <span class="st">f'{val:,}'</span>, va=<span class="st">'center'</span>, fontsize=<span class="nm">9</span>)
 
     ax.<span class="fn">set_title</span>(region_name + <span class="st">" 연령대별 인구 분포 (2026년 1월)"</span>,
-                fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>, pad=<span class="nm">15</span>)
-    ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>)
-    ax.<span class="fn">set_ylabel</span>(<span class="st">'연령대'</span>)
+                fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>, pad=<span class="nm">15</span>, fontproperties=fontprop)
+    ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>, fontproperties=fontprop)
+    ax.<span class="fn">set_ylabel</span>(<span class="st">'연령대'</span>, fontproperties=fontprop)
+    ax.<span class="fn">set_yticklabels</span>(group_labels, fontproperties=fontprop)   <span class="cm"># 세로축 한글 라벨</span>
     ax.<span class="fn">grid</span>(axis=<span class="st">'x'</span>, alpha=<span class="nm">0.3</span>)
     plt.<span class="fn">tight_layout</span>()
     plt.<span class="fn">show</span>()</code></pre>
