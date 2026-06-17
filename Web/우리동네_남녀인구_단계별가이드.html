@@ -718,8 +718,6 @@ female_pop.<span class="fn">append</span>(r[<span class="st">'2026년04월_여_1
         <button class="cpbtn" onclick="cp(this)">복사</button>
       </div>
       <pre><code><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
-<span class="kw">import</span> matplotlib.font_manager <span class="kw">as</span> fm
-fontprop = fm.<span class="fn">FontProperties</span>(fname=<span class="st">'malgun.ttf'</span>)   <span class="cm"># 한글 폰트 파일 직접 지정</span>
 <span class="kw">import</span> matplotlib <span class="kw">as</span> mlp
 
 <span class="cm"># 남자 값을 음수로 바꿔 중앙선 왼쪽으로 보내기</span>
@@ -743,21 +741,15 @@ ax.<span class="fn">set_xticklabels</span>([<span class="fn">f</span><span class
 
 <span class="cm"># Y축 라벨이 101개라 너무 빽빽 → 10세 간격(0, 10, 20, ...)만 표시</span>
 ax.<span class="fn">set_yticks</span>(<span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">101</span>, <span class="nm">10</span>))
-ax.<span class="fn">set_yticklabels</span>([ages[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">101</span>, <span class="nm">10</span>)], fontproperties=fontprop)
+ax.<span class="fn">set_yticklabels</span>([ages[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">101</span>, <span class="nm">10</span>)])
 
 ax.<span class="fn">set_title</span>(region_name + <span class="st">" 인구 피라미드 (2026년 4월)"</span>,
-            fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>, pad=<span class="nm">15</span>, fontproperties=fontprop)
-ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>, fontproperties=fontprop)
-ax.<span class="fn">set_ylabel</span>(<span class="st">'나이'</span>, fontproperties=fontprop)
+            fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>, pad=<span class="nm">15</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>)
+ax.<span class="fn">set_ylabel</span>(<span class="st">'나이'</span>)
 ax.<span class="fn">grid</span>(axis=<span class="st">'x'</span>, alpha=<span class="nm">0.3</span>)
 plt.<span class="fn">tight_layout</span>()
 plt.<span class="fn">show</span>()</code></pre>
-    </div>
-
-    <div class="tip-box info">
-      <span class="ti">🔤</span>
-      <p><strong>한글이 깨지지 않게 — malgun.ttf 폰트 파일을 직접 지정합니다.</strong><br>
-      <code>fm.FontProperties(fname='malgun.ttf')</code>로 폰트 객체(<code>fontprop</code>)를 만든 뒤, 제목·축 라벨마다 <code>fontproperties=fontprop</code>을 넘겨주면 한글이 정상 출력됩니다. <code>malgun.ttf</code>는 실행하는 <code>.py</code> 파일과 <strong>같은 폴더</strong>에 두거나, 전체 경로(<code>C:/Windows/Fonts/malgun.ttf</code>)로 적어도 됩니다.</p>
     </div>
 
     <div class="tip-box good">
@@ -788,16 +780,12 @@ plt.<span class="fn">show</span>()</code></pre>
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
 <span class="kw">import</span> pandas <span class="kw">as</span> pd
 <span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
-<span class="kw">import</span> matplotlib.font_manager <span class="kw">as</span> fm
 
-<span class="cm"># ① 한글 폰트 설정 (malgun.ttf 파일을 직접 지정)</span>
-fontprop = fm.<span class="fn">FontProperties</span>(fname=<span class="st">'malgun.ttf'</span>)
-
-<span class="cm"># ② 데이터 불러오기 (숫자에 쉼표 있음 → thousands 옵션 필수!)</span>
+<span class="cm"># ① 데이터 불러오기 (숫자에 쉼표 있음 → thousands 옵션 필수!)</span>
 df = pd.<span class="fn">read_csv</span>(<span class="st">'인구데이터_4월.csv'</span>,
                  encoding=<span class="st">'cp949'</span>, thousands=<span class="st">','</span>)
 
-<span class="cm"># ③ 지역명 입력 & 검색</span>
+<span class="cm"># ② 지역명 입력 & 검색</span>
 findDong = <span class="fn">input</span>(<span class="st">"지역 이름을 입력하세요 (예: 역삼1동, 강남구, 서울): "</span>)
 matched  = df[df[<span class="st">'행정구역'</span>].<span class="fn">str</span>.<span class="fn">contains</span>(findDong, na=<span class="nm">False</span>)]
 
@@ -805,7 +793,7 @@ matched  = df[df[<span class="st">'행정구역'</span>].<span class="fn">str</s
     <span class="fn">print</span>(<span class="st">f"'{findDong}' 지역을 찾지 못했습니다."</span>)
 
 <span class="kw">else</span>:
-    <span class="cm"># ④ 결과가 여러 개이면 목록 출력 후 선택</span>
+    <span class="cm"># ③ 결과가 여러 개이면 목록 출력 후 선택</span>
     <span class="kw">if</span> <span class="fn">len</span>(matched) > <span class="nm">1</span>:
         <span class="fn">print</span>(<span class="st">f"'{findDong}' 검색 결과 ({len(matched)}건):"</span>)
         <span class="kw">for</span> i, (_, row) <span class="kw">in</span> <span class="fn">enumerate</span>(matched.<span class="fn">iterrows</span>()):
@@ -817,10 +805,10 @@ matched  = df[df[<span class="st">'행정구역'</span>].<span class="fn">str</s
     <span class="kw">else</span>:
         r = matched.<span class="fn">iloc</span>[<span class="nm">0</span>]
 
-    <span class="cm"># ⑤ 지역명 정리</span>
+    <span class="cm"># ④ 지역명 정리</span>
     region_name = r[<span class="st">'행정구역'</span>].<span class="fn">split</span>(<span class="st">'('</span>)[<span class="nm">0</span>].<span class="fn">strip</span>()
 
-    <span class="cm"># ⑥ 1세 단위로 남·여 인구 리스트 만들기 (101개)</span>
+    <span class="cm"># ⑤ 1세 단위로 남·여 인구 리스트 만들기 (101개)</span>
     ages = [<span class="fn">str</span>(i) + <span class="st">'세'</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">100</span>)]
     ages.<span class="fn">append</span>(<span class="st">'100세 이상'</span>)
 
@@ -831,7 +819,7 @@ matched  = df[df[<span class="st">'행정구역'</span>].<span class="fn">str</s
     male_pop.<span class="fn">append</span>(r[<span class="st">'2026년04월_남_100세 이상'</span>])
     female_pop.<span class="fn">append</span>(r[<span class="st">'2026년04월_여_100세 이상'</span>])
 
-    <span class="cm"># ⑦ 인구 피라미드 (항아리 모양)</span>
+    <span class="cm"># ⑥ 인구 피라미드 (항아리 모양)</span>
     male_neg = [<span class="op">-</span>v <span class="kw">for</span> v <span class="kw">in</span> male_pop]
 
     fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="nm">10</span>, <span class="nm">12</span>))
@@ -848,12 +836,12 @@ matched  = df[df[<span class="st">'행정구역'</span>].<span class="fn">str</s
 
     <span class="cm"># Y축은 10세 간격만 표시 (101개 다 표시하면 빽빽)</span>
     ax.<span class="fn">set_yticks</span>(<span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">101</span>, <span class="nm">10</span>))
-    ax.<span class="fn">set_yticklabels</span>([ages[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">101</span>, <span class="nm">10</span>)], fontproperties=fontprop)
+    ax.<span class="fn">set_yticklabels</span>([ages[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">0</span>, <span class="nm">101</span>, <span class="nm">10</span>)])
 
     ax.<span class="fn">set_title</span>(region_name + <span class="st">" 인구 피라미드 (2026년 4월)"</span>,
-                fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>, pad=<span class="nm">15</span>, fontproperties=fontprop)
-    ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>, fontproperties=fontprop)
-    ax.<span class="fn">set_ylabel</span>(<span class="st">'나이'</span>, fontproperties=fontprop)
+                fontsize=<span class="nm">14</span>, fontweight=<span class="st">'bold'</span>, pad=<span class="nm">15</span>)
+    ax.<span class="fn">set_xlabel</span>(<span class="st">'인구수 (명)'</span>)
+    ax.<span class="fn">set_ylabel</span>(<span class="st">'나이'</span>)
     ax.<span class="fn">grid</span>(axis=<span class="st">'x'</span>, alpha=<span class="nm">0.3</span>)
     plt.<span class="fn">tight_layout</span>()
     plt.<span class="fn">show</span>()</code></pre>
