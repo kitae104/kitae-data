@@ -211,7 +211,7 @@
   color: #cbd5e1;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767.98px) {
   [data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header {
     padding: 40px 20px 36px;
   }
