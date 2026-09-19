@@ -304,7 +304,7 @@
   color: var(--course-tertiary);
 }
 
-[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.s4, .s5, .step-new, .new-badge) {
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.s4, .s5, .toc .step-num.step-new, .new-badge) {
   border-color: #fecaca;
   background: #fef2f2;
   color: #b91c1c;
