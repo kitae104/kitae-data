@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import ast
 import json
+import re
+from html.parser import HTMLParser
 from pathlib import Path
 
 import nbformat
@@ -20,6 +22,30 @@ EXPECTED = {
         "solutions": 5,
     },
 }
+
+WEB_EXPECTED = {
+    "판다스_수업자료.html",
+    "반도체_공정_데이터분석.html",
+    "실전_반도체_공정_데이터분석_강의자료.html",
+}
+
+AI_SECTION_IDS = {
+    "ai-learning-check",
+    "ai-code-improvement",
+    "ai-extra-projects",
+}
+
+
+class IdCollector(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.ids: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attributes = dict(attrs)
+        element_id = attributes.get("id")
+        if element_id:
+            self.ids.append(element_id)
 
 
 def source_text(cell: dict) -> str:
@@ -43,6 +69,9 @@ def verify_notebook(path: Path, expected: dict[str, int]) -> None:
     exercise_cells = []
     solution_cells = []
     prompt_cells = []
+    learning_check_cells = []
+    improvement_cells = []
+    extra_project_cells = []
 
     for index, cell in enumerate(cells):
         tags = set(cell.metadata.get("tags", []))
@@ -52,6 +81,12 @@ def verify_notebook(path: Path, expected: dict[str, int]) -> None:
             solution_cells.append(cell)
         if "ai-project-prompt" in tags:
             prompt_cells.append(cell)
+        if "ai-learning-check" in tags:
+            learning_check_cells.append(cell)
+        if "ai-code-improvement" in tags:
+            improvement_cells.append(cell)
+        if "ai-extra-project-prompt" in tags:
+            extra_project_cells.append(cell)
 
         if cell.cell_type == "code":
             ast.parse(source_text(cell), filename=f"{path.name}:cell-{index}")
@@ -65,11 +100,36 @@ def verify_notebook(path: Path, expected: dict[str, int]) -> None:
         f"최소 {expected['solutions']}개 필요"
     )
     assert len(prompt_cells) == 1, f"{path.name}: AI 프롬프트 셀은 1개여야 함"
+    assert len(learning_check_cells) >= 1, f"{path.name}: AI 학습 확인 셀 없음"
+    assert len(improvement_cells) >= 1, f"{path.name}: AI 코드 개선 셀 없음"
+    assert len(extra_project_cells) == 2, (
+        f"{path.name}: 추가 미니 프로젝트 프롬프트는 2개여야 함"
+    )
 
     prompt = source_text(prompt_cells[0])
     assert "\n```text\n" in prompt, f"{path.name}: AI 프롬프트 코드 블록 형식 오류"
     for heading in ("역할", "입력 데이터", "구현 요구사항", "결과물", "검증"):
         assert heading in prompt, f"{path.name}: AI 프롬프트에 '{heading}' 항목 없음"
+
+
+def verify_web_page(path: Path) -> None:
+    html = path.read_text(encoding="utf-8")
+    parser = IdCollector()
+    parser.feed(html)
+    duplicate_ids = {element_id for element_id in parser.ids if parser.ids.count(element_id) > 1}
+    assert not duplicate_ids, f"{path.name}: 중복 id 발견 {sorted(duplicate_ids)}"
+    missing = AI_SECTION_IDS.difference(parser.ids)
+    assert not missing, f"{path.name}: AI 섹션 누락 {sorted(missing)}"
+
+    ai_html = html.split("<!-- AI_EXTENSION_START -->", 1)[1].split(
+        "<!-- AI_EXTENSION_END -->", 1
+    )[0]
+    defined_vars = set(re.findall(r"(--[a-zA-Z0-9_-]+)\s*:", html))
+    used_vars = set(re.findall(r"var\((--[a-zA-Z0-9_-]+)", ai_html))
+    undefined_vars = used_vars.difference(defined_vars)
+    assert not undefined_vars, (
+        f"{path.name}: AI 섹션에서 정의되지 않은 CSS 변수 사용 {sorted(undefined_vars)}"
+    )
 
 
 def main() -> None:
@@ -83,6 +143,11 @@ def main() -> None:
         csv_path = NOTEBOOK_DIR / csv_name
         assert csv_path.exists() and csv_path.stat().st_size > 0, f"데이터 파일 없음: {csv_name}"
         print(f"OK {csv_name}")
+
+    for filename in sorted(WEB_EXPECTED):
+        web_path = ROOT / "Web" / filename
+        verify_web_page(web_path)
+        print(f"OK {filename}")
 
 
 if __name__ == "__main__":

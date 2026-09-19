@@ -1717,7 +1717,91 @@ plt.<span class="fn">show</span>()</pre>
       </div>
     </div>
 
-  </div><!-- /content -->
+<!-- AI_EXTENSION_START -->
+        <section id="ai-learning-check" style="margin:28px 0; padding:24px; border:1px solid var(--border); border-left:4px solid var(--blue); border-radius:10px; background:var(--bg);">
+          <div class="section-title">AI로 학습 내용 확인하기</div>
+          <div class="section-desc">정답을 바로 받기보다 AI가 한 문제씩 질문하게 해서 이해도를 확인합니다.</div>
+
+      <div class="code-wrap" style="margin-top:14px;">
+        <div class="code-header">
+          <span class="code-title">AI 튜터 프롬프트</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>나는 반도체 공정 EDA를 복습하고 있습니다. 결측률, 중복, IQR 이상값 후보,
+groupby 비교, 상관관계, 히스토그램·박스플롯·히트맵에서 문제를 6개 내주세요.
+한 번에 한 문제만 내고 답을 먼저 공개하지 마세요.
+내 답의 코드와 해석을 함께 평가하고, 상관관계와 원인을 구분하도록 질문하세요.
+틀린 답에는 수정 코드, 예상 출력 형태, 안전한 공정 해석을 제공하세요.</code></pre>
+      </div>
+
+          <div style="margin-top:14px; padding:14px; border-radius:8px; background:var(--bg2); font-size:13px; line-height:1.7;">
+            <strong>확인 방법</strong><br>
+            강의 노트를 보지 않고 먼저 답한 뒤 원래 예제와 비교하세요. AI가 제시한 코드는 작은 가상 데이터로 직접 실행하고, 함수·열 이름·라벨 의미가 맞는지 확인합니다.
+          </div>
+        </section>
+
+        <section id="ai-code-improvement" style="margin:28px 0; padding:24px; border:1px solid var(--border); border-left:4px solid var(--orange); border-radius:10px; background:var(--bg);">
+          <div class="section-title">AI로 작성한 프로그램 개선하기</div>
+          <div class="section-desc">현재 강의 범위 안에서 오류와 가독성을 점검하고, 수정 이유와 검증 코드까지 요청합니다.</div>
+
+      <div class="code-wrap" style="margin-top:14px;">
+        <div class="code-header">
+          <span class="code-title">프로그램 개선 프롬프트</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>아래 반도체 공정 EDA 코드를 검토해 최소한으로 개선하세요.
+원본 보존, 결측·중복 처리, 숫자 열 선택, IQR 후보 처리,
+합격/불합격 라벨, groupby 비교, 그래프 축·단위, 과장된 인과 해석을 확인하세요.
+머신러닝은 추가하지 말고 문제 목록, 수정 코드, 변경 이유,
+처리 전후 행 수·결측값·타겟 분포 검증 코드 순서로 답하세요.
+
+[검토할 코드]
+여기에 코드를 붙여 넣으세요.</code></pre>
+      </div>
+
+          <ol style="margin:14px 0 0 20px; line-height:1.8; font-size:13px;">
+            <li>원본 코드를 남기고 복사본에서 수정 코드를 실행합니다.</li>
+            <li>AI가 바꾼 줄과 이유를 먼저 읽습니다.</li>
+            <li>행 수, 결측값 수, 타겟 분포처럼 유지되어야 할 값을 비교합니다.</li>
+            <li>이해하지 못한 고급 문법은 현재 강의 수준으로 다시 작성해 달라고 요청합니다.</li>
+          </ol>
+        </section>
+
+        <section id="ai-extra-projects" style="margin:28px 0; padding:24px; border:1px solid var(--border); border-left:4px solid var(--green); border-radius:10px; background:var(--bg);">
+          <div class="section-title">AI 프롬프트로 도전하는 추가 미니 프로젝트</div>
+          <div class="section-desc">현재 강의에서 배운 기능을 새로운 반도체 데이터 문제에 조합해 봅니다.</div>
+
+      <div class="code-wrap" style="margin-top:14px;">
+        <div class="code-header">
+          <span class="code-title">추가 프로젝트 1 · 센서별 이상값 후보 보고서</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>반도체_공정_샘플.csv의 숫자 센서별 Q1, Q3, IQR, 하한, 상한,
+이상값 후보 건수와 비율을 표로 만드세요. 후보 비율 상위 5개를 출력하고
+상위 3개 센서의 박스플롯을 그린 뒤 sensor_outlier_summary.csv로 저장하세요.
+이상값을 자동 삭제하지 않는 이유와 직접 계산 검증도 포함하세요.</code></pre>
+      </div>
+
+
+      <div class="code-wrap" style="margin-top:14px;">
+        <div class="code-header">
+          <span class="code-title">추가 프로젝트 2 · 합격·불합격 비교 리포트</span>
+          <button class="copy-btn" onclick="copyCode(this)">복사</button>
+        </div>
+        <pre><code>반도체_공정_샘플.csv에서 판정별 평균·중앙값·표준편차와 표본 수를 계산하세요.
+평균 차이가 큰 상위 5개 센서를 표와 박스플롯으로 보여주고
+pass_fail_comparison.csv로 저장하세요. 차이를 공정 원인으로 단정하지 않는
+3문장 결론과 다음 점검 사항을 작성하세요.</code></pre>
+      </div>
+
+          <div style="margin-top:16px; padding:15px; border:1px solid rgba(188,76,0,.35); border-radius:8px; background:rgba(188,76,0,.06); font-size:13px; line-height:1.75;">
+            <strong>AI 결과 검증과 보안</strong><br>
+            가상·비식별 데이터로 먼저 실행하고 원본 파일을 보존하세요. 처리 전후 행 수, 결측값 수, 라벨 분포를 비교하고 상관관계나 모델 중요도를 공정 원인으로 단정하지 않습니다. 회사의 장비명, 레시피값, Lot 식별자는 외부 AI 서비스에 입력하지 않습니다.
+          </div>
+        </section>
+        <!-- AI_EXTENSION_END -->
+
+</div><!-- /content -->
 </div><!-- /layout -->
 
 <footer>
