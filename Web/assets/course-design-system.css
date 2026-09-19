@@ -216,3 +216,241 @@
     padding: 40px 20px 36px;
   }
 }
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] header {
+  padding: 48px 24px 40px;
+  color: var(--course-text);
+  background-color: var(--course-surface);
+  background-image: linear-gradient(var(--course-border) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--course-border) 1px, transparent 1px);
+  background-size: 32px 32px;
+  border-top: 4px solid var(--course-primary);
+  border-bottom: 1px solid var(--course-border);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] header::before,
+[data-course-theme="fabmetric"][data-course-layout="toc"] header::after {
+  display: none;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] h1 {
+  max-width: 760px;
+  margin-bottom: 12px;
+  color: var(--course-text);
+  background: none;
+  font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif;
+  font-size: 36px;
+  line-height: 1.22;
+  letter-spacing: 0;
+  -webkit-text-fill-color: currentColor;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .layout {
+  max-width: 1280px;
+  gap: 24px;
+  padding: 32px;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .toc {
+  width: 240px;
+  top: 16px;
+  border: 1px solid var(--course-border);
+  border-radius: 8px;
+  background: var(--course-surface);
+  box-shadow: var(--course-shadow);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .toc a:hover,
+[data-course-theme="fabmetric"][data-course-layout="toc"] .toc a.active {
+  color: var(--course-primary);
+  border-left-color: var(--course-primary);
+  background: #eff6ff;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .section {
+  border: 1px solid var(--course-border);
+  border-radius: 8px;
+  background: var(--course-surface);
+  box-shadow: var(--course-shadow);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .subsection {
+  border: 0;
+  border-top: 1px solid var(--course-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.step-badge, .subsection h3 .step-circle, .toc .step-num) {
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  background: #eff6ff;
+  color: var(--course-primary);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.s3, .s6, .subsection.orange h3 .step-circle) {
+  border-color: #ddd6fe;
+  background: #f5f3ff;
+  color: var(--course-tertiary);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.s4, .s5, .step-new, .new-badge) {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: var(--course-error);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .code-wrap {
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: var(--course-code);
+  box-shadow: none;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .code-header {
+  border-color: #334155;
+  background: var(--course-code-toolbar);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] pre {
+  background: var(--course-code);
+  color: #e2e8f0;
+  font-family: "JetBrains Mono", Consolas, monospace;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.code-copy, .copy-btn) {
+  min-height: 36px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #334155;
+  color: #f8fafc;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .tbl-wrap {
+  border: 1px solid var(--course-border);
+  border-radius: 8px;
+  background: var(--course-surface);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] table th {
+  background: var(--course-surface-low);
+  color: var(--course-text);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] table td {
+  border-color: #f1f5f9;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .callout {
+  border: 1px solid var(--course-border);
+  border-left-width: 3px;
+  border-radius: 8px;
+  background: var(--course-surface-low);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .callout-tip {
+  border-left-color: var(--course-success);
+  background: #ecfdf5;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .callout-info {
+  border-left-color: var(--course-primary);
+  background: #eff6ff;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .callout-warn {
+  border-left-color: var(--course-warning);
+  background: #fffbeb;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .callout-danger {
+  border-left-color: var(--course-error);
+  background: #fef2f2;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.card, .stat-card, .compare-side, .summary-card) {
+  border: 1px solid var(--course-border);
+  border-radius: 8px;
+  background: var(--course-surface);
+  box-shadow: var(--course-shadow);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.flow-step, .badge, .tag) {
+  border-radius: 6px;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(#insights, #summary, [id^="ai-"]) {
+  border: 1px solid var(--course-border) !important;
+  border-left: 3px solid var(--course-tertiary) !important;
+  border-radius: 8px !important;
+  background: var(--course-surface) !important;
+  box-shadow: none !important;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.header-badge, .objectives, .quiz-section, .chart-preview) {
+  border-radius: 8px;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .objectives {
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .quiz-section {
+  border: 1px solid var(--course-border);
+  background: var(--course-surface-low);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .chart-preview {
+  border: 1px solid var(--course-border);
+  background: var(--course-surface);
+  box-shadow: var(--course-shadow);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .code-header,
+[data-course-theme="fabmetric"][data-course-layout="toc"] pre {
+  border-radius: 0;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .code-lang {
+  color: #cbd5e1;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] pre .kw {
+  color: #fca5a5;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] pre .st {
+  color: #86efac;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] pre .nm {
+  color: #93c5fd;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] pre .cm {
+  color: #94a3b8;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] pre .fn {
+  color: #c4b5fd;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] pre .op {
+  color: #fbbf24;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] pre .cl {
+  color: #fbbf24;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.code-copy, .copy-btn).copied {
+  border-color: var(--course-success);
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] #summary > div[style*="border-radius:10px"] {
+  border-radius: 8px !important;
+}
