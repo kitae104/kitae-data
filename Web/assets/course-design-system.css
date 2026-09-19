@@ -55,6 +55,10 @@
   color: var(--course-muted);
 }
 
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header h1 span {
+  color: var(--course-primary);
+}
+
 [data-course-theme="fabmetric"][data-course-layout="tabs"] .header-tag,
 [data-course-theme="fabmetric"][data-course-layout="tabs"] .nav-tab .session-num {
   border: 1px solid #bfdbfe;
