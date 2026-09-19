@@ -1,0 +1,36 @@
+/*
+ * Usage:
+ * <link rel="stylesheet" href="./assets/course-design-system.css">
+ * <body data-course-theme="fabmetric" data-course-layout="tabs|toc">
+ */
+[data-course-theme="fabmetric"] {
+  --course-canvas: #f8fafc;
+  --course-surface: #ffffff;
+  --course-surface-low: #f1f5f9;
+  --course-text: #0f172a;
+  --course-muted: #64748b;
+  --course-border: #e2e8f0;
+  --course-primary: #2563eb;
+  --course-secondary: #06b6d4;
+  --course-tertiary: #7c3aed;
+  --course-success: #10b981;
+  --course-warning: #f59e0b;
+  --course-error: #ef4444;
+  --course-code: #0f172a;
+  --course-code-toolbar: #1e293b;
+  --course-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+  background: var(--course-canvas);
+  color: var(--course-text);
+  font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif;
+  font-feature-settings: "tnum" 1, "cv05" 1;
+}
+
+[data-course-theme="fabmetric"] *,
+[data-course-theme="fabmetric"] *::before,
+[data-course-theme="fabmetric"] *::after {
+  box-sizing: border-box;
+}
+
+[data-course-theme="fabmetric"] :is(button, a) {
+  -webkit-tap-highlight-color: transparent;
+}
