@@ -480,7 +480,8 @@
 }
 
 @media (max-width: 767px) {
-  [data-course-theme="fabmetric"] :is(.site-header, header) {
+  [data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header,
+  [data-course-theme="fabmetric"][data-course-layout="toc"] header {
     padding: 32px 16px 28px;
   }
 
@@ -513,6 +514,17 @@
   }
 }
 
+@media (width: 768px) {
+  [data-course-theme="fabmetric"][data-course-layout="toc"] .layout {
+    flex-direction: row;
+  }
+
+  [data-course-theme="fabmetric"][data-course-layout="toc"] .toc {
+    position: sticky;
+    width: 240px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-course-theme="fabmetric"] *,
   [data-course-theme="fabmetric"] *::before,
@@ -530,9 +542,98 @@
   }
 
   [data-course-theme="fabmetric"],
-  [data-course-theme="fabmetric"] :is(.section, .content-card, .session-header) {
+  [data-course-theme="fabmetric"] * {
     color: #000 !important;
+    text-shadow: none !important;
+  }
+
+  [data-course-theme="fabmetric"] {
     background: #fff !important;
+    background-image: none !important;
     box-shadow: none !important;
+  }
+
+  [data-course-theme="fabmetric"] :is(
+    header,
+    .site-header,
+    .main,
+    .layout,
+    .content,
+    .section,
+    .content-card,
+    .session-header,
+    .subsection,
+    .objectives,
+    .quiz-section,
+    .chart-preview,
+    .card,
+    .stat-card,
+    .compare-side,
+    .summary-card,
+    .code-wrap,
+    .code-block,
+    .code-header,
+    pre,
+    code,
+    .output-wrap,
+    .callout,
+    .tip-box,
+    .info,
+    .success,
+    .concept-box,
+    .analogy,
+    .tbl-wrap,
+    .table-wrap,
+    table,
+    thead,
+    tbody,
+    tr,
+    th,
+    td,
+    .header-tag,
+    .header-badge,
+    .tag,
+    .badge,
+    .step-badge,
+    .section-num,
+    .quiz-num,
+    .flow-step,
+    .new-badge,
+    [id^="ai-"],
+    #insights,
+    #summary
+  ) {
+    background: #fff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
+  [data-course-theme="fabmetric"] :is([id^="ai-"], #insights, #summary) > div[style*="background"] {
+    background: #fff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
+  [data-course-theme="fabmetric"] :is(.code-wrap, .code-block, .tbl-wrap, .table-wrap, pre) {
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  [data-course-theme="fabmetric"] pre,
+  [data-course-theme="fabmetric"] pre code {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word;
+  }
+
+  [data-course-theme="fabmetric"] table {
+    width: 100% !important;
+    table-layout: fixed;
+  }
+
+  [data-course-theme="fabmetric"] :is(th, td, .code-header) {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }
