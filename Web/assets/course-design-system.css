@@ -34,3 +34,137 @@
 [data-course-theme="fabmetric"] :is(button, a) {
   -webkit-tap-highlight-color: transparent;
 }
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header {
+  padding: 48px 24px 40px;
+  color: var(--course-text);
+  background-color: var(--course-surface);
+  background-image: linear-gradient(var(--course-border) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--course-border) 1px, transparent 1px);
+  background-size: 32px 32px;
+  border-top: 4px solid var(--course-primary);
+  border-bottom: 1px solid var(--course-border);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header::before {
+  background: linear-gradient(90deg, rgba(248, 250, 252, 0.96), rgba(248, 250, 252, 0.72));
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .header-tag,
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .nav-tab .session-num {
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  background: #eff6ff;
+  color: var(--course-primary);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .nav-bar {
+  top: 0;
+  background: rgba(255, 255, 255, 0.96);
+  border-color: var(--course-border);
+  box-shadow: var(--course-shadow);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .nav-tab {
+  min-height: 44px;
+  color: var(--course-muted);
+  border-bottom-color: transparent;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .nav-tab.active {
+  color: var(--course-primary);
+  background: #eff6ff;
+  border-bottom-color: var(--course-primary);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] :is(.session-header, .content-card) {
+  border: 1px solid var(--course-border);
+  border-radius: 8px;
+  background: var(--course-surface);
+  box-shadow: var(--course-shadow);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .objectives {
+  border: 1px solid #bae6fd;
+  border-left: 3px solid var(--course-secondary);
+  border-radius: 8px;
+  background: #ecfeff;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .section-num {
+  border-radius: 6px;
+  background: var(--course-primary);
+  color: #fff;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] :is(.concept-box, .analogy, .tip-box, .info, .success, .quiz-section) {
+  border: 1px solid var(--course-border);
+  border-radius: 8px;
+  background: var(--course-surface-low);
+  box-shadow: none;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .tip-box {
+  border-left: 3px solid var(--course-secondary);
+  background: #ecfeff;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .info {
+  border-left: 3px solid var(--course-primary);
+  background: #eff6ff;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .success {
+  border-left: 3px solid var(--course-success);
+  background: #ecfdf5;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] :is(.code-wrap, .code-block) {
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: var(--course-code);
+  box-shadow: none;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .code-header {
+  background: var(--course-code-toolbar);
+  border-color: #334155;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] pre {
+  background: var(--course-code);
+  color: #e2e8f0;
+  font-family: "JetBrains Mono", Consolas, monospace;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .copy-btn {
+  min-height: 36px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #334155;
+  color: #f8fafc;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] :is(.api-table, table) {
+  border-color: var(--course-border);
+  background: var(--course-surface);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] :is(.api-table, table) th {
+  background: var(--course-surface-low);
+  color: var(--course-muted);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] [id^="ai-"] {
+  border: 1px solid var(--course-border) !important;
+  border-left: 3px solid var(--course-tertiary) !important;
+  border-radius: 8px !important;
+  background: #faf5ff !important;
+  box-shadow: none !important;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .site-footer {
+  border-top: 1px solid var(--course-border);
+  background: var(--course-code);
+  color: #cbd5e1;
+}
