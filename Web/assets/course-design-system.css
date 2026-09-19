@@ -50,6 +50,11 @@
   background: linear-gradient(90deg, rgba(248, 250, 252, 0.96), rgba(248, 250, 252, 0.72));
 }
 
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header p,
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .meta-item {
+  color: var(--course-muted);
+}
+
 [data-course-theme="fabmetric"][data-course-layout="tabs"] .header-tag,
 [data-course-theme="fabmetric"][data-course-layout="tabs"] .nav-tab .session-num {
   border: 1px solid #bfdbfe;
