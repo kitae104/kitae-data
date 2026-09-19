@@ -260,10 +260,15 @@
   box-shadow: var(--course-shadow);
 }
 
+[data-course-theme="fabmetric"][data-course-layout="toc"] .toc a[style^="border-left-color:"] {
+  border-left-color: transparent !important;
+}
+
 [data-course-theme="fabmetric"][data-course-layout="toc"] .toc a:hover,
-[data-course-theme="fabmetric"][data-course-layout="toc"] .toc a.active {
-  color: var(--course-primary);
-  border-left-color: var(--course-primary);
+[data-course-theme="fabmetric"][data-course-layout="toc"] .toc a.active,
+[data-course-theme="fabmetric"][data-course-layout="toc"] .toc a:is([style^="color:"], [style*="; color:"]) {
+  color: var(--course-primary) !important;
+  border-left-color: var(--course-primary) !important;
   background: #eff6ff;
 }
 
@@ -272,6 +277,10 @@
   border-radius: 8px;
   background: var(--course-surface);
   box-shadow: var(--course-shadow);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="toc"] .section[style*="border-left"]:not(#insights):not(#summary) {
+  border-left: 1px solid var(--course-border) !important;
 }
 
 [data-course-theme="fabmetric"][data-course-layout="toc"] .subsection {
@@ -298,7 +307,7 @@
 [data-course-theme="fabmetric"][data-course-layout="toc"] :is(.s4, .s5, .step-new, .new-badge) {
   border-color: #fecaca;
   background: #fef2f2;
-  color: var(--course-error);
+  color: #b91c1c;
 }
 
 [data-course-theme="fabmetric"][data-course-layout="toc"] .code-wrap {
@@ -336,6 +345,7 @@
 [data-course-theme="fabmetric"][data-course-layout="toc"] table th {
   background: var(--course-surface-low);
   color: var(--course-text);
+  border-bottom: 1px solid var(--course-border);
 }
 
 [data-course-theme="fabmetric"][data-course-layout="toc"] table td {
@@ -376,6 +386,10 @@
   box-shadow: var(--course-shadow);
 }
 
+[data-course-theme="fabmetric"][data-course-layout="toc"] .card[style*="border-top"] {
+  border-top: 1px solid var(--course-border) !important;
+}
+
 [data-course-theme="fabmetric"][data-course-layout="toc"] :is(.flow-step, .badge, .tag) {
   border-radius: 6px;
 }
@@ -413,7 +427,7 @@
   border-radius: 0;
 }
 
-[data-course-theme="fabmetric"][data-course-layout="toc"] .code-lang {
+[data-course-theme="fabmetric"][data-course-layout="toc"] :is(.code-lang, .code-title) {
   color: #cbd5e1;
 }
 
