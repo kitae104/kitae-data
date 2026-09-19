@@ -468,3 +468,71 @@
 [data-course-theme="fabmetric"][data-course-layout="toc"] #summary > div[style*="border-radius:10px"] {
   border-radius: 8px !important;
 }
+
+[data-course-theme="fabmetric"] :is(a, button):focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+  outline-offset: 3px;
+}
+
+[data-course-theme="fabmetric"] :is(.tbl-wrap, .table-wrap, .code-wrap, pre) {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 767px) {
+  [data-course-theme="fabmetric"] :is(.site-header, header) {
+    padding: 32px 16px 28px;
+  }
+
+  [data-course-theme="fabmetric"] :is(.site-header h1, header h1) {
+    font-size: 28px;
+    line-height: 1.28;
+  }
+
+  [data-course-theme="fabmetric"][data-course-layout="tabs"] .main,
+  [data-course-theme="fabmetric"][data-course-layout="toc"] .layout {
+    width: 100%;
+    padding: 24px 16px;
+  }
+
+  [data-course-theme="fabmetric"][data-course-layout="toc"] .layout {
+    flex-direction: column;
+  }
+
+  [data-course-theme="fabmetric"][data-course-layout="toc"] .toc {
+    position: static;
+    width: 100%;
+  }
+
+  [data-course-theme="fabmetric"] :is(.section, .session-header, .content-card) {
+    padding: 16px;
+  }
+
+  [data-course-theme="fabmetric"] :is(.nav-tab, button, .code-copy, .copy-btn) {
+    min-height: 40px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-course-theme="fabmetric"] *,
+  [data-course-theme="fabmetric"] *::before,
+  [data-course-theme="fabmetric"] *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media print {
+  [data-course-theme="fabmetric"] :is(.nav-bar, .toc, .copy-btn, .code-copy) {
+    display: none !important;
+  }
+
+  [data-course-theme="fabmetric"],
+  [data-course-theme="fabmetric"] :is(.section, .content-card, .session-header) {
+    color: #000 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+}
