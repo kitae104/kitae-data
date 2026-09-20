@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "build": "node scripts/generate-index.js"
+        "build": "node scripts/generate-index.js",
+        "verify:course-design": "node scripts/verify-course-design.js"
     },
     "engines": {
         "node": ">=14"
