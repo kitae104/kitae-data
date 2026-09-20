@@ -16,6 +16,10 @@
   --course-success: #10b981;
   --course-warning: #f59e0b;
   --course-error: #ef4444;
+  --course-focus: #1d4ed8;
+  --course-focus-on-dark: #93c5fd;
+  --course-code-comment: #94a3b8;
+  --course-output-label: #475569;
   --course-code: #0f172a;
   --course-code-toolbar: #1e293b;
   --course-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
@@ -47,7 +51,13 @@
 }
 
 [data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header::before {
-  background: linear-gradient(90deg, rgba(248, 250, 252, 0.96), rgba(248, 250, 252, 0.72));
+  display: none;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header h1 {
+  font-size: 36px;
+  line-height: 1.22;
+  letter-spacing: 0;
 }
 
 [data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header p,
@@ -75,9 +85,19 @@
 }
 
 [data-course-theme="fabmetric"][data-course-layout="tabs"] .nav-tab {
+  flex: 1 1 0;
+  min-width: 0;
   min-height: 44px;
+  margin: 0;
+  appearance: none;
   color: var(--course-muted);
+  background: transparent;
+  border: 0;
   border-bottom-color: transparent;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  font-family: inherit;
+  text-align: center;
 }
 
 [data-course-theme="fabmetric"][data-course-layout="tabs"] .nav-tab.active {
@@ -167,6 +187,14 @@
   background: var(--course-code);
   color: #e2e8f0;
   font-family: "JetBrains Mono", Consolas, monospace;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] :is(pre .cmt, pre .cm) {
+  color: var(--course-code-comment);
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .output-label {
+  color: var(--course-output-label);
 }
 
 [data-course-theme="fabmetric"][data-course-layout="tabs"] .copy-btn {
@@ -470,8 +498,12 @@
 }
 
 [data-course-theme="fabmetric"] :is(a, button):focus-visible {
-  outline: 3px solid rgba(37, 99, 235, 0.3);
+  outline: 3px solid var(--course-focus);
   outline-offset: 3px;
+}
+
+[data-course-theme="fabmetric"] :is(.copy-btn, .code-copy):focus-visible {
+  outline-color: var(--course-focus-on-dark);
 }
 
 [data-course-theme="fabmetric"] :is(.tbl-wrap, .table-wrap, .code-wrap, pre) {
@@ -485,7 +517,8 @@
     padding: 32px 16px 28px;
   }
 
-  [data-course-theme="fabmetric"] :is(.site-header h1, header h1) {
+  [data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header h1,
+  [data-course-theme="fabmetric"][data-course-layout="toc"] header h1 {
     font-size: 28px;
     line-height: 1.28;
   }

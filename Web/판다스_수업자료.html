@@ -537,16 +537,16 @@
 
 <!-- ─── NAV ────────────────────────────────── -->
 <nav class="nav-bar">
-  <div class="nav-inner">
-    <div class="nav-tab active" onclick="showSession(1, this)">
+  <div class="nav-inner" role="tablist" aria-label="차시 선택">
+    <button type="button" class="nav-tab active" id="tab-1" role="tab" aria-controls="session-1" aria-selected="true" tabindex="0" data-session="1" onclick="showSession(1, this)">
       <span class="session-num">1</span>판다스 기초
-    </div>
-    <div class="nav-tab" onclick="showSession(2, this)">
+    </button>
+    <button type="button" class="nav-tab" id="tab-2" role="tab" aria-controls="session-2" aria-selected="false" tabindex="-1" data-session="2" onclick="showSession(2, this)">
       <span class="session-num">2</span>EDA
-    </div>
-    <div class="nav-tab" onclick="showSession(3, this)">
+    </button>
+    <button type="button" class="nav-tab" id="tab-3" role="tab" aria-controls="session-3" aria-selected="false" tabindex="-1" data-session="3" onclick="showSession(3, this)">
       <span class="session-num">3</span>데이터 시각화
-    </div>
+    </button>
   </div>
 </nav>
 
@@ -554,7 +554,7 @@
      SESSION 1 - PANDAS BASICS
 ═══════════════════════════════════════════ -->
 <main class="main">
-<section class="session-pane active" id="session-1">
+<section class="session-pane active" id="session-1" role="tabpanel" aria-labelledby="tab-1">
 
   <div class="session-header">
     <div class="session-icon green">🐼</div>
@@ -811,7 +811,7 @@ df.<span class="fn">loc</span>[<span class="num">0</span>:<span class="num">2</s
 <!-- ═══════════════════════════════════════════
      SESSION 2 - EDA
 ═══════════════════════════════════════════ -->
-<section class="session-pane" id="session-2">
+<section class="session-pane" id="session-2" role="tabpanel" aria-labelledby="tab-2" hidden>
 
   <div class="session-header">
     <div class="session-icon blue">🔍</div>
@@ -1032,7 +1032,7 @@ grade_stats.columns = [<span class="str">'인원수'</span>, <span class="str">'
 <!-- ═══════════════════════════════════════════
      SESSION 3 - VISUALIZATION
 ═══════════════════════════════════════════ -->
-<section class="session-pane" id="session-3">
+<section class="session-pane" id="session-3" role="tabpanel" aria-labelledby="tab-3" hidden>
 
   <div class="session-header">
     <div class="session-icon orange">📈</div>
@@ -1824,13 +1824,54 @@ process_alerts.csv로 저장하세요. 원본은 copy()로 보존하세요.</cod
 </footer>
 
 <script>
-function showSession(num, tab) {
-  document.querySelectorAll('.session-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('session-' + num).classList.add('active');
-  tab.classList.add('active');
-  window.scrollTo({ top: document.querySelector('.nav-bar').offsetTop, behavior: 'smooth' });
+function showSession(num, tab, shouldFocus = false) {
+  const panelId = 'session-' + num;
+
+  document.querySelectorAll('.session-pane').forEach(panel => {
+    const isActive = panel.id === panelId;
+    panel.classList.toggle('active', isActive);
+    panel.hidden = !isActive;
+  });
+
+  document.querySelectorAll('.nav-tab').forEach(item => {
+    const isActive = item === tab;
+    item.classList.toggle('active', isActive);
+    item.setAttribute('aria-selected', String(isActive));
+    item.setAttribute('tabindex', isActive ? '0' : '-1');
+  });
+
+  if (shouldFocus) tab.focus();
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({
+    top: document.querySelector('.nav-bar').offsetTop,
+    behavior: reduceMotion ? 'auto' : 'smooth'
+  });
 }
+
+document.querySelector('.nav-inner').addEventListener('keydown', event => {
+  const tabs = [...document.querySelectorAll('.nav-tab')];
+  const currentTab = event.target.closest('[role="tab"]');
+  const currentIndex = tabs.indexOf(currentTab);
+  if (currentIndex === -1) return;
+
+  if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+    event.preventDefault();
+    showSession(Number(currentTab.dataset.session), currentTab, true);
+    return;
+  }
+
+  let nextIndex;
+  if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+  else if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % tabs.length;
+  else if (event.key === 'Home') nextIndex = 0;
+  else if (event.key === 'End') nextIndex = tabs.length - 1;
+  else return;
+
+  event.preventDefault();
+  const nextTab = tabs[nextIndex];
+  showSession(Number(nextTab.dataset.session), nextTab, true);
+});
 
 function copyCode(btn) {
   const pre = btn.closest('.code-wrap').querySelector('pre');
