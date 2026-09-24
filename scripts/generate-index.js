@@ -6,7 +6,28 @@ function escapeHtml(str) {
 }
 
 function formatTitle(filename) {
-    return filename.replace(/\.html$/i, '').replace(/_/g, ' ');
+    return path.posix.basename(filename).replace(/\.html$/i, '').replace(/_/g, ' ');
+}
+
+// Web/강좌/<번호_강좌명>/*.html 도 목록에 포함 (예: 강좌/01_판다스/판다스_수업자료.html)
+const COURSE_DIR = '강좌';
+
+async function listCourseHtml(webDir) {
+    let courses;
+    try {
+        courses = await fs.readdir(path.join(webDir, COURSE_DIR), { withFileTypes: true });
+    } catch (err) {
+        if (err.code === 'ENOENT') return [];
+        throw err;
+    }
+    const found = [];
+    for (const course of courses.filter(e => e.isDirectory()).sort((a, b) => a.name.localeCompare(b.name, 'ko'))) {
+        const files = await fs.readdir(path.join(webDir, COURSE_DIR, course.name), { withFileTypes: true });
+        files
+            .filter(e => e.isFile() && e.name.toLowerCase().endsWith('.html'))
+            .forEach(e => found.push(`${COURSE_DIR}/${course.name}/${e.name}`));
+    }
+    return found;
 }
 
 (async () => {
@@ -15,7 +36,8 @@ function formatTitle(filename) {
         const entries = await fs.readdir(webDir, { withFileTypes: true });
         const allHtml = entries
             .filter(e => e.isFile() && e.name.toLowerCase().endsWith('.html') && e.name.toLowerCase() !== 'index.html')
-            .map(e => e.name);
+            .map(e => e.name)
+            .concat(await listCourseHtml(webDir));
 
         let orderList = [];
         try {
@@ -41,7 +63,7 @@ function formatTitle(filename) {
 
         const listItems = htmlFiles.map((f, index) => {
             const title = escapeHtml(formatTitle(f));
-            return `    <a class="resource-card" href="./${encodeURIComponent(f)}">
+            return `    <a class="resource-card" href="./${f.split('/').map(encodeURIComponent).join('/')}">
       <span class="card-index">${String(index + 1).padStart(2, '0')}</span>
       <span class="card-body">
         <strong>${title}</strong>

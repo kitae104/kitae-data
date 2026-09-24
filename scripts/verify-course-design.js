@@ -4,13 +4,13 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const cssPath = path.join(root, 'Web', 'assets', 'course-design-system.css');
 const pages = {
-  pandas: path.join(root, 'Web', '판다스_수업자료.html'),
-  introFab: path.join(root, 'Web', '반도체_공정_데이터분석.html'),
-  practicalFab: path.join(root, 'Web', '실전_반도체_공정_데이터분석_강의자료.html'),
+  pandas: path.join(root, 'Web', '강좌', '01_판다스', '판다스_수업자료.html'),
+  introFab: path.join(root, 'Web', '강좌', '02_반도체_공정_데이터분석', '반도체_공정_데이터분석.html'),
+  practicalFab: path.join(root, 'Web', '강좌', '03_실전_반도체_공정_데이터분석', '실전_반도체_공정_데이터분석_강의자료.html'),
 };
 const requested = process.argv.find(arg => arg.startsWith('--scope='));
 const scope = requested ? requested.split('=')[1] : 'all';
-const allowed = new Set(['foundation', 'pandas', 'toc', 'all']);
+const allowed = new Set(['foundation', 'pandas', 'courses', 'all']);
 
 if (!allowed.has(scope)) {
   throw new Error(`지원하지 않는 scope: ${scope}`);
@@ -312,71 +312,98 @@ function verifyFoundation() {
   }
 }
 
-function verifyPage(file, layout, expectedKorean) {
+function verifyPage(file, layout, expectedKorean, cssHref = './assets/course-design-system.css') {
   const html = read(file);
-  contains(html, '<link rel="stylesheet" href="./assets/course-design-system.css">', '스타일 링크 누락');
+  contains(html, `<link rel="stylesheet" href="${cssHref}">`, '스타일 링크 누락');
+  check(fs.existsSync(path.resolve(path.dirname(file), cssHref)), `스타일 파일 경로 오류: ${cssHref}`);
   contains(html, 'data-course-theme="fabmetric"', '테마 속성 누락');
   contains(html, `data-course-layout="${layout}"`, '레이아웃 속성 누락');
   contains(html, expectedKorean, 'UTF-8 한국어 본문 손상');
   return html;
 }
 
-function verifyPandas() {
-  const html = verifyPage(pages.pandas, 'tabs', '판다스로 배우는');
+// 강좌 탭형 페이지 공통 검사 (01·02·03 강좌가 같은 구조를 따르는지)
+function verifyTabsPage(name, file, expectedKorean, tabCount) {
+  const html = verifyPage(file, 'tabs', expectedKorean, '../../assets/course-design-system.css');
+  contains(html, '<link rel="stylesheet" href="../../assets/course-tabs.css">', `${name} 공통 탭 스타일 링크 누락`);
+  check(fs.existsSync(path.resolve(path.dirname(file), '../../assets/course-tabs.css')), `${name} 공통 탭 스타일 파일 없음`);
   const css = read(cssPath);
   const rules = collectStyleRules(css);
   const buttonTabs = [...html.matchAll(/<button\b[^>]*class="[^"]*\bnav-tab\b[^"]*"[^>]*>/g)].map(match => match[0]);
 
-  check(/<div\s+class="nav-inner"\s+role="tablist"\s+aria-label="차시 선택">/.test(html), 'Pandas 탭 목록의 role="tablist" 또는 레이블 누락');
-  check(buttonTabs.length === 3, `Pandas button 탭 수 불일치: ${buttonTabs.length}/3`);
+  check(/<div\s+class="nav-inner"\s+role="tablist"\s+aria-label="차시 선택">/.test(html), `${name} 탭 목록의 role="tablist" 또는 레이블 누락`);
+  check(buttonTabs.length === tabCount, `${name} button 탭 수 불일치: ${buttonTabs.length}/${tabCount}`);
   buttonTabs.forEach((tag, index) => {
     const number = index + 1;
-    check(/type="button"/.test(tag), `Pandas ${number}번 탭 type="button" 누락`);
-    check(/role="tab"/.test(tag), `Pandas ${number}번 탭 role="tab" 누락`);
-    check(new RegExp(`id="tab-${number}"`).test(tag), `Pandas ${number}번 탭 id 누락`);
-    check(new RegExp(`aria-controls="session-${number}"`).test(tag), `Pandas ${number}번 탭 aria-controls 누락`);
-    check(/aria-selected="(?:true|false)"/.test(tag), `Pandas ${number}번 탭 aria-selected 누락`);
-    check(/tabindex="(?:0|-1)"/.test(tag), `Pandas ${number}번 탭 roving tabindex 누락`);
+    check(/type="button"/.test(tag), `${name} ${number}번 탭 type="button" 누락`);
+    check(/role="tab"/.test(tag), `${name} ${number}번 탭 role="tab" 누락`);
+    check(new RegExp(`id="tab-${number}"`).test(tag), `${name} ${number}번 탭 id 누락`);
+    check(new RegExp(`aria-controls="session-${number}"`).test(tag), `${name} ${number}번 탭 aria-controls 누락`);
+    check(/aria-selected="(?:true|false)"/.test(tag), `${name} ${number}번 탭 aria-selected 누락`);
+    check(/tabindex="(?:0|-1)"/.test(tag), `${name} ${number}번 탭 roving tabindex 누락`);
   });
 
-  for (let number = 1; number <= 3; number += 1) {
+  for (let number = 1; number <= tabCount; number += 1) {
     const panelPattern = new RegExp(`<section\\s+class="[^"]*session-pane[^"]*"\\s+id="session-${number}"[^>]*role="tabpanel"[^>]*aria-labelledby="tab-${number}"`);
-    check(panelPattern.test(html), `Pandas ${number}번 패널의 tabpanel 관계 누락`);
+    check(panelPattern.test(html), `${name} ${number}번 패널의 tabpanel 관계 누락`);
   }
 
-  ['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Enter'].forEach(key => {
-    contains(html, `'${key}'`, 'Pandas 탭 키보드 처리 누락');
+  const notebookLinks = [...html.matchAll(/<a class="notebook-link" href="([^"]+\.ipynb)"/g)].map(match => match[1]);
+  check(notebookLinks.length === tabCount, `${name} 탭별 실습 노트북 링크 수 불일치: ${notebookLinks.length}/${tabCount}`);
+  notebookLinks.forEach(href => {
+    check(fs.existsSync(path.resolve(path.dirname(file), href)), `${name} 실습 노트북 파일 없음: ${href}`);
   });
-  check(/event\.key\s*===\s*' '\s*\|\|\s*event\.key\s*===\s*'Spacebar'/.test(html), 'Pandas 탭 Space 키 처리 누락');
-  contains(html, "matchMedia('(prefers-reduced-motion: reduce)')", 'Pandas reduced-motion 감지 누락');
-  check(/behavior:\s*reduceMotion\s*\?\s*'auto'\s*:\s*'smooth'/.test(html), 'Pandas scrollTo의 reduced-motion 분기 누락');
-  contains(html, "setAttribute('aria-selected'", 'Pandas showSession ARIA 상태 동기화 누락');
-  contains(html, "setAttribute('tabindex'", 'Pandas showSession roving tabindex 동기화 누락');
-  contains(html, '.hidden =', 'Pandas showSession 패널 hidden 상태 동기화 누락');
+
+  ['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Enter'].forEach(key => {
+    contains(html, `'${key}'`, `${name} 탭 키보드 처리 누락`);
+  });
+  check(/event\.key\s*===\s*' '\s*\|\|\s*event\.key\s*===\s*'Spacebar'/.test(html), `${name} 탭 Space 키 처리 누락`);
+  contains(html, "matchMedia('(prefers-reduced-motion: reduce)')", `${name} reduced-motion 감지 누락`);
+  check(/behavior:\s*reduceMotion\s*\?\s*'auto'\s*:\s*'smooth'/.test(html), `${name} scrollTo의 reduced-motion 분기 누락`);
+  contains(html, "setAttribute('aria-selected'", `${name} showSession ARIA 상태 동기화 누락`);
+  contains(html, "setAttribute('tabindex'", `${name} showSession roving tabindex 동기화 누락`);
+  contains(html, '.hidden =', `${name} showSession 패널 hidden 상태 동기화 누락`);
 
   const h1 = getRule(rules, '[data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header h1');
-  check(Boolean(h1), 'Pandas 데스크톱 H1 전용 규칙 누락');
+  check(Boolean(h1), `${name} 데스크톱 H1 전용 규칙 누락`);
   if (h1) {
-    check(/font-size:\s*36px\s*;/.test(h1.body), 'Pandas 데스크톱 H1 36px 고정값 누락');
-    check(/line-height:\s*1\.22\s*;/.test(h1.body), 'Pandas 데스크톱 H1 line-height 누락');
-    check(/letter-spacing:\s*0\s*;/.test(h1.body), 'Pandas 데스크톱 H1 letter-spacing: 0 누락');
+    check(/font-size:\s*36px\s*;/.test(h1.body), `${name} 데스크톱 H1 36px 고정값 누락`);
+    check(/line-height:\s*1\.22\s*;/.test(h1.body), `${name} 데스크톱 H1 line-height 누락`);
+    check(/letter-spacing:\s*0\s*;/.test(h1.body), `${name} 데스크톱 H1 letter-spacing: 0 누락`);
   }
 
   const pseudo = getRule(rules, '[data-course-theme="fabmetric"][data-course-layout="tabs"] .site-header::before');
-  check(Boolean(pseudo) && /display:\s*none\s*;/.test(pseudo.body), 'Pandas legacy .site-header::before 비활성화 누락');
+  check(Boolean(pseudo) && /display:\s*none\s*;/.test(pseudo.body), `${name} legacy .site-header::before 비활성화 누락`);
 
   const focus = getRule(rules, '[data-course-theme="fabmetric"] :is(a, button):focus-visible');
   check(Boolean(focus) && /outline:\s*3px\s+solid\s+var\(--course-focus\)\s*;/.test(focus.body), '불투명 고대비 focus-visible outline 누락');
 
   const comment = getRule(rules, '[data-course-theme="fabmetric"][data-course-layout="tabs"] :is(pre .cmt, pre .cm)');
-  check(Boolean(comment) && /color:\s*var\(--course-code-comment\)\s*;/.test(comment.body), 'Pandas 코드 주석 대비 토큰 적용 누락');
+  check(Boolean(comment) && /color:\s*var\(--course-code-comment\)\s*;/.test(comment.body), `${name} 코드 주석 대비 토큰 적용 누락`);
   const outputLabel = getRule(rules, '[data-course-theme="fabmetric"][data-course-layout="tabs"] .output-label');
-  check(Boolean(outputLabel) && /color:\s*var\(--course-output-label\)\s*;/.test(outputLabel.body), 'Pandas output-label 대비 토큰 적용 누락');
+  check(Boolean(outputLabel) && /color:\s*var\(--course-output-label\)\s*;/.test(outputLabel.body), `${name} output-label 대비 토큰 적용 누락`);
+  return html;
 }
 
-function verifyToc() {
-  verifyPage(pages.introFab, 'toc', '반도체 공정 데이터 분석');
-  verifyPage(pages.practicalFab, 'toc', '실전 반도체 공정');
+// 강좌 폴더 페이지의 실습 노트북·데이터 링크가 실제 파일을 가리키는지 확인
+function verifyLocalLinks(file, html, expectedNotebooks) {
+  const hrefs = [...html.matchAll(/href="(\.\/실습\/[^"]+)"/g)].map(match => match[1]);
+  const notebooks = new Set(hrefs.filter(href => href.endsWith('.ipynb')));
+  check(notebooks.size === expectedNotebooks, `${path.basename(file)} 실습 노트북 링크 수 불일치: ${notebooks.size}/${expectedNotebooks}`);
+  hrefs.forEach(href => {
+    check(fs.existsSync(path.resolve(path.dirname(file), href)), `${path.basename(file)} 링크 대상 파일 없음: ${href}`);
+  });
+}
+
+function verifyPandas() {
+  verifyTabsPage('Pandas', pages.pandas, '판다스로 배우는', 5);
+}
+
+function verifyCourses() {
+  const introFab = verifyTabsPage('반도체 공정', pages.introFab, '반도체 공정', 6);
+  verifyLocalLinks(pages.introFab, introFab, 6);
+  const practicalFab = verifyTabsPage('실전 반도체', pages.practicalFab, '실전 반도체 공정', 6);
+  verifyLocalLinks(pages.practicalFab, practicalFab, 6);
 }
 
 function verifyResponsiveContract() {
@@ -392,7 +419,7 @@ function verifyResponsiveContract() {
 
 if (scope === 'foundation' || scope === 'all') verifyFoundation();
 if (scope === 'pandas' || scope === 'all') verifyPandas();
-if (scope === 'toc' || scope === 'all') verifyToc();
+if (scope === 'courses' || scope === 'all') verifyCourses();
 if (scope === 'all') verifyResponsiveContract();
 
 if (failures.length > 0) {

@@ -148,6 +148,16 @@
   background: #ecfdf5;
 }
 
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .tip-box.warning {
+  border-left: 3px solid var(--course-warning);
+  background: #fffbeb;
+}
+
+[data-course-theme="fabmetric"][data-course-layout="tabs"] .tip-box.danger {
+  border-left: 3px solid var(--course-error);
+  background: #fef2f2;
+}
+
 [data-course-theme="fabmetric"][data-course-layout="tabs"] :is(.quiz-section, .quiz-title, .quiz-item p) {
   color: var(--course-text);
 }

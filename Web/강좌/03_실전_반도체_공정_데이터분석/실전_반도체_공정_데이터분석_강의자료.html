@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏭 실전 반도체 공정 데이터 분석 강의자료 (fab.csv)</title>
+<link rel="stylesheet" href="../../assets/course-tabs.css">
+<link rel="stylesheet" href="../../assets/course-design-system.css">
+</head>
+<body data-course-theme="fabmetric" data-course-layout="tabs">
+
+<!-- ─── HEADER ──────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-tag">🏭 실전 데이터셋 · SECOM 기반</div>
+    <h1>실전 반도체 공정<br><span>데이터 분석</span></h1>
+    <p>590개 익명 센서 · 1,567건의 진짜 팹(fab) 데이터로 불량 예측 — 이전 시간에 배운 도구 그대로 한 단계 더 나아가기</p>
+    <div class="header-meta">
+      <div class="meta-item"><div class="meta-icon">📚</div> 6개 탭 · 탭마다 실습 노트북</div>
+      <div class="meta-item"><div class="meta-icon">🤖</div> Pandas · Scikit-learn · Seaborn</div>
+      <div class="meta-item"><div class="meta-icon">🏭</div> fab.csv (1,567행 × 592열)</div>
+      <div class="meta-item"><div class="meta-icon">🎯</div> 중급 입문</div>
+    </div>
+  </div>
+</header>
+
+<!-- ─── NAV ────────────────────────────────── -->
+<nav class="nav-bar">
+  <div class="nav-inner" role="tablist" aria-label="차시 선택">
+    <button type="button" class="nav-tab active" id="tab-1" role="tab" aria-controls="session-1" aria-selected="true" tabindex="0" data-session="1" onclick="showSession(1, this)">
+      <span class="session-num">1</span>데이터 탐색
+    </button>
+    <button type="button" class="nav-tab" id="tab-2" role="tab" aria-controls="session-2" aria-selected="false" tabindex="-1" data-session="2" onclick="showSession(2, this)">
+      <span class="session-num">2</span>데이터 정제
+    </button>
+    <button type="button" class="nav-tab" id="tab-3" role="tab" aria-controls="session-3" aria-selected="false" tabindex="-1" data-session="3" onclick="showSession(3, this)">
+      <span class="session-num">3</span>특성 선택
+    </button>
+    <button type="button" class="nav-tab" id="tab-4" role="tab" aria-controls="session-4" aria-selected="false" tabindex="-1" data-session="4" onclick="showSession(4, this)">
+      <span class="session-num">4</span>모델링
+    </button>
+    <button type="button" class="nav-tab" id="tab-5" role="tab" aria-controls="session-5" aria-selected="false" tabindex="-1" data-session="5" onclick="showSession(5, this)">
+      <span class="session-num">5</span>보강 실습
+    </button>
+    <button type="button" class="nav-tab" id="tab-6" role="tab" aria-controls="session-6" aria-selected="false" tabindex="-1" data-session="6" onclick="showSession(6, this)">
+      <span class="session-num">6</span>AI 활용
+    </button>
+  </div>
+</nav>
+
+<main class="main">
+<!-- ═══════════════════════════════════════════
+     TAB 1 - 데이터 탐색
+═══════════════════════════════════════════ -->
+<section class="session-pane active" id="session-1" role="tabpanel" aria-labelledby="tab-1">
+
+  <div class="session-header">
+    <div class="session-icon green">📊</div>
+    <div>
+      <h2>데이터 소개 · 라이브러리 · 데이터 탐색 (1~2단계)</h2>
+      <p>590개 익명 센서 데이터를 소개하고, 라이브러리를 불러와 큰 테이블을 요약 정보로 살핍니다.</p>
+      <a class="notebook-link" href="./실습/01_데이터_탐색.ipynb" download>📓 실습 노트북 받기 · 01_데이터_탐색.ipynb</a>
+    </div>
+  </div>
+
+  <div class="part-header" id="intro">
+    <div class="part-icon">📊</div>
+    <div>
+      <h3 class="part-title">분석 데이터 소개 — fab.csv</h3>
+    </div>
+  </div>
+
+  <div class="flow">
+<div class="flow-step">🏭 반도체 공정</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">📡 590개 센서 (익명)</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">🤖 정상/불량 예측</div>
+</div>
+
+  <div class="stat-cards">
+<div class="stat-card stat-blue"><div class="v">1,567</div><div class="l">전체 측정 건수</div></div>
+<div class="stat-card stat-blue"><div class="v">590</div><div class="l">센서 컬럼</div></div>
+<div class="stat-card stat-green"><div class="v">93.4%</div><div class="l">정상(-1) 비율</div></div>
+<div class="stat-card stat-red"><div class="v">6.6%</div><div class="l">불량(+1) 비율</div></div>
+</div>
+
+  <h3 style="font-size:14px; color:var(--text-dim); margin:18px 0 10px;">🔄 이전 샘플과 비교</h3>
+
+  <div class="compare-box">
+<div class="compare-side prev">
+<h5>이전 — 반도체_공정_샘플.csv</h5>
+<div class="num">200 × 12</div>
+<div class="label">센서명 의미 있음 · 결측 적음 · 1=합격, -1=불합격</div>
+</div>
+<div class="compare-side now">
+<h5>오늘 — fab.csv</h5>
+<div class="num">1,567 × 592</div>
+<div class="label">익명 센서(Sensor0~589) · 결측 4만+개 · <strong style="color:var(--red)">−1=정상, +1=불량 (반대!)</strong></div>
+</div>
+</div>
+
+  <div class="tip-box success"><span class="tip-icon">📁</span><p><strong>실습 파일 받기</strong><br/>
+          데이터 파일 <a download="" href="./실습/fab.csv">fab.csv</a>(약 5.8MB)를 받아 실습 노트북과 <strong>같은 폴더</strong>에 두세요. 실습 노트북은 탭마다 하나씩 있습니다 — 1~2단계 <a download="" href="./실습/01_데이터_탐색.ipynb">01</a> · 3~4단계 <a download="" href="./실습/02_데이터_정제.ipynb">02</a> · 5~6단계 <a download="" href="./실습/03_특성선택_EDA.ipynb">03</a> · 7~9단계 <a download="" href="./실습/04_모델_학습_평가.ipynb">04</a> · 보강 실습 <a download="" href="./실습/05_보강_실습.ipynb">05</a> · AI <a download="" href="./실습/06_AI_미니프로젝트.ipynb">06</a>. 각 노트북은 앞 단계 코드를 준비 셀로 포함하므로 어느 것부터 열어도 실행됩니다.</p></div>
+
+  <div class="tip-box danger"><span class="tip-icon">⚠️</span><p><strong>라벨 의미가 이전과 반대입니다!</strong><br/>
+          이 데이터는 SECOM 표준 형식을 따라서 <code style="color:var(--red);font-family:monospace">+1 = 불량(이상)</code>, <code style="color:var(--green);font-family:monospace">−1 = 정상</code> 입니다.
+          이상 탐지(anomaly detection) 분야 표준 관례로, "찾고 싶은 사건"을 양성(+1)으로 둡니다.</p></div>
+
+  <div class="tbl-wrap" style="margin-top:18px;">
+<table class="api-table">
+<thead>
+<tr><th>컬럼</th><th>의미</th><th>역할</th></tr>
+</thead>
+<tbody>
+<tr><td>SensorTime</td><td>측정 시각</td><td>시계열 인덱스</td></tr>
+<tr><td>Sensor0 ~ Sensor589</td><td>익명의 공정 센서값 (590개)</td><td>입력 특성</td></tr>
+<tr><td style="color:var(--red)">Pass_Fail</td><td>+1=불량 / −1=정상</td><td>🎯 예측 타겟</td></tr>
+</tbody>
+</table>
+</div>
+
+  <div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>실전 데이터의 어려움</strong><br/>
+          ① 컬럼이 너무 많아 모두 시각화 불가  | 
+          ② 결측치가 4만 개 이상  | 
+          ③ 항상 0만 출력하는 의미 없는 센서 다수  | 
+          ④ 불량률 6.6%의 심한 불균형</p></div>
+
+  <div class="part-header" id="step1">
+    <div class="part-icon">📦</div>
+    <div>
+      <h3 class="part-title">1단계 · 라이브러리 불러오기</h3>
+      <div class="part-desc">이전 시간 + <code style="color:var(--blue);font-family:monospace">SelectKBest</code> 만 추가</div>
+    </div>
+  </div>
+
+  <div class="cards">
+<div class="card">
+<div class="card-icon">🐼</div>
+<div class="card-title">pandas / numpy</div>
+<div class="card-desc">이전과 동일 — 데이터 로딩과 수치 연산</div>
+</div>
+<div class="card">
+<div class="card-icon">📈</div>
+<div class="card-title">matplotlib / seaborn</div>
+<div class="card-desc">이전과 동일 — 그래프 시각화</div>
+</div>
+<div class="card" style="border-top:3px solid var(--red);">
+<div class="card-icon">🆕</div>
+<div class="card-title">SelectKBest, f_classif</div>
+<div class="card-desc"><strong style="color:var(--red)">신규!</strong> 590개 센서 중 중요한 K개만 자동 선택</div>
+</div>
+<div class="card">
+<div class="card-icon">🤖</div>
+<div class="card-title">scikit-learn 모델</div>
+<div class="card-desc">로지스틱 회귀 + 랜덤 포레스트 (이전 동일)</div>
+</div>
+</div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> seaborn <span class="kw">as</span> sns
+
+<span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler
+<span class="kw">from</span> sklearn.feature_selection <span class="kw">import</span> SelectKBest, f_classif   <span class="cmt"># ⭐ NEW</span>
+<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
+<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LogisticRegression
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> classification_report, confusion_matrix, roc_curve, auc
+
+<span class="cmt"># 그래프 한글 설정 (Mac은 'AppleGothic', Colab·리눅스는 'NanumGothic')</span>
+plt.rcParams[<span class="str">'font.family'</span>] = <span class="str">'Malgun Gothic'</span>
+plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="kw">False</span></code></pre>
+</div>
+
+  <div class="part-header" id="step2">
+    <div class="part-icon">🔍</div>
+    <div>
+      <h3 class="part-title">2단계 · 데이터 불러오기 & 큰 테이블 다루기</h3>
+      <div class="part-desc">컬럼이 590개나 되니 <strong>요약 정보</strong>로 살핍시다</div>
+    </div>
+  </div>
+
+  <div class="tip-box success"><span class="tip-icon">💡</span><p><strong>info()을 그냥 호출하면 590줄이 나옵니다!</strong><br/>
+<code style="color:var(--blue);font-family:monospace">df.info(verbose=False)</code> 옵션을 쓰면 요약만 보여줍니다.</p></div>
+
+  <div class="tbl-wrap">
+<table class="api-table">
+<thead><tr><th>함수</th><th>역할</th><th>이전과 차이</th></tr></thead>
+<tbody>
+<tr><td>read_csv()</td><td>CSV → DataFrame</td><td>동일</td></tr>
+<tr><td>df.shape</td><td>(행, 열) 크기</td><td>동일</td></tr>
+<tr><td>df.iloc[:, :6].head()</td><td>앞 6컬럼만 미리보기</td><td><span class="badge badge-red">신규</span> 컬럼 슬라이싱</td></tr>
+<tr><td>df.info(verbose=False)</td><td>전체 메모리·dtype 요약</td><td><span class="badge badge-red">신규</span> 옵션</td></tr>
+<tr><td>df[cols].describe()</td><td>일부 컬럼만 통계</td><td>컬럼 부분집합 사용</td></tr>
+<tr><td>df['Pass_Fail'].value_counts()</td><td>라벨 분포</td><td>동일</td></tr>
+</tbody>
+</table>
+</div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 데이터 불러오기 &amp; 기본 탐색</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>df = pd.<span class="fn">read_csv</span>(<span class="str">'fab.csv'</span>)
+
+<span class="fn">print</span>(<span class="str">f"📊 데이터 크기: {df.shape[0]}행 × {df.shape[1]}열"</span>)
+<span class="fn">print</span>(<span class="str">f"📋 첫 5컬럼: {df.columns[:5].tolist()}"</span>)
+<span class="fn">print</span>(<span class="str">f"📋 마지막 컬럼: {df.columns[-3:].tolist()}"</span>)
+
+<span class="cmt"># 컬럼이 너무 많으니 일부만 미리보기</span>
+<span class="fn">display</span>(df.iloc[:, :<span class="num">6</span>].<span class="fn">head</span>())
+
+<span class="cmt"># 590개 컬럼을 다 출력하지 않게 verbose=False</span>
+df.<span class="fn">info</span>(verbose=<span class="kw">False</span>)
+
+<span class="cmt"># 일부 센서만 통계</span>
+<span class="fn">display</span>(df[[<span class="str">'Sensor0'</span>, <span class="str">'Sensor1'</span>, <span class="str">'Sensor2'</span>]].<span class="fn">describe</span>().<span class="fn">round</span>(<span class="num">2</span>))
+
+<span class="cmt"># 라벨 분포 (불균형 확인!)</span>
+df[<span class="str">'Pass_Fail'</span>].<span class="fn">value_counts</span>()</code></pre>
+</div>
+
+  <div class="output-block"><div class="output-label">📤 실행 결과</div>📊 데이터 크기: 1567행 × 592열
+📋 첫 5컬럼: ['SensorTime', 'Sensor0', 'Sensor1', 'Sensor2', 'Sensor3']
+📋 마지막 컬럼: ['Sensor588', 'Sensor589', 'Pass_Fail']
+            SensorTime  Sensor0  Sensor1    Sensor2    Sensor3  Sensor4
+0  2008-07-19 11:55:00  3030.93  2564.00  2187.7333  1411.1265   1.3602
+1  2008-07-19 12:32:00  3095.78  2465.14  2230.4222  1463.6606   0.8294
+2  2008-07-19 13:17:00  2932.61  2559.94  2186.4111  1698.0172   1.5102
+3  2008-07-19 14:43:00  2988.72  2479.90  2199.0333   909.7926   1.3204
+4  2008-07-19 15:22:00  3032.24  2502.87  2233.3667  1326.5200   1.5334
+&lt;class 'pandas.DataFrame'&gt;
+RangeIndex: 1567 entries, 0 to 1566
+Columns: 592 entries, SensorTime to Pass_Fail
+dtypes: float64(590), int64(1), str(1)
+memory usage: 7.1 MB
+       Sensor0  Sensor1  Sensor2
+count  1561.00  1560.00  1553.00
+mean   3014.45  2495.85  2200.55
+std      73.62    80.41    29.51
+min    2743.24  2158.75  2060.66
+25%    2966.26  2452.25  2181.04
+50%    3011.49  2499.40  2201.07
+75%    3056.65  2538.82  2218.06
+max    3356.35  2846.44  2315.27
+Pass_Fail
+-1    1463
+ 1     104</div>
+
+  <div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>불량률 6.6% — 심한 불균형!</strong><br/>
+          모든 샘플을 "정상"이라고만 답해도 정확도 93.4% 입니다. 정확도(Accuracy)에 속지 마세요.</p></div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TAB 2 - 데이터 정제
+═══════════════════════════════════════════ -->
+<section class="session-pane" id="session-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+
+  <div class="session-header">
+    <div class="session-icon blue">🧹</div>
+    <div>
+      <h2>결측값 처리 · 의미 없는 컬럼 제거 (3~4단계)</h2>
+      <p>결측이 많은 열을 지우고 중앙값으로 채운 뒤, 값이 변하지 않는 센서를 제거합니다.</p>
+      <a class="notebook-link" href="./실습/02_데이터_정제.ipynb" download>📓 실습 노트북 받기 · 02_데이터_정제.ipynb</a>
+    </div>
+  </div>
+
+  <div class="part-header" id="step3">
+    <div class="part-icon">🧹</div>
+    <div>
+      <h3 class="part-title">3단계 · 결측값 처리 (적극 모드)</h3>
+      <div class="part-desc">결측이 너무 많은 컬럼은 통째로 제거</div>
+    </div>
+  </div>
+
+  <div class="flow">
+<div class="flow-step">📋 결측률 계산</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step" style="border-color:var(--red)">🗑️ 50% 초과 컬럼 제거</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step" style="border-color:var(--green)">📊 나머지는 중앙값으로 채우기</div>
+</div>
+
+  <div class="tip-box info"><span class="tip-icon">💡</span><p><strong>왜 평균이 아니라 중앙값(median)?</strong><br/>
+          실제 데이터는 이상치가 많아 평균이 왜곡됩니다. 중앙값은 이상치에 강합니다.</p></div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 결측 컬럼 제거 + 중앙값 채우기</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="cmt"># 1️⃣ 컬럼별 결측률 계산</span>
+miss_pct = (df.<span class="fn">isnull</span>().<span class="fn">sum</span>() / <span class="fn">len</span>(df) * <span class="num">100</span>).<span class="fn">round</span>(<span class="num">2</span>)
+<span class="fn">print</span>(miss_pct.<span class="fn">sort_values</span>(ascending=<span class="kw">False</span>).<span class="fn">head</span>(<span class="num">10</span>))
+
+<span class="cmt"># 2️⃣ 결측률 50% 초과 컬럼 제거</span>
+THRESHOLD = <span class="num">50.0</span>
+cols_to_drop = miss_pct[miss_pct &gt; THRESHOLD].index.<span class="fn">tolist</span>()
+<span class="fn">print</span>(<span class="str">f"🗑️ 제거할 컬럼: {len(cols_to_drop)}개"</span>)
+df = df.<span class="fn">drop</span>(columns=cols_to_drop)
+
+<span class="cmt"># 3️⃣ 남은 결측치는 중앙값으로 채우기 (타겟 제외!)</span>
+numeric_cols = df.<span class="fn">select_dtypes</span>(include=<span class="str">'number'</span>).columns.<span class="fn">tolist</span>()
+numeric_cols.<span class="fn">remove</span>(<span class="str">'Pass_Fail'</span>)   <span class="cmt"># ⚠️ 타겟은 절대 채우지 말 것!</span>
+
+df[numeric_cols] = df[numeric_cols].<span class="fn">fillna</span>(df[numeric_cols].<span class="fn">median</span>())
+<span class="fn">print</span>(<span class="str">f"✅ 결측 처리 완료. 남은 결측: {df.isnull().sum().sum()}"</span>)</code></pre>
+</div>
+
+  <div class="output-block"><div class="output-label">📤 실행 결과</div>Sensor293    91.19
+Sensor292    91.19
+Sensor157    91.19
+Sensor158    91.19
+Sensor492    85.58
+Sensor220    85.58
+Sensor85     85.58
+Sensor358    85.58
+Sensor518    64.96
+Sensor382    64.96
+dtype: float64
+🗑️ 제거할 컬럼: 28개
+✅ 결측 처리 완료. 남은 결측: 0</div>
+
+  <div class="part-header" id="step4">
+    <div class="part-icon">🚮</div>
+    <div>
+      <h3 class="part-title">4단계 · 의미 없는 컬럼 제거 <span class="new-badge">NEW</span></h3>
+      <div class="part-desc">분산이 0인 센서는 학습에 전혀 도움 안 됩니다</div>
+    </div>
+  </div>
+
+  <div class="tip-box success"><span class="tip-icon">💡</span><p><strong>분산(variance)이 0이라는 뜻은?</strong><br/>
+          그 컬럼의 모든 값이 똑같다는 뜻입니다. 모든 행에서 100을 출력한 센서는 정상/불량을 구분하는 데 전혀 쓸모가 없죠. → 제거.</p></div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 분산 0 컬럼 제거</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="cmt"># 분산 = 0 컬럼 + 거의 0인 컬럼 모두 제거</span>
+variances = df[numeric_cols].<span class="fn">var</span>()
+
+constant_cols    = variances[variances == <span class="num">0</span>].index.<span class="fn">tolist</span>()
+near_constant    = variances[(variances &gt; <span class="num">0</span>) &amp; (variances &lt; <span class="num">1e-6</span>)].index.<span class="fn">tolist</span>()
+
+<span class="fn">print</span>(<span class="str">f"분산 0  컬럼: {len(constant_cols)}개"</span>)
+<span class="fn">print</span>(<span class="str">f"분산 ≈0 컬럼: {len(near_constant)}개"</span>)
+
+to_drop_var = constant_cols + near_constant
+df = df.<span class="fn">drop</span>(columns=to_drop_var)
+numeric_cols = [c <span class="kw">for</span> c <span class="kw">in</span> numeric_cols <span class="kw">if</span> c <span class="kw">not</span> <span class="kw">in</span> to_drop_var]
+
+<span class="fn">print</span>(<span class="str">f"✅ 사용 가능한 센서: {len(numeric_cols)}개"</span>)</code></pre>
+</div>
+
+  <div class="output-block"><div class="output-label">📤 실행 결과</div>분산 0  컬럼: 116개
+분산 ≈0 컬럼: 10개
+✅ 사용 가능한 센서: 436개</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TAB 3 - 특성 선택
+═══════════════════════════════════════════ -->
+<section class="session-pane" id="session-3" role="tabpanel" aria-labelledby="tab-3" hidden>
+
+  <div class="session-header">
+    <div class="session-icon orange">🎯</div>
+    <div>
+      <h2>특성 선택 · 핵심 변수 EDA (5~6단계)</h2>
+      <p>ANOVA F-검정으로 상위 20개 센서를 고르고, 박스플롯·히트맵으로 살펴봅니다.</p>
+      <a class="notebook-link" href="./실습/03_특성선택_EDA.ipynb" download>📓 실습 노트북 받기 · 03_특성선택_EDA.ipynb</a>
+    </div>
+  </div>
+
+  <div class="part-header" id="step5">
+    <div class="part-icon">🎯</div>
+    <div>
+      <h3 class="part-title">5단계 · 특성 선택 <span class="new-badge">NEW</span></h3>
+      <div class="part-desc">중요한 K개 센서만 추리기 (ANOVA F-검정)</div>
+    </div>
+  </div>
+
+  <div class="tip-box info"><span class="tip-icon">📌</span><p><strong>SelectKBest + f_classif 가 하는 일</strong><br/>
+          각 센서에 대해 "정상 그룹의 평균 vs 불량 그룹의 평균" 차이를 통계적으로 측정합니다.
+          F-값이 클수록 두 그룹의 차이가 뚜렷한 센서 = 예측에 유용한 센서입니다.</p></div>
+
+  <div class="tbl-wrap">
+<table class="api-table">
+<thead><tr><th>F-값 크기</th><th>해석</th><th>활용</th></tr></thead>
+<tbody>
+<tr><td>F &gt; 30</td><td>매우 강한 변별력</td><td><span class="badge badge-red">반드시 사용</span></td></tr>
+<tr><td>10 &lt; F &lt; 30</td><td>유의미한 변별력</td><td><span class="badge badge-orange">사용</span></td></tr>
+<tr><td>F &lt; 5</td><td>거의 차이 없음</td><td><span class="badge badge-blue">제외 가능</span></td></tr>
+</tbody>
+</table>
+</div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 상위 K개 센서 자동 선택</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="cmt"># 타겟을 0/1로 변환: 불량(1)을 양성 클래스로</span>
+y = (df[<span class="str">'Pass_Fail'</span>] == <span class="num">1</span>).<span class="fn">astype</span>(int)
+X_all = df[numeric_cols].<span class="fn">copy</span>()
+
+<span class="cmt"># 상위 K=20 개 센서 자동 선택</span>
+K = <span class="num">20</span>
+selector = <span class="fn">SelectKBest</span>(score_func=f_classif, k=K)
+selector.<span class="fn">fit</span>(X_all, y)
+
+f_scores   = pd.<span class="fn">Series</span>(selector.scores_, index=numeric_cols)\
+               .<span class="fn">replace</span>([np.inf, -np.inf], np.nan).<span class="fn">dropna</span>()
+top_k_cols = f_scores.<span class="fn">sort_values</span>(ascending=<span class="kw">False</span>).<span class="fn">head</span>(K).index.<span class="fn">tolist</span>()
+
+<span class="fn">print</span>(<span class="str">f"🏆 선택된 상위 {K}개 센서:"</span>)
+<span class="kw">for</span> i, col <span class="kw">in</span> <span class="fn">enumerate</span>(top_k_cols, <span class="num">1</span>):
+    <span class="fn">print</span>(<span class="str">f"  {i:2d}. {col}  F={f_scores[col]:6.1f}"</span>)</code></pre>
+</div>
+
+  <div class="output-block"><div class="output-label">📤 실행 결과</div>🏆 선택된 상위 20개 센서:
+   1. Sensor59  F=  39.0
+   2. Sensor103  F=  36.6
+   3. Sensor510  F=  27.6
+   4. Sensor348  F=  27.2
+   5. Sensor431  F=  22.8
+   6. Sensor434  F=  19.6
+   7. Sensor430  F=  18.9
+   8. Sensor21  F=  18.6
+   9. Sensor435  F=  18.6
+  10. Sensor28  F=  18.1
+  11. Sensor436  F=  17.8
+  12. Sensor210  F=  16.9
+  13. Sensor129  F=  16.7
+  14. Sensor298  F=  16.3
+  15. Sensor163  F=  15.7
+  16. Sensor124  F=  14.0
+  17. Sensor295  F=  13.2
+  18. Sensor316  F=  12.6
+  19. Sensor160  F=  12.6
+  20. Sensor164  F=  12.0</div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 상위 K 시각화</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>top = f_scores.<span class="fn">sort_values</span>(ascending=<span class="kw">False</span>).<span class="fn">head</span>(K)
+plt.<span class="fn">figure</span>(figsize=(<span class="num">10</span>, <span class="num">7</span>))
+plt.<span class="fn">barh</span>(top.index[::-<span class="num">1</span>], top.values[::-<span class="num">1</span>], color=<span class="str">'#3498db'</span>)
+plt.<span class="fn">xlabel</span>(<span class="str">'F-값 (클수록 유용)'</span>)
+plt.<span class="fn">title</span>(<span class="str">'상위 K개 센서 F-점수'</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+</div>
+
+  <div class="part-header" id="step6">
+    <div class="part-icon">📊</div>
+    <div>
+      <h3 class="part-title">6단계 · 핵심 변수 EDA</h3>
+      <div class="part-desc">상위 K개로 줄였으니 이제 시각화 가능!</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+<table class="api-table">
+<thead><tr><th>시각화</th><th>인사이트</th><th>핵심 함수</th></tr></thead>
+<tbody>
+<tr><td>그룹 평균 차이 막대</td><td>정상 vs 불량 시 어떤 센서가 변하는지</td><td><code style="color:var(--blue);font-family:monospace">groupby().mean()</code></td></tr>
+<tr><td>박스플롯 6개</td><td>중앙값·이상치를 그룹 간 비교</td><td><code style="color:var(--blue);font-family:monospace">sns.boxplot()</code></td></tr>
+<tr><td>상관관계 히트맵</td><td>중복 센서 발견</td><td><code style="color:var(--blue);font-family:monospace">sns.heatmap(corr)</code></td></tr>
+</tbody>
+</table>
+</div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 상위 6개 박스플롯</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>top6 = top_k_cols[:<span class="num">6</span>]
+fig, axes = plt.<span class="fn">subplots</span>(<span class="num">2</span>, <span class="num">3</span>, figsize=(<span class="num">15</span>, <span class="num">9</span>))
+axes = axes.<span class="fn">flatten</span>()
+
+<span class="kw">for</span> i, col <span class="kw">in</span> <span class="fn">enumerate</span>(top6):
+    sns.<span class="fn">boxplot</span>(x=<span class="str">'Pass_Fail'</span>, y=col, data=df,
+                hue=<span class="str">'Pass_Fail'</span>,
+                palette={-<span class="num">1</span>: <span class="str">'#2ecc71'</span>, <span class="num">1</span>: <span class="str">'#e74c3c'</span>},
+                legend=<span class="kw">False</span>, ax=axes[i], width=<span class="num">0.5</span>)
+    axes[i].<span class="fn">set_title</span>(<span class="str">f'{col}  (F={f_scores[col]:.1f})'</span>)
+    axes[i].<span class="fn">set_xticks</span>([<span class="num">0</span>, <span class="num">1</span>], [<span class="str">'정상(-1)'</span>, <span class="str">'불량(+1)'</span>])
+
+plt.<span class="fn">suptitle</span>(<span class="str">'상위 6개 센서 — 정상 vs 불량 분포'</span>)
+plt.<span class="fn">tight_layout</span>()
+plt.<span class="fn">show</span>()</code></pre>
+</div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 상위 K 상관관계 히트맵</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>corr_top = df[top_k_cols + [<span class="str">'Pass_Fail'</span>]].<span class="fn">corr</span>().<span class="fn">round</span>(<span class="num">2</span>)
+
+plt.<span class="fn">figure</span>(figsize=(<span class="num">13</span>, <span class="num">10</span>))
+mask = np.<span class="fn">triu</span>(np.<span class="fn">ones_like</span>(corr_top, dtype=bool))
+sns.<span class="fn">heatmap</span>(corr_top, annot=<span class="kw">True</span>, fmt=<span class="str">'.2f'</span>,
+            cmap=<span class="str">'RdYlGn'</span>, center=<span class="num">0</span>, mask=mask,
+            linewidths=<span class="num">0.5</span>)
+plt.<span class="fn">title</span>(<span class="str">'상위 센서 간 상관관계 + Pass_Fail'</span>)
+plt.<span class="fn">show</span>()</code></pre>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TAB 4 - 모델링
+═══════════════════════════════════════════ -->
+<section class="session-pane" id="session-4" role="tabpanel" aria-labelledby="tab-4" hidden>
+
+  <div class="session-header">
+    <div class="session-icon green">🤖</div>
+    <div>
+      <h2>전처리 · 모델 학습 · 평가 (7~9단계)</h2>
+      <p>학습/테스트로 나누고 두 모델을 학습해 혼동행렬·ROC·특성 중요도로 평가한 뒤 오늘 내용을 정리합니다.</p>
+      <a class="notebook-link" href="./실습/04_모델_학습_평가.ipynb" download>📓 실습 노트북 받기 · 04_모델_학습_평가.ipynb</a>
+    </div>
+  </div>
+
+  <div class="part-header" id="step7">
+    <div class="part-icon">⚙️</div>
+    <div>
+      <h3 class="part-title">7단계 · 데이터 전처리 & 분리</h3>
+      <div class="part-desc">상위 K개 센서만 입력으로 사용</div>
+    </div>
+  </div>
+
+  <div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>stratify=y 는 절대 빠뜨리지 마세요!</strong><br/>
+          불량이 6.6%밖에 안 되므로 무작위 분리하면 테스트 셋에 불량이 0건 들어갈 수도 있습니다.</p></div>
+
+  <div class="tip-box warning"><span class="tip-icon">🚰</span><p><strong>꼭 알아둘 데이터 누수</strong><br/>
+          이 강의는 흐름을 이해하기 쉽게 결측 중앙값·특성 선택을 <strong>전체 데이터</strong>로 계산한 뒤 분리합니다. 실제 프로젝트에서는 데이터를 <strong>먼저 학습/평가용으로 나누고</strong> 중앙값 계산, 센서 선택, 표준화를 학습 데이터에만 fit해야 합니다. 평가 데이터의 정보를 미리 쓰면 성능이 실제보다 좋아 보입니다.</p></div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 분리 &amp; 스케일링</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>X = df[top_k_cols].<span class="fn">copy</span>()    <span class="cmt"># 상위 K개 센서만!</span>
+<span class="cmt"># y = (df['Pass_Fail'] == 1).astype(int)  # 위에서 이미 만듦</span>
+
+X_train, X_test, y_train, y_test = <span class="fn">train_test_split</span>(
+    X, y,
+    test_size=<span class="num">0.2</span>,
+    random_state=<span class="num">42</span>,
+    stratify=y          <span class="cmt"># ⭐ 불균형 비율 유지 필수!</span>
+)
+
+scaler = <span class="fn">StandardScaler</span>()
+X_train_scaled = scaler.<span class="fn">fit_transform</span>(X_train)
+X_test_scaled  = scaler.<span class="fn">transform</span>(X_test)
+
+<span class="fn">print</span>(<span class="str">f"학습: {X_train.shape}, 그 중 불량 {y_train.sum()}건"</span>)
+<span class="fn">print</span>(<span class="str">f"테스트: {X_test.shape}, 그 중 불량 {y_test.sum()}건"</span>)</code></pre>
+</div>
+
+  <div class="output-block"><div class="output-label">📤 실행 결과</div>학습: (1253, 20), 그 중 불량 83건
+테스트: (314, 20), 그 중 불량 21건</div>
+
+  <div class="part-header" id="step8">
+    <div class="part-icon">🤖</div>
+    <div>
+      <h3 class="part-title">8단계 · 머신러닝 모델 학습</h3>
+      <div class="part-desc"><code style="color:var(--blue);font-family:monospace">class_weight='balanced'</code>로 소수 클래스(불량)에 가중치 주기</div>
+    </div>
+  </div>
+
+  <div class="tip-box danger"><span class="tip-icon">⚠️</span><p><strong><code style="font-family:monospace">class_weight='balanced'</code> 없이 학습하면…</strong><br/>
+          모델이 모두 "정상"이라고만 답하기 쉽습니다. 정확도 93%로 보이지만 불량 탐지율(Recall)은 0% — 진짜 불량은 다 놓칩니다.</p></div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 모델 학습 (불균형 처리)</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="cmt"># 1) 로지스틱 회귀</span>
+lr_model = <span class="fn">LogisticRegression</span>(
+    random_state=<span class="num">42</span>, max_iter=<span class="num">1000</span>,
+    class_weight=<span class="str">'balanced'</span>   <span class="cmt"># ⭐ 소수 클래스에 가중치</span>
+)
+lr_model.<span class="fn">fit</span>(X_train_scaled, y_train)
+
+<span class="cmt"># 2) 랜덤 포레스트</span>
+rf_model = <span class="fn">RandomForestClassifier</span>(
+    n_estimators=<span class="num">200</span>,
+    max_depth=<span class="num">8</span>,
+    random_state=<span class="num">42</span>,
+    class_weight=<span class="str">'balanced'</span>
+)
+rf_model.<span class="fn">fit</span>(X_train_scaled, y_train)
+
+<span class="cmt"># 예측</span>
+y_pred_lr = lr_model.<span class="fn">predict</span>(X_test_scaled)
+y_pred_rf = rf_model.<span class="fn">predict</span>(X_test_scaled)</code></pre>
+</div>
+
+  <div class="tip-box info"><span class="tip-icon">🔎</span><p><strong>balanced를 썼는데도 불량을 못 잡는다면?</strong><br/>
+          실행해 보면 로지스틱 회귀는 테스트 불량 21건 중 15건을 잡지만(Recall 0.714), 랜덤 포레스트는 기본 임계값 0.5에서 <strong>한 건도 잡지 못합니다</strong>(Recall 0.000). 가중치만으로는 부족할 수 있으니 9단계의 혼동행렬과 보강 실습 3의 <strong>임계값 조정</strong>으로 꼭 확인하세요.</p></div>
+
+  <div class="part-header" id="step9">
+    <div class="part-icon">🎯</div>
+    <div>
+      <h3 class="part-title">9단계 · 모델 평가 — Recall 최우선</h3>
+      <div class="part-desc">불균형 데이터에서는 정확도가 거짓말을 합니다</div>
+    </div>
+  </div>
+
+  <div class="tip-box success"><span class="tip-icon">💡</span><p><strong>가장 먼저 봐야 할 지표: 불량(1) 클래스의 Recall</strong><br/>
+          실제 불량 21건 중 모델이 잡아낸 비율입니다. 이 값을 최대화하는 게 반도체 공정의 목표입니다.</p></div>
+
+  <div class="tbl-wrap">
+<table class="api-table">
+<thead><tr><th>지표</th><th>의미 (불량 클래스 기준)</th><th>이상적 값</th></tr></thead>
+<tbody>
+<tr><td>Accuracy</td><td>전체 정답 비율</td><td style="color:var(--text-dim)">참고용 (불균형 시 신뢰도 낮음)</td></tr>
+<tr><td style="color:var(--red)">Recall (불량)</td><td>실제 불량 중 잡아낸 비율</td><td><span class="badge badge-red">최대화</span></td></tr>
+<tr><td>Precision (불량)</td><td>불량으로 예측한 것 중 실제 불량</td><td>너무 낮으면 오탐 多</td></tr>
+<tr><td>F1-Score</td><td>Precision·Recall 균형</td><td>종합 평가</td></tr>
+<tr><td>ROC-AUC</td><td>임계값 무관 종합 지표</td><td>1에 가까울수록</td></tr>
+</tbody>
+</table>
+</div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 혼동행렬 + 분류 리포트</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">13</span>, <span class="num">5</span>))
+<span class="kw">for</span> ax, (name, model) <span class="kw">in</span> <span class="fn">zip</span>(axes,
+        [(<span class="str">'로지스틱 회귀'</span>, lr_model), (<span class="str">'랜덤 포레스트'</span>, rf_model)]):
+    cm = <span class="fn">confusion_matrix</span>(y_test, model.<span class="fn">predict</span>(X_test_scaled))
+    sns.<span class="fn">heatmap</span>(cm, annot=<span class="kw">True</span>, fmt=<span class="str">'d'</span>, cmap=<span class="str">'Blues'</span>, ax=ax,
+                xticklabels=[<span class="str">'정상(0)'</span>, <span class="str">'불량(1)'</span>],
+                yticklabels=[<span class="str">'정상(0)'</span>, <span class="str">'불량(1)'</span>])
+    ax.<span class="fn">set_title</span>(name)
+plt.<span class="fn">show</span>()
+
+<span class="cmt"># 상세 리포트</span>
+<span class="fn">print</span>(<span class="fn">classification_report</span>(y_test, lr_model.<span class="fn">predict</span>(X_test_scaled),
+      target_names=[<span class="str">'정상(0)'</span>, <span class="str">'불량(1)'</span>]))</code></pre>
+</div>
+
+  <div class="output-block"><div class="output-label">📤 실행 결과 (로지스틱 회귀 분류 리포트)</div>              precision    recall  f1-score   support
+
+       정상(0)       0.97      0.75      0.85       293
+       불량(1)       0.17      0.71      0.28        21
+
+    accuracy                           0.75       314
+   macro avg       0.57      0.73      0.56       314
+weighted avg       0.92      0.75      0.81       314</div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — ROC 커브 비교</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>fig, ax = plt.<span class="fn">subplots</span>(figsize=(<span class="num">8</span>, <span class="num">7</span>))
+<span class="kw">for</span> name, model, color <span class="kw">in</span> [
+        (<span class="str">'로지스틱 회귀'</span>, lr_model, <span class="str">'#3498db'</span>),
+        (<span class="str">'랜덤 포레스트'</span>, rf_model, <span class="str">'#e74c3c'</span>)]:
+    y_prob = model.<span class="fn">predict_proba</span>(X_test_scaled)[:, <span class="num">1</span>]
+    fpr, tpr, _ = <span class="fn">roc_curve</span>(y_test, y_prob)
+    roc_auc = <span class="fn">auc</span>(fpr, tpr)
+    ax.<span class="fn">plot</span>(fpr, tpr, color=color, linewidth=<span class="num">2.5</span>,
+            label=<span class="str">f'{name} (AUC={roc_auc:.3f})'</span>)
+ax.<span class="fn">plot</span>([<span class="num">0</span>,<span class="num">1</span>], [<span class="num">0</span>,<span class="num">1</span>], <span class="str">'k--'</span>, alpha=<span class="num">0.5</span>)
+ax.<span class="fn">set_xlabel</span>(<span class="str">'FPR'</span>); ax.<span class="fn">set_ylabel</span>(<span class="str">'TPR (= 불량 Recall)'</span>)
+ax.<span class="fn">legend</span>(); plt.<span class="fn">show</span>()</code></pre>
+</div>
+
+  <div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">Python — 특성 중요도</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>imp = pd.<span class="fn">Series</span>(rf_model.feature_importances_,
+                index=top_k_cols).<span class="fn">sort_values</span>()
+
+plt.<span class="fn">figure</span>(figsize=(<span class="num">10</span>, <span class="num">7</span>))
+plt.<span class="fn">barh</span>(imp.index, imp.values, color=<span class="str">'#e74c3c'</span>)
+plt.<span class="fn">xlabel</span>(<span class="str">'Feature Importance'</span>)
+plt.<span class="fn">title</span>(<span class="str">'랜덤 포레스트 특성 중요도'</span>)
+plt.<span class="fn">show</span>()</code></pre>
+</div>
+
+  <div class="part-header" id="insights">
+    <div class="part-icon">🔬</div>
+    <div>
+      <h3 class="part-title">분석 핵심 인사이트</h3>
+    </div>
+  </div>
+
+  <ul class="insight-list">
+<li><span class="num">01</span>익명 센서라도 <strong>ANOVA F-검정</strong>으로 변별력 있는 컬럼을 자동으로 찾을 수 있습니다.</li>
+<li><span class="num">02</span>실제 데이터 정제는 <strong>결측 컬럼 제거 → 분산 0 제거 → 특성 선택</strong>의 3단 콤보가 핵심입니다.</li>
+<li><span class="num">03</span>590개에서 약 <strong>440개로 1차 정제</strong>한 뒤 <strong>20개로 좁혀</strong> 시각화·해석이 가능해집니다.</li>
+<li><span class="num">04</span>심한 불균형(6.6%) 상황에선 <strong>Accuracy는 거의 무용지물</strong> — Recall·F1·ROC-AUC를 봐야 합니다.</li>
+<li><span class="num">05</span><code style="color:var(--blue);font-family:monospace">class_weight='balanced'</code>의 효과는 모델마다 다릅니다 — 이 데이터에서 로지스틱 회귀는 불량 Recall 0.714, 랜덤 포레스트는 기본 임계값 0.5에서 <strong>0.000</strong>입니다. 반드시 혼동행렬로 확인하세요.</li>
+<li><span class="num">06</span>결측 채우기·특성 선택·스케일링을 전체 데이터에 맞추면 <strong>데이터 누수</strong>로 성능이 좋아 보일 수 있습니다. 실무에서는 먼저 분리하고 학습 데이터에만 fit합니다.</li>
+</ul>
+
+  <div class="part-header" id="summary">
+    <div class="part-icon">✅</div>
+    <div>
+      <h3 class="part-title">수업 정리 — 이전 vs 오늘 비교</h3>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+<table class="api-table">
+<thead><tr><th>단계</th><th>이전 (샘플)</th><th>오늘 (실전)</th></tr></thead>
+<tbody>
+<tr><td>데이터 크기</td><td>200 × 12</td><td><strong style="color:var(--red)">1,567 × 592</strong></td></tr>
+<tr><td>결측 처리</td><td><code style="font-family:monospace">fillna(mean())</code></td><td><strong>임계값 컬럼 제거 + median</strong></td></tr>
+<tr><td>차원 축소</td><td>(불필요)</td><td><strong>분산 0 제거 + SelectKBest</strong></td></tr>
+<tr><td>클래스 불균형</td><td>90:10</td><td><strong style="color:var(--red)">93:7 → class_weight='balanced'</strong></td></tr>
+<tr><td>라벨 의미</td><td>1=합격</td><td><strong style="color:var(--red)">1=불량 (SECOM 표준)</strong></td></tr>
+<tr><td>핵심 평가지표</td><td>Accuracy·Recall</td><td><strong>Recall(불량) 최우선</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+  <h3 style="font-size:15px; margin:20px 0 12px;">📚 함수 레퍼런스</h3>
+
+  <div class="summary-grid">
+<div class="summary-card">
+<h4>📂 데이터 탐색</h4>
+<ul class="fn-list">
+<li>pd.read_csv()</li>
+<li>df.shape</li>
+<li>df.iloc[:, :n].head()</li>
+<li>df.info(verbose=False)</li>
+<li>df[cols].describe()</li>
+<li>df['col'].value_counts()</li>
+</ul>
+</div>
+<div class="summary-card">
+<h4>🧹 정제 (NEW)</h4>
+<ul class="fn-list">
+<li>df.isnull().sum() / len(df) * 100</li>
+<li>df.drop(columns=...)</li>
+<li>df.fillna(df.median())</li>
+<li>df.var() == 0</li>
+<li>SelectKBest(f_classif)</li>
+<li>selector.scores_</li>
+</ul>
+</div>
+<div class="summary-card">
+<h4>📊 시각화</h4>
+<ul class="fn-list">
+<li>plt.barh()</li>
+<li>sns.boxplot(hue=...)</li>
+<li>sns.heatmap(corr)</li>
+<li>plt.suptitle()</li>
+<li>plt.subplots()</li>
+<li>plt.tight_layout()</li>
+</ul>
+</div>
+<div class="summary-card">
+<h4>🤖 모델·평가</h4>
+<ul class="fn-list">
+<li>train_test_split(stratify=y)</li>
+<li>StandardScaler()</li>
+<li>class_weight='balanced'</li>
+<li>confusion_matrix()</li>
+<li>classification_report()</li>
+<li>roc_curve / auc</li>
+</ul>
+</div>
+</div>
+
+  <div style="margin-top:24px; padding:20px; background:var(--bg3); border-radius:10px;">
+<h3 style="font-size:15px; margin-bottom:12px; color:var(--green);">🚀 더 나아가기</h3>
+<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">
+<div style="padding:12px; background:var(--bg2); border-radius:8px; font-size:13px;">
+<strong style="color:var(--blue)">⚡ 고급 모델</strong><br/>
+<span style="color:var(--text-dim)">XGBoost, LightGBM, CatBoost</span>
+</div>
+<div style="padding:12px; background:var(--bg2); border-radius:8px; font-size:13px;">
+<strong style="color:var(--orange)">⚖️ 오버샘플링</strong><br/>
+<span style="color:var(--text-dim)">imbalanced-learn 의 SMOTE</span>
+</div>
+<div style="padding:12px; background:var(--bg2); border-radius:8px; font-size:13px;">
+<strong style="color:var(--purple)">🔧 차원 축소</strong><br/>
+<span style="color:var(--text-dim)">PCA, UMAP 으로 시각화</span>
+</div>
+<div style="padding:12px; background:var(--bg2); border-radius:8px; font-size:13px;">
+<strong style="color:var(--green)">🔍 모델 해석</strong><br/>
+<span style="color:var(--text-dim)">SHAP value 로 예측 근거</span>
+</div>
+</div>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TAB 5 - 보강 실습
+═══════════════════════════════════════════ -->
+<section class="session-pane" id="session-5" role="tabpanel" aria-labelledby="tab-5" hidden>
+
+  <div class="session-header">
+    <div class="session-icon blue">🧪</div>
+    <div>
+      <h2>초보자 필수 보강 실습</h2>
+      <p>무엇을 맞혀야 하고, 어떤 실수를 줄여야 하는지 숫자로 확인합니다</p>
+      <a class="notebook-link" href="./실습/05_보강_실습.ipynb" download>📓 실습 노트북 받기 · 05_보강_실습.ipynb</a>
+    </div>
+  </div>
+
+  <div class="objectives">
+<h3>🎯 실습 방법</h3>
+<ul class="obj-list">
+<li><span class="obj-check">✓</span>반도체 불량 탐지에서는 불량을 정상으로 놓치는 <code>False Negative</code>와 불량 재현율(<code>Recall</code>)을 특히 주의해서 봅니다</li>
+<li><span class="obj-check">✓</span>각 실습은 <strong>직접 작성 → 힌트 → 정답 확인</strong> 순서로 진행합니다</li>
+<li><span class="obj-check">✓</span>정답 예제의 실행 결과는 8단계까지 학습한 모델 기준입니다</li>
+</ul>
+</div>
+
+  <div class="content-section">
+<div class="section-label">
+<div class="section-num">1</div>
+<div>
+<div class="section-title">실습 1 · 클래스 불균형과 기준 모델 이해하기</div>
+</div>
+</div>
+<p><strong>목표:</strong> 항상 정상이라고 예측하는 단순 모델과 비교해 정확도의 함정을 확인합니다.</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습1_문제.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="cmt"># TODO 1: y_test의 정상/불량 건수와 비율을 출력하세요.</span>
+<span class="cmt"># TODO 2: 항상 정상(0)만 예측하는 배열을 만드세요.</span>
+<span class="cmt"># TODO 3: 이 기준 모델의 정확도와 불량 Recall을 계산하세요.</span></code></pre>
+</div>
+<details class="practice-toggle">
+<summary>💡 힌트 보기</summary>
+<div class="toggle-body"><p><code>value_counts(normalize=True)</code>와 <code>accuracy_score</code>, <code>recall_score</code>를 사용합니다.</p></div>
+</details>
+<details class="practice-toggle">
+<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
+<div class="toggle-body">
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습1_정답.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="kw">from</span> sklearn.metrics <span class="kw">import</span> accuracy_score, recall_score
+
+<span class="fn">print</span>(<span class="str">'테스트 판정 건수:'</span>)
+<span class="fn">print</span>(y_test.<span class="fn">value_counts</span>().<span class="fn">sort_index</span>())
+<span class="fn">print</span>(<span class="str">'\n테스트 판정 비율(%):'</span>)
+<span class="fn">print</span>(y_test.<span class="fn">value_counts</span>(normalize=<span class="kw">True</span>).<span class="fn">sort_index</span>().<span class="fn">mul</span>(<span class="num">100</span>).<span class="fn">round</span>(<span class="num">2</span>))
+
+always_normal = np.<span class="fn">zeros</span>(<span class="fn">len</span>(y_test), dtype=int)
+baseline_accuracy = <span class="fn">accuracy_score</span>(y_test, always_normal)
+baseline_recall = <span class="fn">recall_score</span>(y_test, always_normal, zero_division=<span class="num">0</span>)
+<span class="fn">print</span>(<span class="str">f'항상 정상 모델 정확도: {baseline_accuracy:.3f}'</span>)
+<span class="fn">print</span>(<span class="str">f'항상 정상 모델 불량 Recall: {baseline_recall:.3f}'</span>)
+<span class="fn">print</span>(<span class="str">'정확도가 높아도 불량 Recall이 0이면 불량 탐지 모델로 쓸 수 없습니다.'</span>)</code></pre>
+</div>
+<div class="output-block"><div class="output-label">📤 실행 결과</div>테스트 판정 건수:
+Pass_Fail
+0    293
+1     21
+Name: count, dtype: int64
+
+테스트 판정 비율(%):
+Pass_Fail
+0    93.31
+1     6.69
+Name: proportion, dtype: float64
+항상 정상 모델 정확도: 0.933
+항상 정상 모델 불량 Recall: 0.000
+정확도가 높아도 불량 Recall이 0이면 불량 탐지 모델로 쓸 수 없습니다.</div>
+</div>
+</details>
+</div>
+
+  <div class="content-section">
+<div class="section-label">
+<div class="section-num">2</div>
+<div>
+<div class="section-title">실습 2 · 혼동행렬을 숫자로 읽기</div>
+</div>
+</div>
+<p><strong>목표:</strong> 정상/불량 예측의 네 가지 경우와 놓친 불량 수를 직접 확인합니다.</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습2_문제.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="cmt"># TODO 1: 랜덤 포레스트 예측 결과로 혼동행렬을 만드세요.</span>
+<span class="cmt"># TODO 2: tn, fp, fn, tp 네 값으로 나누어 저장하세요.</span>
+<span class="cmt"># TODO 3: 불량 Recall = tp / (tp + fn)을 직접 계산하세요.</span></code></pre>
+</div>
+<details class="practice-toggle">
+<summary>💡 힌트 보기</summary>
+<div class="toggle-body"><p>2x2 혼동행렬에는 <code>ravel()</code>을 적용할 수 있습니다. 분모가 0인지도 확인하세요.</p></div>
+</details>
+<details class="practice-toggle">
+<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
+<div class="toggle-body">
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습2_정답.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>rf_predictions = rf_model.<span class="fn">predict</span>(X_test_scaled)
+tn, fp, fn, tp = <span class="fn">confusion_matrix</span>(y_test, rf_predictions).<span class="fn">ravel</span>()
+manual_recall = tp / (tp + fn) <span class="kw">if</span> (tp + fn) <span class="kw">else</span> <span class="num">0</span>
+
+<span class="fn">print</span>(<span class="str">f'TN(정상을 정상): {tn}'</span>)
+<span class="fn">print</span>(<span class="str">f'FP(정상을 불량): {fp}'</span>)
+<span class="fn">print</span>(<span class="str">f'FN(불량을 정상으로 놓침): {fn}'</span>)
+<span class="fn">print</span>(<span class="str">f'TP(불량을 불량): {tp}'</span>)
+<span class="fn">print</span>(<span class="str">f'불량 Recall: {manual_recall:.3f}'</span>)</code></pre>
+</div>
+<div class="output-block"><div class="output-label">📤 실행 결과</div>TN(정상을 정상): 291
+FP(정상을 불량): 2
+FN(불량을 정상으로 놓침): 21
+TP(불량을 불량): 0
+불량 Recall: 0.000</div>
+</div>
+</details>
+</div>
+
+  <div class="content-section">
+<div class="section-label">
+<div class="section-num">3</div>
+<div>
+<div class="section-title">실습 3 · 예측 임계값과 Recall의 관계</div>
+</div>
+</div>
+<p><strong>목표:</strong> 불량 판정 기준을 바꿀 때 Recall과 Precision이 어떻게 달라지는지 비교합니다.</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습3_문제.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="cmt"># TODO 1: 랜덤 포레스트의 불량 확률을 구하세요.</span>
+<span class="cmt"># TODO 2: 임계값 0.3, 0.5, 0.7마다 예측값을 만드세요.</span>
+<span class="cmt"># TODO 3: 각 임계값의 Precision과 Recall을 표로 정리하세요.</span></code></pre>
+</div>
+<details class="practice-toggle">
+<summary>💡 힌트 보기</summary>
+<div class="toggle-body"><p>확률이 임계값 이상이면 1로 바꾸고 <code>precision_score</code>, <code>recall_score</code>를 계산합니다.</p></div>
+</details>
+<details class="practice-toggle">
+<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
+<div class="toggle-body">
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습3_정답.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="kw">from</span> sklearn.metrics <span class="kw">import</span> precision_score, recall_score
+
+rf_probabilities = rf_model.<span class="fn">predict_proba</span>(X_test_scaled)[:, <span class="num">1</span>]
+threshold_rows = []
+<span class="kw">for</span> threshold <span class="kw">in</span> [<span class="num">0.3</span>, <span class="num">0.5</span>, <span class="num">0.7</span>]:
+    threshold_prediction = (rf_probabilities &gt;= threshold).<span class="fn">astype</span>(int)
+    threshold_rows.<span class="fn">append</span>({
+        <span class="str">'임계값'</span>: threshold,
+        <span class="str">'Precision'</span>: <span class="fn">precision_score</span>(y_test, threshold_prediction, zero_division=<span class="num">0</span>),
+        <span class="str">'Recall'</span>: <span class="fn">recall_score</span>(y_test, threshold_prediction, zero_division=<span class="num">0</span>),
+        <span class="str">'불량예측수'</span>: <span class="fn">int</span>(threshold_prediction.<span class="fn">sum</span>())
+    })
+
+threshold_table = pd.<span class="fn">DataFrame</span>(threshold_rows).<span class="fn">round</span>(<span class="num">3</span>)
+threshold_table</code></pre>
+</div>
+<div class="output-block"><div class="output-label">📤 실행 결과</div>   임계값  Precision  Recall  불량예측수
+0  0.3      0.261   0.286     23
+1  0.5      0.000   0.000      2
+2  0.7      0.000   0.000      0</div>
+</div>
+</details>
+</div>
+
+  <div class="content-section">
+<div class="section-label">
+<div class="section-num">4</div>
+<div>
+<div class="section-title">실습 4 · 두 모델을 같은 기준으로 비교하기</div>
+</div>
+</div>
+<p><strong>목표:</strong> 정확도만 보지 않고 불량 Precision, Recall, F1을 한 표에서 비교합니다.</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습4_문제.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="cmt"># TODO 1: 로지스틱 회귀와 랜덤 포레스트의 예측값을 만드세요.</span>
+<span class="cmt"># TODO 2: 각 모델의 Accuracy, Precision, Recall, F1을 계산하세요.</span>
+<span class="cmt"># TODO 3: Recall이 높은 순서로 정렬하세요.</span></code></pre>
+</div>
+<details class="practice-toggle">
+<summary>💡 힌트 보기</summary>
+<div class="toggle-body"><p>여러 모델을 리스트에 담아 반복하면 같은 계산 기준을 적용할 수 있습니다.</p></div>
+</details>
+<details class="practice-toggle">
+<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
+<div class="toggle-body">
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습4_정답.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="kw">from</span> sklearn.metrics <span class="kw">import</span> accuracy_score, precision_score, recall_score, f1_score
+
+comparison_rows = []
+<span class="kw">for</span> model_name, model <span class="kw">in</span> [
+    (<span class="str">'로지스틱 회귀'</span>, lr_model),
+    (<span class="str">'랜덤 포레스트'</span>, rf_model)
+]:
+    prediction = model.<span class="fn">predict</span>(X_test_scaled)
+    comparison_rows.<span class="fn">append</span>({
+        <span class="str">'모델'</span>: model_name,
+        <span class="str">'Accuracy'</span>: <span class="fn">accuracy_score</span>(y_test, prediction),
+        <span class="str">'Precision_불량'</span>: <span class="fn">precision_score</span>(y_test, prediction, zero_division=<span class="num">0</span>),
+        <span class="str">'Recall_불량'</span>: <span class="fn">recall_score</span>(y_test, prediction, zero_division=<span class="num">0</span>),
+        <span class="str">'F1_불량'</span>: <span class="fn">f1_score</span>(y_test, prediction, zero_division=<span class="num">0</span>)
+    })
+
+model_comparison = (
+    pd.<span class="fn">DataFrame</span>(comparison_rows)
+    .<span class="fn">sort_values</span>(<span class="str">'Recall_불량'</span>, ascending=<span class="kw">False</span>)
+    .<span class="fn">round</span>(<span class="num">3</span>)
+)
+model_comparison</code></pre>
+</div>
+<div class="output-block"><div class="output-label">📤 실행 결과</div>        모델  Accuracy  Precision_불량  Recall_불량  F1_불량
+0  로지스틱 회귀     0.752         0.172      0.714  0.278
+1  랜덤 포레스트     0.927         0.000      0.000  0.000</div>
+</div>
+</details>
+</div>
+
+  <div class="content-section">
+<div class="section-label">
+<div class="section-num">5</div>
+<div>
+<div class="section-title">실습 5 · 놓친 불량 사례 살펴보기</div>
+</div>
+</div>
+<p><strong>목표:</strong> False Negative 행을 찾아 어떤 센서값을 추가로 점검할지 준비합니다.</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습5_문제.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code><span class="cmt"># TODO 1: y_test가 1이면서 랜덤 포레스트 예측이 0인 위치를 찾으세요.</span>
+<span class="cmt"># TODO 2: 원래 X_test에서 해당 행을 선택하세요.</span>
+<span class="cmt"># TODO 3: 놓친 불량 수와 센서값 일부를 출력하세요.</span></code></pre>
+</div>
+<details class="practice-toggle">
+<summary>💡 힌트 보기</summary>
+<div class="toggle-body"><p><code>(y_test == 1) &amp; (예측 == 0)</code> 조건을 만들고 불리언 배열의 위치로 <code>X_test</code>를 선택합니다.</p></div>
+</details>
+<details class="practice-toggle">
+<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
+<div class="toggle-body">
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">실습5_정답.py</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>false_negative_mask = (y_test.<span class="fn">to_numpy</span>() == <span class="num">1</span>) &amp; (rf_predictions == <span class="num">0</span>)
+false_negative_cases = X_test.loc[false_negative_mask].<span class="fn">copy</span>()
+
+<span class="fn">print</span>(<span class="str">f'랜덤 포레스트가 놓친 불량: {len(false_negative_cases)}건'</span>)
+display_cols = top_k_cols[:<span class="num">5</span>]
+<span class="kw">if</span> <span class="fn">len</span>(false_negative_cases) &gt; <span class="num">0</span>:
+    <span class="fn">display</span>(false_negative_cases[display_cols].<span class="fn">head</span>())
+    <span class="fn">print</span>(<span class="str">'이 행들은 원인 확정 대상이 아니라 추가 공정 점검 대상입니다.'</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">'현재 테스트 데이터에서는 놓친 불량이 없습니다.'</span>)</code></pre>
+</div>
+<div class="output-block"><div class="output-label">📤 실행 결과</div>랜덤 포레스트가 놓친 불량: 21건
+      Sensor59  Sensor103  Sensor510  Sensor348  Sensor431
+154    26.7745    -0.0060    68.7631     0.0371    18.4187
+62     18.3209    -0.0057    66.5208     0.0502     9.9690
+1242   -5.7091    -0.0057    95.8606     0.1193    13.0864
+576     1.9245    -0.0118    54.9102     0.0136    12.4713
+518    13.3709    -0.0114    46.4912     0.0116    19.1947
+이 행들은 원인 확정 대상이 아니라 추가 공정 점검 대상입니다.</div>
+</div>
+</details>
+</div>
+
+  <div class="content-section">
+<div class="section-label">
+<div class="section-num">🚰</div>
+<div>
+<div class="section-title">꼭 알아둘 데이터 누수</div>
+</div>
+</div>
+<p>실제 프로젝트에서는 <strong>데이터를 학습용과 평가용으로 먼저 분리한 뒤</strong> 다음 작업을 학습 데이터에만 맞춰야 합니다.</p>
+<ul class="plain-list">
+<li>결측값을 채울 중앙값 계산</li>
+<li>중요한 센서 선택</li>
+<li>표준화 평균과 표준편차 계산</li>
+</ul>
+<p>평가 데이터의 정보를 미리 사용하면 모델 성능이 실제보다 좋아 보일 수 있습니다. AI에게 프로그램을 요청할 때도 이 순서를 명확히 적어 주는 것이 좋습니다.</p>
+</div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TAB 6 - AI 활용
+═══════════════════════════════════════════ -->
+<!-- AI_EXTENSION_START -->
+<section class="session-pane" id="session-6" role="tabpanel" aria-labelledby="tab-6" hidden>
+
+  <div class="session-header">
+    <div class="session-icon orange">🤖</div>
+    <div>
+      <h2>AI와 함께 만드는 미니 프로젝트</h2>
+      <p>AI 프롬프트로 데이터 누수를 막은 불량 탐지 모델과 평가 리포트를 만듭니다</p>
+      <a class="notebook-link" href="./실습/06_AI_미니프로젝트.ipynb" download>📓 실습 노트북 받기 · 06_AI_미니프로젝트.ipynb</a>
+    </div>
+  </div>
+
+  <div class="objectives">
+<h3>🎯 학습 목표</h3>
+<ul class="obj-list">
+<li><span class="obj-check">✓</span>모델 종류보다 <strong>평가 목적과 데이터 누수 방지 순서</strong>를 프롬프트에 명확히 적을 수 있다</li>
+<li><span class="obj-check">✓</span>AI가 만든 코드에서 전처리 객체가 테스트 데이터에 fit되지 않았는지 확인할 수 있다</li>
+<li><span class="obj-check">✓</span>AI를 튜터·코드 리뷰어로 활용해 학습 내용을 확인할 수 있다</li>
+<li><span class="obj-check">✓</span>외부 AI 서비스 사용 시 보안 규정을 지킬 수 있다</li>
+</ul>
+</div>
+
+  <div class="content-section" id="ai-mini-project">
+<div class="section-label">
+<div class="section-num">1</div>
+<div>
+<div class="section-title">프로젝트 · 불량 탐지 모델과 평가 리포트</div>
+</div>
+</div>
+<div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>프롬프트 사용 설명</strong><br/>
+            이 프롬프트의 핵심은 AI에게 모델 종류보다 평가 목적과 데이터 누수 방지 순서를 명확히 알려 주는 것입니다. 생성된 코드는 먼저 작은 셀로 나누어 실행하고, 테스트 데이터가 전처리 학습에 사용되지 않았는지 확인하세요.</p></div>
+<div class="code-wrap prompt-block">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">복사해서 사용할 프롬프트</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>당신은 초보자에게 코드의 이유를 설명하는 반도체 데이터 분석가입니다.
+
+[역할]
+fab.csv로 정상/불량을 분류하고 불량을 놓치지 않는 데 초점을 둔 주피터 노트북 프로그램을 작성하세요.
+
+[입력 데이터]
+- 파일명: fab.csv
+- 타겟 열: Pass_Fail (-1=정상, 1=불량)
+- 나머지 숫자 열은 센서값이며 결측값과 상수 열이 포함될 수 있습니다.
+
+[구현 요구사항]
+1. 클래스 건수와 비율을 확인하고 정확도만 보면 안 되는 이유를 설명하세요.
+2. 데이터를 학습 80%, 테스트 20%로 stratify 분리하세요.
+3. 결측률 기준 열 제거, 중앙값 채우기, 상수 열 제거, SelectKBest, StandardScaler는
+   반드시 학습 데이터에만 fit하고 테스트 데이터에는 transform만 하세요.
+4. 로지스틱 회귀와 랜덤 포레스트에 class_weight='balanced'를 적용하세요.
+5. Accuracy, 불량 Precision, 불량 Recall, 불량 F1, ROC-AUC를 같은 표로 비교하세요.
+6. 혼동행렬을 그리고 False Negative 수를 눈에 띄게 출력하세요.
+7. 기본 임계값 0.5에서 결과를 평가하고, 0.3과 0.7은 학습용 비교표로만 보여주세요.
+8. random_state=42를 사용하고 각 단계 앞에 초보자용 설명을 작성하세요.
+
+[결과물]
+- 위에서 아래로 실행 가능한 주피터 노트북 코드
+- model_comparison.csv
+- 모델별 혼동행렬과 ROC 곡선
+- 놓친 불량 사례의 상위 센서값 표
+- 어떤 모델을 선택할지 근거가 포함된 3문장 결론
+
+[검증]
+- 학습/테스트 행 수와 불량 건수를 출력하세요.
+- 전처리 객체가 테스트 데이터에 fit되지 않았음을 코드 주석으로 확인하세요.
+- 예측값 개수가 y_test 행 수와 같은지 assert로 검사하세요.
+- 결과를 '원인 규명'으로 과장하지 말고 추가 공정 검토가 필요하다고 표시하세요.</code></pre>
+</div>
+<p><strong>결과 검토 체크리스트</strong> — AI가 프로그램을 작성했다고 해서 결과가 자동으로 맞는 것은 아닙니다.</p>
+<ul class="check-list">
+<li>CSV 파일 경로와 열 이름이 실제 데이터와 같은가?</li>
+<li>원본 데이터를 복사한 뒤 정리했는가?</li>
+<li>처리 전후 행 수와 결측값 수가 설명 가능한가?</li>
+<li>그래프의 축, 단위, 범례가 데이터 의미와 맞는가?</li>
+<li>합격/불합격 숫자의 의미를 반대로 사용하지 않았는가?</li>
+<li>오류 메시지가 나오면 해당 셀만 읽고 원인을 설명할 수 있는가?</li>
+<li>분석 결과를 공정 원인으로 단정하지 않았는가?</li>
+<li>실제 회사 데이터라면 보안 규정을 지켰는가?</li>
+</ul>
+<div class="tip-box success"><span class="tip-icon">💬</span><p><strong>마지막으로 AI에게 이렇게 요청해 보세요</strong><br/>
+            “위 코드를 한 셀씩 설명하고, 각 셀에서 초보자가 확인해야 할 출력값을 알려줘.”</p></div>
+</div>
+
+  <div class="content-section" id="ai-learning-check">
+<div class="section-label">
+<div class="section-num">2</div>
+<div>
+<div class="section-title">AI 튜터로 학습 내용 확인하기</div>
+</div>
+</div>
+<div class="code-wrap prompt-block">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">AI 튜터 프롬프트</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>나는 반도체 불량 분류 모델을 복습하고 있습니다. 다음 주제에서 확인 문제를 6개 내주세요:
+클래스 불균형, stratify 분할, fit과 transform, 데이터 누수, 혼동행렬,
+불량 Precision·Recall, 예측 임계값.
+
+한 번에 한 문제만 내고 내가 답할 때까지 정답을 공개하지 마세요.
+계산 문제에는 작은 혼동행렬 숫자를 사용하고, 코드 문제에는 10줄 이하 예제를 사용하세요.
+답을 평가할 때 불량을 정상으로 놓치는 False Negative 관점도 설명하세요.
+마지막에는 실무에서 반드시 확인할 항목 5개를 체크리스트로 정리하세요.</code></pre>
+</div>
+<div class="tip-box info"><span class="tip-icon">ℹ️</span><p><strong>사용 방법</strong><br/>
+            먼저 노트북을 보지 않고 답한 뒤, AI의 설명을 원래 강의 코드와 비교합니다. AI가 제시한 함수가 실제 데이터 열과 맞는지 작은 가상 데이터로 직접 실행해 확인하세요.</p></div>
+</div>
+
+  <div class="content-section" id="ai-code-improvement">
+<div class="section-label">
+<div class="section-num">3</div>
+<div>
+<div class="section-title">작성한 프로그램 개선하기</div>
+</div>
+</div>
+<div class="code-wrap prompt-block">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">프로그램 개선 프롬프트</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>아래 반도체 불량 분류 코드를 데이터 누수와 평가 오류 중심으로 검토하세요.
+
+[필수 확인]
+- Pass_Fail의 -1=정상, 1=불량 매핑
+- train_test_split과 stratify 사용
+- 결측 처리, 특성 선택, StandardScaler가 학습 데이터에만 fit되는지
+- class_weight='balanced'와 random_state 설정
+- Accuracy 외에 불량 Precision, Recall, F1, ROC-AUC를 계산하는지
+- 혼동행렬의 False Negative를 정확히 읽는지
+
+[응답 형식]
+1. 심각도별 문제 목록
+2. 데이터 누수를 막은 최소 수정 코드
+3. 수정 전후 처리 순서 비교
+4. 예측 개수, 클래스 분포, 혼동행렬 합계를 확인하는 assert 코드
+
+새로운 고급 모델이나 복잡한 튜닝은 추가하지 마세요.
+
+[검토할 코드]
+여기에 코드를 붙여 넣으세요.</code></pre>
+</div>
+<p><strong>개선 결과 확인 순서</strong></p>
+<ol class="step-list">
+<li>AI가 바꾼 줄과 이유를 먼저 읽습니다.</li>
+<li>원본 코드는 남겨 두고 복사본에서 수정 코드를 실행합니다.</li>
+<li>행 수, 결측값 수, 타겟 분포처럼 바뀌면 안 되는 값을 비교합니다.</li>
+<li>결과가 달라졌다면 오류 수정 때문인지 분석 의미가 바뀐 것인지 확인합니다.</li>
+<li>이해하지 못한 고급 문법은 쉬운 코드로 다시 작성해 달라고 요청합니다.</li>
+</ol>
+</div>
+
+  <div class="content-section" id="ai-extra-projects">
+<div class="section-label">
+<div class="section-num">4</div>
+<div>
+<div class="section-title">AI 프롬프트로 도전하는 추가 미니 프로젝트</div>
+</div>
+</div>
+<p>새 라이브러리를 많이 배우기보다 현재 강의의 기능을 다른 문제에 조합하는 연습입니다. AI가 만든 첫 답을 완성본으로 보지 말고, 입력 열·중간 출력·저장 파일을 하나씩 확인하며 개선하세요.</p>
+<div class="code-wrap prompt-block">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">추가 프로젝트 1 · 불량 판정 임계값 비교 도구</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>학습된 분류 모델의 불량 확률을 사용해 임계값 0.2부터 0.8까지 0.1 간격으로 비교하는 코드를 작성하세요.
+각 임계값의 Precision, Recall, F1, False Positive, False Negative, 불량 예측 수를 표로 만드세요.
+Recall과 Precision 변화를 선 그래프로 그리고 False Negative가 가장 적은 임계값도 표시하세요.
+임계값 선택은 테스트 데이터가 아니라 별도 검증 데이터에서 해야 한다는 설명을 포함하세요.
+초보자가 기존 y_valid와 y_valid_prob 변수에 연결할 수 있도록 독립적인 코드 셀로 작성하세요.</code></pre>
+</div>
+<div class="code-wrap prompt-block">
+<div class="code-header">
+<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+<span class="code-title">추가 프로젝트 2 · 놓친 불량 사례 점검 도구</span>
+<button class="copy-btn" onclick="copyCode(this)">복사</button>
+</div>
+<pre><code>X_test, y_test, y_pred와 센서 열 이름을 이용해 False Negative 사례를 점검하는 프로그램을 작성하세요.
+놓친 불량 행을 찾고, True Positive 불량과 정상 데이터의 센서 중앙값을 함께 비교하세요.
+차이가 큰 센서 상위 10개를 표로 만들고 놓친 불량의 센서값을 CSV로 저장하세요.
+표본 수가 0일 때도 오류 없이 안내하고, 결과를 불량 원인으로 단정하지 마세요.
+마지막에 공정 엔지니어에게 확인할 질문 3개를 자동으로 출력하세요.</code></pre>
+</div>
+</div>
+
+  <div class="content-section" id="ai-security-check">
+<div class="section-label">
+<div class="section-num">🔒</div>
+<div>
+<div class="section-title">AI 결과 검증과 보안 체크</div>
+</div>
+</div>
+<ul class="check-list">
+<li>가상 데이터나 비식별 데이터로 먼저 실행했는가?</li>
+<li>사용한 열 이름과 합격·불합격 값의 의미가 맞는가?</li>
+<li>원본 데이터와 코드의 복사본을 보존했는가?</li>
+<li>처리 전후 행 수, 결측값 수, 클래스 분포를 비교했는가?</li>
+<li>상관관계나 모델 중요도를 공정 원인으로 단정하지 않았는가?</li>
+<li>회사 보안 규정상 외부 입력이 금지된 정보를 제거했는가?</li>
+</ul>
+<p>AI의 설명과 실행 결과가 다르면 <strong>실행 결과를 우선</strong>하고, 오류 메시지와 최소 예제만 제공해 다시 질문하세요. 실제 회사 데이터, 장비명, 레시피값, Lot 식별자는 외부 AI 서비스에 직접 붙여 넣지 않습니다.</p>
+</div>
+
+</section>
+<!-- AI_EXTENSION_END -->
+
+</main>
+
+<!-- ─── FOOTER ─────────────────────────── -->
+<footer class="site-footer">
+  <p>🏭 실전 반도체 공정 데이터 분석 강의자료  ·  fab.csv (SECOM 형식) 기반</p>
+  <p style="margin-top: 6px; font-size: 12px; color: var(--text-light);">Google Colab에서 실전_반도체_공정_데이터분석.ipynb 와 함께 실행해보세요!</p>
+</footer>
+
+<script>
+function showSession(num, tab, shouldFocus = false) {
+  const panelId = 'session-' + num;
+
+  document.querySelectorAll('.session-pane').forEach(panel => {
+    const isActive = panel.id === panelId;
+    panel.classList.toggle('active', isActive);
+    panel.hidden = !isActive;
+  });
+
+  document.querySelectorAll('.nav-tab').forEach(item => {
+    const isActive = item === tab;
+    item.classList.toggle('active', isActive);
+    item.setAttribute('aria-selected', String(isActive));
+    item.setAttribute('tabindex', isActive ? '0' : '-1');
+  });
+
+  if (shouldFocus) tab.focus();
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({
+    top: document.querySelector('.nav-bar').offsetTop,
+    behavior: reduceMotion ? 'auto' : 'smooth'
+  });
+}
+
+document.querySelector('.nav-inner').addEventListener('keydown', event => {
+  const tabs = [...document.querySelectorAll('.nav-tab')];
+  const currentTab = event.target.closest('[role="tab"]');
+  const currentIndex = tabs.indexOf(currentTab);
+  if (currentIndex === -1) return;
+
+  if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+    event.preventDefault();
+    showSession(Number(currentTab.dataset.session), currentTab, true);
+    return;
+  }
+
+  let nextIndex;
+  if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+  else if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % tabs.length;
+  else if (event.key === 'Home') nextIndex = 0;
+  else if (event.key === 'End') nextIndex = tabs.length - 1;
+  else return;
+
+  event.preventDefault();
+  const nextTab = tabs[nextIndex];
+  showSession(Number(nextTab.dataset.session), nextTab, true);
+});
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ 복사됨';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

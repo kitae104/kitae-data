@@ -12,21 +12,25 @@ import nbformat
 
 
 ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK_DIR = ROOT / "강의자료_ipynb"
+COURSE_DIR = ROOT / "Web" / "강좌"
 
-EXPECTED = {
-    "01_판다스_수업자료.ipynb": {"exercises": 5, "solutions": 5},
-    "05_반도체_공정_데이터분석.ipynb": {"exercises": 5, "solutions": 5},
-    "06_실전_반도체_공정_데이터분석_강의자료.ipynb": {
-        "exercises": 5,
-        "solutions": 5,
-    },
+# 탭별로 나뉜 강좌 노트북: 폴더 안 노트북 전체를 하나의 과정으로 검증
+COURSE_EXPECTED = {
+    "01_판다스": {"exercises": 5, "solutions": 5},
+    "02_반도체_공정_데이터분석": {"exercises": 5, "solutions": 5},
+    "03_실전_반도체_공정_데이터분석": {"exercises": 5, "solutions": 5},
+}
+
+# 노트북이 읽는 실습 데이터 (강좌 폴더 기준)
+COURSE_DATA = {
+    "02_반도체_공정_데이터분석": "반도체_공정_샘플.csv",
+    "03_실전_반도체_공정_데이터분석": "fab.csv",
 }
 
 WEB_EXPECTED = {
-    "판다스_수업자료.html",
-    "반도체_공정_데이터분석.html",
-    "실전_반도체_공정_데이터분석_강의자료.html",
+    "강좌/01_판다스/판다스_수업자료.html",
+    "강좌/02_반도체_공정_데이터분석/반도체_공정_데이터분석.html",
+    "강좌/03_실전_반도체_공정_데이터분석/실전_반도체_공정_데이터분석_강의자료.html",
 }
 
 AI_SECTION_IDS = {
@@ -53,12 +57,17 @@ def source_text(cell: dict) -> str:
     return "".join(source) if isinstance(source, list) else source
 
 
-def verify_notebook(path: Path, expected: dict[str, int]) -> None:
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    notebook = nbformat.from_dict(raw)
-    nbformat.validate(notebook)
+def load_cells(paths: list[Path]) -> list:
+    cells = []
+    for notebook_path in paths:
+        notebook = nbformat.from_dict(json.loads(notebook_path.read_text(encoding="utf-8")))
+        nbformat.validate(notebook)
+        cells.extend(notebook.cells)
+    return cells
 
-    cells = notebook.cells
+
+def verify_notebook(path: Path, expected: dict[str, int], paths: list[Path] | None = None) -> None:
+    cells = load_cells(paths or [path])
     markdown = "\n".join(
         source_text(cell) for cell in cells if cell.cell_type == "markdown"
     )
@@ -133,16 +142,16 @@ def verify_web_page(path: Path) -> None:
 
 
 def main() -> None:
-    for filename, expected in EXPECTED.items():
-        path = NOTEBOOK_DIR / filename
-        assert path.exists(), f"노트북 없음: {path}"
-        verify_notebook(path, expected)
-        print(f"OK {filename}")
+    for course, expected in COURSE_EXPECTED.items():
+        notebooks = sorted((COURSE_DIR / course / "실습").glob("*.ipynb"))
+        assert notebooks, f"강좌 노트북 없음: {course}"
+        verify_notebook(COURSE_DIR / course, expected, notebooks)
+        print(f"OK 강좌/{course} (노트북 {len(notebooks)}개)")
 
-    for csv_name in ("반도체_공정_샘플.csv", "fab.csv"):
-        csv_path = NOTEBOOK_DIR / csv_name
-        assert csv_path.exists() and csv_path.stat().st_size > 0, f"데이터 파일 없음: {csv_name}"
-        print(f"OK {csv_name}")
+    for course, csv_name in COURSE_DATA.items():
+        csv_path = COURSE_DIR / course / "실습" / csv_name
+        assert csv_path.exists() and csv_path.stat().st_size > 0, f"데이터 파일 없음: {csv_path}"
+        print(f"OK 강좌/{course}/실습/{csv_name}")
 
     for filename in sorted(WEB_EXPECTED):
         web_path = ROOT / "Web" / filename
