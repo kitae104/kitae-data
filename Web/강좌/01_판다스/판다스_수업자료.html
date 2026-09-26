@@ -39,7 +39,8 @@
     <button type="button" class="nav-tab" id="tab-4" role="tab" aria-controls="session-4" aria-selected="false" tabindex="-1" data-session="4" onclick="showSession(4, this)">
       <span class="session-num">4</span>공정 데이터 실습
     </button>
-    <button type="button" class="nav-tab" id="tab-5" role="tab" aria-controls="session-5" aria-selected="false" tabindex="-1" data-session="5" onclick="showSession(5, this)">
+    <!-- AI 활용 탭: 잠시 숨김. 다시 보이려면 아래 버튼의 hidden 속성을 지우세요. -->
+    <button type="button" class="nav-tab" id="tab-5" hidden role="tab" aria-controls="session-5" aria-selected="false" tabindex="-1" data-session="5" onclick="showSession(5, this)">
       <span class="session-num">5</span>AI 활용
     </button>
   </div>
@@ -1992,7 +1993,7 @@ function showSession(num, tab, shouldFocus = false) {
 }
 
 document.querySelector('.nav-inner').addEventListener('keydown', event => {
-  const tabs = [...document.querySelectorAll('.nav-tab')];
+  const tabs = [...document.querySelectorAll('.nav-tab:not([hidden])')];
   const currentTab = event.target.closest('[role="tab"]');
   const currentIndex = tabs.indexOf(currentTab);
   if (currentIndex === -1) return;
