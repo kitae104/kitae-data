@@ -1598,13 +1598,14 @@ plt.<span class="fn">show</span>()</code></pre>
 <!-- ═══════════════════════════════════════════
      SESSION 5 - AI
 ═══════════════════════════════════════════ -->
+<!-- AI_EXTENSION_START -->
 <section class="session-pane" id="session-5" role="tabpanel" aria-labelledby="tab-5" hidden>
 
   <div class="session-header">
     <div class="session-icon blue">🤖</div>
     <div>
-      <h2>AI와 함께 만드는 미니 프로젝트</h2>
-      <p>AI 프롬프트로 공정 데이터 점검 도구를 만들고, 학습 내용을 확인·확장합니다. 프롬프트의 대괄호나 <code>여기에 ...</code> 부분만 자신의 상황에 맞게 바꿔 사용하세요.</p>
+      <h2>AI와 함께 복습하고 응용하기</h2>
+      <p>앞 수업에서 배운 내용을 AI와 함께 다시 확인하고, 헷갈린 부분은 AI가 만든 연습 문제로 채우고, 배운 코드를 조금 바꿔 응용해 봅니다. 프롬프트의 <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 사용하세요.</p>
       <a class="notebook-link" href="./실습/05_AI_미니프로젝트.ipynb" download>📓 실습 노트북 받기 · 05_AI_미니프로젝트.ipynb</a>
     </div>
   </div>
@@ -1612,195 +1613,324 @@ plt.<span class="fn">show</span>()</code></pre>
   <div class="objectives">
     <h3>🎯 학습 목표</h3>
     <ul class="obj-list">
-      <li><span class="obj-check">✓</span>AI에게 역할·입력·요구사항·검증 기준을 갖춘 프롬프트를 작성할 수 있다</li>
-      <li><span class="obj-check">✓</span>AI가 만든 코드를 셀별로 실행하며 결과를 검토할 수 있다</li>
-      <li><span class="obj-check">✓</span>AI를 튜터·코드 리뷰어로 활용해 학습 내용을 확인할 수 있다</li>
-      <li><span class="obj-check">✓</span>외부 AI 서비스 사용 시 보안 규정을 지킬 수 있다</li>
+      <li><span class="obj-check">✓</span>배운 함수와 개념을 AI에게 쉬운 말로 다시 설명받고, 작은 예제로 직접 확인할 수 있다</li>
+      <li><span class="obj-check">✓</span>내가 헷갈리는 부분을 골라 AI에게 맞춤 연습 문제를 요청하고 풀 수 있다</li>
+      <li><span class="obj-check">✓</span>배운 코드를 조금 바꿔 새로운 질문에 답해 볼 수 있다</li>
+      <li><span class="obj-check">✓</span>AI의 답을 실행 결과로 검증하고, 회사 데이터를 외부 AI에 넣지 않는다</li>
     </ul>
   </div>
 
-<!-- AI_EXTENSION_START -->
-  <div class="content-section" id="ai-mini-project">
+  <div class="content-section" id="ai-rules">
     <div class="section-label">
-      <div class="section-num">1</div>
+      <div class="section-num" style="background:#64748B;">준비</div>
       <div>
-        <div class="section-title">미니 프로젝트 · 판다스 공정 데이터 점검 도구</div>
-        <div class="section-desc">아래 프롬프트를 AI 도구에 붙여 넣어 이번 강의 범위로 실제 프로그램을 만들어 봅니다.</div>
+        <div class="section-title">AI 사용 전 3가지 약속</div>
+        <div class="section-desc">AI는 정답을 대신 내 주는 도구가 아니라, 내가 이해했는지 확인해 주는 학습 도우미입니다.</div>
       </div>
-    </div>
-    <div class="tip-box warning">
-      <span class="tip-icon">⚠️</span>
-      <p><strong>프롬프트 사용 설명</strong><br>파일명과 열 이름, 온도·두께 기준값만 자신의 데이터에 맞게 바꾸면 됩니다. 회사 데이터는 외부 AI 서비스에 직접 업로드하지 말고, 열 이름과 일부 가상 예시만 제공하세요.</p>
-    </div>
-    <div class="code-wrap prompt-block">
-      <div class="code-header">
-        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">복사해서 사용할 프롬프트</span>
-        <button class="copy-btn" onclick="copyCode(this)">복사</button>
-      </div>
-      <pre><code>당신은 초보자를 돕는 파이썬 데이터 분석 강사입니다.
-
-[역할]
-pandas와 matplotlib만 사용해 반도체 공정 CSV를 점검하는 주피터 노트북 프로그램을 작성하세요.
-
-[입력 데이터]
-- 파일명: 사용자가 지정하는 CSV 파일
-- 예시 열: lot_id, 공정, 온도_섭씨, 압력_Pa, 두께_nm, 합격여부
-- 실제 열 이름이 다를 수 있으므로 처음에 열 목록을 출력하고 사용자가 열 이름을 설정하게 하세요.
-
-[구현 요구사항]
-1. CSV를 읽고 행·열 수, 앞 5행, 자료형, 결측값, 중복 행 수를 보여주세요.
-2. 원본을 copy()로 보존한 뒤 숫자 결측값은 중앙값으로 채우고 중복을 제거하세요.
-3. 사용자가 지정한 온도 기준과 두께 기준을 벗어난 행을 필터링하세요.
-4. 공정별 평균 온도·압력·두께와 합격/불합격 건수를 표로 만드세요.
-5. 공정별 평균 두께 막대그래프와 온도-두께 산점도를 그리세요.
-6. 각 코드 블록 앞에 초보자용 설명을 2~3문장으로 작성하세요.
-7. 어려운 클래스, 장식용 함수, 머신러닝은 사용하지 마세요.
-
-[결과물]
-- 위에서 아래로 순서대로 실행되는 주피터 노트북용 코드
-- 정리된 데이터 미리보기와 공정별 요약표
-- 위험 조건에 해당하는 Lot 목록
-- 그래프 2개
-
-[검증]
-- 실행 전에 필요한 패키지와 CSV 경로를 먼저 확인하세요.
-- 열 이름이 없을 때 이해하기 쉬운 오류 메시지를 보여주세요.
-- 원본 행 수, 정리 후 행 수, 남은 결측값 수를 출력하세요.
-- 마지막에 초보자가 바꿔 볼 값 3가지를 알려주세요.</code></pre>
     </div>
     <div class="concept-box">
-      <h4>🔍 결과 검토 체크리스트</h4>
-      <p>AI가 프로그램을 작성했다고 해서 결과가 자동으로 맞는 것은 아닙니다. AI가 만든 코드는 한꺼번에 실행하지 말고, 셀별로 읽고 실행하며 확인하세요.</p>
-    <ul class="check-list">
-      <li>CSV 파일 경로와 열 이름이 실제 데이터와 같은가?</li>
-      <li>원본 데이터를 복사한 뒤 정리했는가?</li>
-      <li>처리 전후 행 수와 결측값 수가 설명 가능한가?</li>
-      <li>그래프의 축, 단위, 범례가 데이터 의미와 맞는가?</li>
-      <li>합격/불합격 숫자의 의미를 반대로 사용하지 않았는가?</li>
-      <li>오류 메시지가 나오면 해당 셀만 읽고 원인을 설명할 수 있는가?</li>
-      <li>분석 결과를 공정 원인으로 단정하지 않았는가?</li>
-      <li>실제 회사 데이터라면 보안 규정을 지켰는가?</li>
-    </ul>
-    </div>
-    <div class="tip-box success">
-      <span class="tip-icon">💬</span>
-      <p>마지막으로 AI에게 이렇게 요청해 보세요: <strong>“위 코드를 한 셀씩 설명하고, 각 셀에서 초보자가 확인해야 할 출력값을 알려줘.”</strong></p>
-    </div>
-  </div>
-
-  <div class="content-section" id="ai-learning-check">
-    <div class="section-label">
-      <div class="section-num">2</div>
-      <div>
-        <div class="section-title">AI 튜터로 학습 내용 확인하기</div>
-        <div class="section-desc">AI는 정답을 대신 내는 도구가 아니라 내 설명의 빈틈을 찾는 학습 파트너로 사용합니다.</div>
-      </div>
-    </div>
-    <div class="code-wrap prompt-block">
-      <div class="code-header">
-        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">AI 튜터 프롬프트</span>
-        <button class="copy-btn" onclick="copyCode(this)">복사</button>
-      </div>
-      <pre><code>나는 pandas를 처음 배우는 학습자입니다. 다음 범위에서 확인 문제를 5개 내주세요:
-DataFrame 구조 확인, 열과 행 선택, 조건 필터링, 결측값·중복 처리, groupby와 기본 그래프.
-
-규칙:
-1. 한 번에 한 문제만 내고 내가 답할 때까지 정답을 공개하지 마세요.
-2. 내가 답하면 '맞음/보완 필요'를 먼저 말하고 이유를 쉬운 말로 설명하세요.
-3. 틀린 경우 정답 코드와 5행 이하의 작은 예제를 보여주세요.
-4. 반도체 공정의 온도, 압력, 두께, 합격여부 예시를 사용하세요.
-5. 마지막에는 내가 자주 틀린 개념 2개와 다시 연습할 문제를 정리하세요.</code></pre>
+    <ol class="step-list">
+      <li>먼저 스스로 풀어 보고, 막힐 때 AI에게 묻습니다.</li>
+      <li>AI의 설명이나 코드는 노트북에서 <strong>직접 실행해 확인</strong>합니다. 실행 결과가 AI의 말보다 우선입니다.</li>
+      <li>회사 데이터·장비명·Lot 번호는 넣지 않고, 수업용 예시 데이터만 사용합니다.</li>
+    </ol>
     </div>
     <div class="tip-box info">
       <span class="tip-icon">ℹ️</span>
-      <p><strong>사용 방법:</strong> 먼저 노트북을 보지 않고 답한 뒤, AI의 설명을 원래 강의 코드와 비교합니다. AI가 제시한 함수가 실제 데이터 열과 맞는지 작은 가상 데이터로 직접 실행해 확인하세요.</p>
+      <p>4차시 공정 데이터 실습과 비슷한 작은 공정 이력 표를 만듭니다. <code>합격여부</code>는 1 = 합격, -1 = 불합격입니다. 노트북에서는 아래 준비 코드를 먼저 실행하세요.</p>
+    </div>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">00_준비.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+plt.rcParams[<span class="str">'font.family'</span>] = <span class="str">'Malgun Gothic'</span>  <span class="cmt"># 한글 표시 (Mac: 'AppleGothic')</span>
+plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="kw">False</span>       <span class="cmt"># 음수(-) 기호 깨짐 방지</span>
+
+<span class="cmt"># 4차시 공정 데이터 실습과 비슷한 작은 공정 이력 표</span>
+process_df = pd.<span class="fn">DataFrame</span>({
+    <span class="str">'lot_id'</span>: [<span class="str">'L001'</span>, <span class="str">'L002'</span>, <span class="str">'L003'</span>, <span class="str">'L004'</span>, <span class="str">'L005'</span>, <span class="str">'L006'</span>, <span class="str">'L007'</span>, <span class="str">'L008'</span>],
+    <span class="str">'공정'</span>: [<span class="str">'식각'</span>, <span class="str">'증착'</span>, <span class="str">'식각'</span>, <span class="str">'세정'</span>, <span class="str">'증착'</span>, <span class="str">'세정'</span>, <span class="str">'식각'</span>, <span class="str">'증착'</span>],
+    <span class="str">'온도_섭씨'</span>: [<span class="num">298.5</span>, <span class="num">302.1</span>, <span class="kw">None</span>, <span class="num">299.8</span>, <span class="num">305.2</span>, <span class="num">297.9</span>, <span class="num">301.4</span>, <span class="num">306.3</span>],
+    <span class="str">'압력_Pa'</span>: [<span class="num">101.2</span>, <span class="num">99.8</span>, <span class="num">103.1</span>, <span class="num">100.5</span>, <span class="num">98.9</span>, <span class="num">100.9</span>, <span class="num">102.6</span>, <span class="num">99.1</span>],
+    <span class="str">'두께_nm'</span>: [<span class="num">100.4</span>, <span class="num">102.3</span>, <span class="num">98.7</span>, <span class="num">101.1</span>, <span class="num">104.8</span>, <span class="num">99.6</span>, <span class="num">100.9</span>, <span class="num">105.1</span>],
+    <span class="str">'합격여부'</span>: [<span class="num">1</span>, <span class="num">1</span>, -<span class="num">1</span>, <span class="num">1</span>, -<span class="num">1</span>, <span class="num">1</span>, <span class="num">1</span>, -<span class="num">1</span>]
+})
+
+<span class="fn">print</span>(process_df)</code></pre>
     </div>
   </div>
 
-  <div class="content-section" id="ai-code-improvement">
+  <div class="content-section" id="ai-review">
+    <div class="section-label">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-title">배운 내용 AI로 다시 확인하기</div>
+        <div class="section-desc">수업에서 배운 함수나 개념 하나를 골라 쉬운 설명과 작은 예제를 받아 봅니다.</div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+    <table class="api-table">
+      <tr><th>수업</th><th>다시 확인해 볼 함수·개념</th></tr>
+      <tr><td>1 판다스 기초</td><td>Series, DataFrame, head(), info(), describe(), loc, iloc</td></tr>
+      <tr><td>2 EDA</td><td>isnull(), dropna(), fillna(), duplicated(), 조건 필터, sort_values(), groupby()</td></tr>
+      <tr><td>3 데이터 시각화</td><td>scatter, plot, bar, pie, boxplot, 제목·축 이름</td></tr>
+      <tr><td>4 공정 데이터 실습</td><td>copy(), median(), map(), abs(), 공정별 요약표</td></tr>
+    </table>
+    </div>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">개념 다시 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 pandas을(를) 처음 배우는 초보자입니다.
+수업에서 [함수나 개념 이름, 예: groupby()]을(를) 배웠는데 아직 잘 이해가 안 됩니다.
+
+1. 이것이 무엇을 하는지 중학생도 이해할 수 있게 두세 문장으로 설명해 주세요.
+2. 5줄 이하의 아주 작은 예제 코드와, 실행하면 나올 결과를 보여 주세요.
+3. 초보자가 자주 하는 실수 1가지를 알려 주세요.
+어려운 용어를 쓸 때는 괄호 안에 쉬운 말로 풀어 주세요.</code></pre>
+    </div>
+    <div class="concept-box">
+      <h4>🔍 AI 설명 확인하는 방법</h4>
+    <ol class="step-list">
+      <li>AI가 보여 준 예제 코드를 노트북의 빈 셀에 붙여 넣고 실행합니다.</li>
+      <li>AI가 말한 결과와 실제 실행 결과가 같은지 비교합니다.</li>
+      <li>다르면 실행 결과를 그대로 AI에게 보여 주고 왜 다른지 다시 물어봅니다.</li>
+    </ol>
+    </div>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">내 말로 설명하고 점검받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>내가 [함수나 개념 이름]을(를) 내 말로 설명해 볼게요.
+틀린 부분이나 빠진 부분이 있는지 확인해 주세요.
+바로 고쳐 쓰지 말고, 어디가 부족한지 힌트를 먼저 주세요.
+
+내 설명: [여기에 내 말로 쓴 설명]</code></pre>
+    </div>
+    <div class="tip-box success">
+      <span class="tip-icon">💬</span>
+      <p>남에게 설명할 수 있어야 제대로 이해한 것입니다. 노트북을 보지 않고 먼저 내 말로 적어 본 뒤 AI에게 점검받으세요.</p>
+    </div>
+  </div>
+
+  <div class="content-section" id="ai-practice">
+    <div class="section-label">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-title">헷갈린 부분 AI 연습 문제로 채우기</div>
+        <div class="section-desc">수업에서 부족했던 부분을 스스로 찾고, AI에게 그 부분만 연습 문제를 만들어 달라고 합니다.</div>
+      </div>
+    </div>
+    <div class="concept-box highlight">
+      <h4>① 자가 점검 — 자신 없는 항목을 1~2개 고르세요</h4>
+    <ul class="check-list">
+      <li>loc(이름으로 선택)과 iloc(번호로 선택)의 차이를 설명할 수 있다</li>
+      <li>여러 조건 필터에서 괄호와 <code>&amp;</code>, <code>|</code>를 올바르게 쓸 수 있다</li>
+      <li>결측값을 찾고(<code>isnull()</code>) 채우는(<code>fillna()</code>) 코드를 쓸 수 있다</li>
+      <li><code>groupby()</code>로 그룹별 평균을 구할 수 있다</li>
+      <li>데이터에 맞는 그래프 종류(산점도·선·막대·파이·박스)를 고를 수 있다</li>
+    </ul>
+    </div>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 맞춤 연습 문제 요청 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 pandas을(를) 배우는 초보자입니다.
+[자신 없는 부분, 예: loc과 iloc의 차이]이(가) 헷갈립니다.
+이 부분만 연습할 수 있는 문제를 3개 만들어 주세요.
+
+규칙:
+1. 쉬운 문제 → 조금 어려운 문제 순서로 내 주세요.
+2. 한 번에 한 문제씩만 내고, 내가 답을 보낼 때까지 정답을 보여 주지 마세요.
+3. 문제에 필요한 데이터는 5행 이하의 작은 표를 만드는 코드로 함께 주세요. (학생 점수나 공정 온도·두께 같은 예시)
+4. pandas 기초 함수(선택, 조건 필터, 결측값, groupby)와 matplotlib 기본 그래프만 사용하게 해 주세요.
+5. 내가 틀리면 정답을 바로 주지 말고 힌트를 한 번 먼저 주세요.</code></pre>
+    </div>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 채점과 오답 정리 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 푼 문제의 내 답과 실행 결과입니다. 채점해 주세요.
+
+[내 코드]
+[실행 결과 또는 오류 메시지]
+
+1. 맞았는지 먼저 말해 주세요.
+2. 틀렸다면 어느 줄이 왜 틀렸는지 쉬운 말로 설명해 주세요.
+3. 마지막에 '오답 노트'로 한 줄 정리해 주세요. (예: 여러 조건은 각각 괄호로 감싼다)</code></pre>
+    </div>
+    <details class="practice-toggle">
+      <summary>🆘 오류가 나서 막혔을 때</summary>
+      <div class="toggle-body">
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">오류 메시지 이해하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>아래 코드를 실행했더니 오류가 났습니다. 정답 코드를 바로 주지 말고
+1) 오류 메시지가 무슨 뜻인지, 2) 어느 줄을 먼저 살펴보면 되는지 알려 주세요.
+
+[코드]
+[오류 메시지 전체]</code></pre>
+    </div>
+      </div>
+    </details>
+    <div class="tip-box info">
+      <span class="tip-icon">📝</span>
+      <p><strong>오답 노트:</strong> 노트북의 오답 노트 표에 '헷갈린 부분 · 틀린 이유 · 기억할 한 줄'을 적어 두세요. 다음 수업 전에 같은 프롬프트로 문제를 다시 받아 풀어 보면 복습이 됩니다.</p>
+    </div>
+  </div>
+
+  <div class="content-section" id="ai-apply">
     <div class="section-label">
       <div class="section-num">3</div>
       <div>
-        <div class="section-title">작성한 프로그램 개선하기</div>
-        <div class="section-desc">현재 강의 범위 안에서 오류와 가독성을 점검하고, 수정 이유와 검증 코드까지 요청합니다.</div>
+        <div class="section-title">배운 코드로 응용해 보기</div>
+        <div class="section-desc">새 문법을 배우지 않고, 수업 코드를 조금 바꿔 새로운 질문에 답해 봅니다. 먼저 직접 작성하고, 막히면 힌트 → AI 힌트 → 정답 순서로 확인하세요.</div>
       </div>
     </div>
+    <div class="concept-box highlight">
+      <h4>응용 1 · 압력이 높은 Lot 중 불합격은 몇 개일까?</h4>
+      <p>2차시 <strong>조건 필터</strong>를 다른 열(압력)에 적용해 봅니다.<br>🎯 압력_Pa이 101 이상인 Lot을 고르고, 그중 불합격(-1)이 몇 개인지 셉니다.</p>
+    </div>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">응용1_문제.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cmt"># TODO 1: 압력_Pa이 101 이상인 행만 골라 high_pressure에 저장하세요.</span>
+<span class="cmt"># TODO 2: high_pressure의 행 수를 출력하세요.</span>
+<span class="cmt"># TODO 3: high_pressure에서 합격여부가 -1인 행이 몇 개인지 출력하세요.</span></code></pre>
+    </div>
+    <details class="practice-toggle">
+      <summary>💡 힌트 보기</summary>
+      <div class="toggle-body"><p><code>df[df['열'] &gt;= 값]</code>으로 행을 고르고, <code>len()</code>으로 행 수를 셉니다. 불합격 수는 <code>(high_pressure['합격여부'] == -1).sum()</code>처럼 True 개수를 더하면 됩니다.</p></div>
+    </details>
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 힌트만 받기</summary>
+      <div class="toggle-body">
     <div class="code-wrap prompt-block">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">프로그램 개선 프롬프트</span>
+        <span class="code-title">힌트 요청 프롬프트</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code>아래 pandas 코드를 초보자 관점에서 검토하고 개선하세요.
-
-[검토 범위]
-- CSV 경로와 필수 열 확인
-- 원본 DataFrame 보존 여부
-- 결측값과 중복 처리 순서
-- 조건식 괄호와 loc/iloc 사용
-- 변수 이름, 중복 코드, 출력 확인
-- 그래프 제목·축·단위
-
-[제한]
-- pandas와 matplotlib 범위를 벗어나는 머신러닝이나 복잡한 클래스는 추가하지 마세요.
-- 기존 결과의 의미를 임의로 바꾸지 마세요.
-
-[응답 형식]
-1. 발견한 문제와 이유
-2. 최소한으로 수정한 전체 코드
-3. 수정 전후 차이
-4. 작은 가상 데이터로 확인하는 검증 코드
-
-[검토할 코드]
-여기에 코드를 붙여 넣으세요.</code></pre>
+      <pre><code>[압력_Pa이 101 이상인 Lot을 고르고, 그중 불합격(-1)이 몇 개인지 셉니다.]을 풀고 있습니다. 정답 코드는 주지 말고,
+어떤 순서로 풀면 되는지 단계만 3개 이내로 알려 주세요.
+pandas 기초 함수(선택, 조건 필터, 결측값, groupby)와 matplotlib 기본 그래프 범위에서 힌트를 주세요.</code></pre>
     </div>
-    <div class="concept-box">
-      <h4>🧪 개선 결과 확인 순서</h4>
-    <ol class="step-list">
-      <li>AI가 바꾼 줄과 이유를 먼저 읽습니다.</li>
-      <li>원본 코드는 남겨 두고 복사본에서 수정 코드를 실행합니다.</li>
-      <li>행 수, 결측값 수, 합격/불합격 건수처럼 바뀌면 안 되는 값을 비교합니다.</li>
-      <li>결과가 달라졌다면 오류 수정 때문인지 분석 의미가 바뀐 것인지 확인합니다.</li>
-      <li>이해하지 못한 고급 문법은 쉬운 코드로 다시 작성해 달라고 요청합니다.</li>
-    </ol>
-    </div>
-  </div>
-
-  <div class="content-section" id="ai-extra-projects">
-    <div class="section-label">
-      <div class="section-num">4</div>
-      <div>
-        <div class="section-title">AI 프롬프트로 도전하는 추가 미니 프로젝트</div>
-        <div class="section-desc">새 라이브러리를 배우기보다 현재 강의의 기능을 다른 문제에 조합하는 연습입니다.</div>
       </div>
+    </details>
+    <details class="practice-toggle">
+      <summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
+      <div class="toggle-body">
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">응용1_정답.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>high_pressure = process_df[process_df[<span class="str">'압력_Pa'</span>] &gt;= <span class="num">101</span>]
+<span class="fn">print</span>(<span class="str">f"압력 101 Pa 이상: {len(high_pressure)}건"</span>)
+
+fail_count = (high_pressure[<span class="str">'합격여부'</span>] == -<span class="num">1</span>).<span class="fn">sum</span>()
+<span class="fn">print</span>(<span class="str">f"그중 불합격: {fail_count}건"</span>)
+<span class="fn">print</span>(high_pressure[[<span class="str">'lot_id'</span>, <span class="str">'공정'</span>, <span class="str">'압력_Pa'</span>, <span class="str">'합격여부'</span>]])</code></pre>
     </div>
+    <div class="output-block"><div class="output-label">실행 결과</div>압력 101 Pa 이상: 3건
+그중 불합격: 1건
+  lot_id  공정  압력_Pa  합격여부
+0   L001  식각  101.2     1
+2   L003  식각  103.1    -1
+6   L007  식각  102.6     1</div>
+      </div>
+    </details>
+    <div class="concept-box highlight">
+      <h4>응용 2 · 공정별 합격률을 막대그래프로 비교하기</h4>
+      <p>2차시 <strong>groupby</strong>와 3차시 <strong>막대 그래프</strong>를 이어서 사용합니다.<br>🎯 공정(식각·증착·세정)마다 합격률(%)을 계산하고 막대그래프로 비교합니다.</p>
+    </div>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">응용2_문제.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code><span class="cmt"># TODO 1: 합격여부가 1이면 True가 되는 '합격' 열을 만드세요.</span>
+<span class="cmt"># TODO 2: 공정별로 '합격' 열의 평균을 구하고 100을 곱해 합격률(%)을 만드세요.</span>
+<span class="cmt"># TODO 3: 합격률을 막대그래프로 그리고 제목과 축 이름을 붙이세요.</span></code></pre>
+    </div>
+    <details class="practice-toggle">
+      <summary>💡 힌트 보기</summary>
+      <div class="toggle-body"><p>True는 1, False는 0으로 계산되므로 True/False 열의 <b>평균이 곧 비율</b>입니다. <code>groupby('공정')['합격'].mean()</code>에 100을 곱하고, <code>plt.bar(결과.index, 결과.values)</code>로 그립니다.</p></div>
+    </details>
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 힌트만 받기</summary>
+      <div class="toggle-body">
     <div class="code-wrap prompt-block">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">추가 프로젝트 1 · Lot 검색·정렬 도구</span>
+        <span class="code-title">힌트 요청 프롬프트</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code>pandas로 반도체 Lot 검색 도구를 만들어 주세요.
-CSV 파일과 공정명, 최소·최대 온도, 정렬 기준을 변수로 설정하게 하세요.
-필수 열이 있는지 확인한 뒤 조건에 맞는 행만 선택하고, 두께편차가 큰 순서로 정렬하세요.
-검색된 건수, 상위 10개 Lot, 공정별 건수를 출력하고 결과를 lot_search_result.csv로 저장하세요.
-함수나 클래스는 꼭 필요할 때만 사용하고 각 단계에 초보자용 설명을 붙이세요.
-마지막에는 입력 조건을 바꿔 확인할 테스트 3개를 제안하세요.</code></pre>
+      <pre><code>[공정(식각·증착·세정)마다 합격률(%)을 계산하고 막대그래프로 비교합니다.]을 풀고 있습니다. 정답 코드는 주지 말고,
+어떤 순서로 풀면 되는지 단계만 3개 이내로 알려 주세요.
+pandas 기초 함수(선택, 조건 필터, 결측값, groupby)와 matplotlib 기본 그래프 범위에서 힌트를 주세요.</code></pre>
     </div>
+      </div>
+    </details>
+    <details class="practice-toggle">
+      <summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
+      <div class="toggle-body">
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">응용2_정답.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>process_df[<span class="str">'합격'</span>] = process_df[<span class="str">'합격여부'</span>] == <span class="num">1</span>
+pass_rate = (process_df.<span class="fn">groupby</span>(<span class="str">'공정'</span>)[<span class="str">'합격'</span>].<span class="fn">mean</span>() * <span class="num">100</span>).<span class="fn">round</span>(<span class="num">1</span>)
+<span class="fn">print</span>(pass_rate)
+
+plt.<span class="fn">bar</span>(pass_rate.index, pass_rate.values, color=<span class="str">'steelblue'</span>)
+plt.<span class="fn">title</span>(<span class="str">'공정별 합격률'</span>)
+plt.<span class="fn">xlabel</span>(<span class="str">'공정'</span>)
+plt.<span class="fn">ylabel</span>(<span class="str">'합격률 (%)'</span>)
+plt.<span class="fn">ylim</span>(<span class="num">0</span>, <span class="num">100</span>)
+plt.<span class="fn">show</span>()</code></pre>
+    </div>
+    <div class="output-block"><div class="output-label">실행 결과</div>공정
+세정    100.0
+식각     66.7
+증착     33.3
+Name: 합격, dtype: float64</div>
+      </div>
+    </details>
     <div class="code-wrap prompt-block">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">추가 프로젝트 2 · 공정 기준 이탈 알림표</span>
+        <span class="code-title">한 걸음 더 · 비슷한 응용 문제 받기 프롬프트</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code>pandas와 matplotlib로 공정 기준 이탈 알림표를 만들어 주세요.
-입력 열은 lot_id, 공정, 온도_섭씨, 압력_Pa, 두께_nm이라고 가정합니다.
-사용자가 온도·압력·두께의 하한과 상한을 지정하면 각 행에 이탈 여부와 이탈 사유를 추가하세요.
-이탈 Lot 목록, 변수별 이탈 건수, 공정별 이탈률을 만들고 막대그래프 1개를 그리세요.
-원본 데이터는 copy()로 보존하고 필수 열 누락 시 이해하기 쉬운 메시지를 출력하세요.
-결과를 process_alerts.csv로 저장하고 저장 전후 행 수가 같은지 검증하세요.</code></pre>
+      <pre><code>방금 [응용 과제 내용]을 풀었습니다. 내 코드는 아래와 같습니다.
+[내 코드]
+
+같은 데이터로 조금만 바꿔 볼 수 있는 응용 문제를 1개 내 주세요.
+정답은 내가 요청할 때만 보여 주세요.</code></pre>
     </div>
   </div>
 
@@ -1808,25 +1938,23 @@ CSV 파일과 공정명, 최소·최대 온도, 정렬 기준을 변수로 설�
     <div class="section-label">
       <div class="section-num" style="background:#64748B;">🔒</div>
       <div>
-        <div class="section-title">AI 결과 검증과 보안 체크</div>
+        <div class="section-title">AI 답을 믿기 전에</div>
         <div class="section-desc">실제 회사 데이터, 장비명, 레시피값, Lot 식별자는 외부 AI 서비스에 직접 붙여 넣지 않습니다.</div>
       </div>
     </div>
     <div class="concept-box highlight">
     <ul class="check-list">
-      <li>가상 데이터나 비식별 데이터로 먼저 실행했는가?</li>
-      <li>사용한 열 이름과 합격·불합격 값의 의미가 맞는가?</li>
-      <li>원본 데이터와 코드의 복사본을 보존했는가?</li>
-      <li>처리 전후 행 수, 결측값 수, 합격/불합격 건수를 비교했는가?</li>
-      <li>그래프나 그룹 평균 차이를 공정 원인으로 단정하지 않았는가?</li>
-      <li>회사 보안 규정상 외부 입력이 금지된 정보를 제거했는가?</li>
+      <li>AI가 만든 코드를 직접 실행해 결과를 확인했는가?</li>
+      <li>열 이름과 값의 의미(합격여부 1 = 합격, -1 = 불합격)가 수업 데이터와 같은가?</li>
+      <li>이해하지 못한 코드를 그대로 쓰지 않고 쉬운 설명을 다시 요청했는가?</li>
+      <li>회사 데이터나 실제 Lot 번호를 AI에 넣지 않았는가?</li>
     </ul>
-      <p>AI의 설명과 실행 결과가 다르면 <strong>실행 결과를 우선</strong>하고, 오류 메시지와 최소 예제만 제공해 다시 질문하세요.</p>
+      <p>AI가 낸 문제와 응용 과제에서 틀린 부분은 오답 노트에 적어 두고, 다음 수업 전에 같은 프롬프트로 문제를 한 번 더 받아 확인해 보세요.</p>
     </div>
   </div>
 
-<!-- AI_EXTENSION_END -->
 </section>
+<!-- AI_EXTENSION_END -->
 
 
 </main>
