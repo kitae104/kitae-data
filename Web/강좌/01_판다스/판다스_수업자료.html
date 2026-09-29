@@ -71,6 +71,12 @@
     </ul>
   </div>
 
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
+  </div>
+
   <!-- STEP 1 -->
   <div class="content-section">
     <div class="section-label">
@@ -101,6 +107,48 @@
 <span class="fn">print</span>(<span class="str">"✅ 라이브러리 불러오기 완료!"</span>)
 <span class="fn">print</span>(<span class="str">f"Pandas 버전: {pd.__version__}"</span>)</code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · import 코드 이해하기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>import</code>, <code>as</code>, <code>print(f"...")</code>가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬과 pandas를 오늘 처음 배우는 초보자입니다.
+아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+import pandas as pd
+
+print("✅ 라이브러리 불러오기 완료!")
+print(f"Pandas 버전: {pd.__version__}")
+
+1. '라이브러리'와 'import'가 무엇인지 일상생활 비유로 설명해 주세요.
+2. 'as pd'를 쓰지 않으면 코드가 어떻게 달라지는지 예시로 보여 주세요.
+3. print() 안의 f"...{ }..."(f-문자열)이 무엇인지, 중괄호 { } 안에는 무엇을 넣는지 알려 주세요.
+어려운 용어를 쓸 때는 괄호 안에 쉬운 말로 풀어 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 실행했더니 <code>ModuleNotFoundError</code>나 <code>NameError: name 'pd' is not defined</code> 같은 오류가 났을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 첫 오류 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>파이썬 코드를 실행했더니 아래 오류가 났습니다.
+나는 초보자이고 [Jupyter Notebook / Google Colab / VS Code 중 사용하는 것]을(를) 쓰고 있습니다.
+
+[오류 메시지 전체를 여기에 붙여 넣기]
+
+1. 이 오류가 무슨 뜻인지 한두 문장으로 설명해 주세요.
+2. 내 환경에서 해결하는 방법을 순서대로 알려 주세요.
+3. 다음에 같은 오류가 나지 않으려면 무엇을 기억하면 되는지 한 줄로 정리해 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- STEP 2 -->
@@ -145,6 +193,67 @@ math_scores_named = pd.<span class="fn">Series</span>(
 <span class="fn">print</span>(<span class="str">f"평균: {math_scores_named.mean():.1f}점"</span>)
 <span class="fn">print</span>(<span class="str">f"최고: {math_scores_named.max()}점"</span>)</code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · Series 이해하기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 리스트 <code>[ ]</code>, <code>index=</code>, 출력 결과의 왼쪽 숫자와 <code>dtype</code>이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드와 실행 결과 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬과 pandas 초보자입니다. 아래 코드를 이해하고 싶습니다.
+
+math_scores = pd.Series([85, 92, 78, 95, 88])
+print(math_scores)
+
+math_scores_named = pd.Series(
+    [85, 92, 78, 95, 88],
+    index=['김민준', '이서연', '박지호', '최예린', '정도윤']
+)
+print(f"이서연 점수: {math_scores_named['이서연']}점")
+print(f"평균: {math_scores_named.mean():.1f}점")
+
+1. [85, 92, ...]처럼 대괄호로 묶은 '리스트'가 무엇인지 먼저 설명해 주세요.
+2. print(math_scores)의 실행 결과를 보여 주고, 왼쪽 숫자(0~4)와 맨 아래 'dtype: int64'가 무슨 뜻인지 알려 주세요.
+3. index=[...]를 넣으면 무엇이 달라지는지, math_scores_named['이서연']이 어떻게 값을 찾는지 설명해 주세요.
+4. {math_scores_named.mean():.1f}에서 ':.1f'가 무슨 뜻인지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 파이썬 리스트로도 되는데 왜 굳이 Series를 쓰는지 궁금할 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 리스트와 Series 비교하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>파이썬 리스트와 pandas Series의 차이가 헷갈립니다.
+같은 점수 [85, 92, 78, 95, 88]을 가지고
+
+1. 리스트로 평균과 최고점을 구하는 코드
+2. Series로 평균과 최고점을 구하는 코드
+
+를 나란히 보여 주세요. 각 코드는 5줄 이내로 짧게 써 주세요.
+그리고 Series를 쓰면 무엇이 편한지 초보자 눈높이에서 3가지만 설명해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 제대로 이해했는지 스스로 확인해 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 실행 결과 예측 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 pandas Series를 배웠습니다. 실행 결과를 예측해 보는 문제를 3개 내 주세요.
+
+규칙:
+1. 각 문제는 3줄 이하의 짧은 코드로 만들어 주세요.
+2. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요.
+3. Series 만들기, index 지정, 값 조회, mean()·max()·min()만 사용해 주세요.
+4. 내가 틀리면 정답을 바로 주지 말고 힌트를 한 번 먼저 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- STEP 3 -->
@@ -189,6 +298,68 @@ df = pd.<span class="fn">DataFrame</span>(data)
 
 <span class="fn">print</span>(df)  <span class="cmt"># Jupyter에서는 예쁜 표로 출력됩니다</span></code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 딕셔너리로 DataFrame 만들기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 중괄호 <code>{ }</code>로 만든 딕셔너리가 어떻게 표로 바뀌는지 그려지지 않을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 딕셔너리 → 표 변환 과정 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 초보자입니다. 아래 코드에서 딕셔너리가 표(DataFrame)로 바뀌는 과정을 이해하고 싶습니다.
+
+data = {
+    '이름': ['김민준', '이서연', '박지호'],
+    '학년': [2, 1, 3],
+    '수학': [92, 78, 95],
+}
+df = pd.DataFrame(data)
+print(df)
+
+1. 딕셔너리 {키: 값}의 문법을 쉬운 말로 설명하고, 이 코드에서 '키'와 '값'이 각각 무엇인지 짚어 주세요.
+2. 키와 값이 표의 어느 부분(열 이름, 칸, 행 번호)이 되는지 텍스트 표로 그려서 보여 주세요.
+3. print(df)의 실행 결과를 보여 주고, 맨 왼쪽의 0, 1, 2는 어디서 생긴 것인지 알려 주세요.
+4. 앞에서 배운 Series와 DataFrame의 관계를 한 문장으로 정리해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>ValueError: All arrays must be of the same length</code> 오류가 났을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② DataFrame 오류 원인 찾기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas로 DataFrame을 만들다가 아래 오류가 났습니다.
+
+[오류 메시지 전체 붙여 넣기]
+
+내 코드:
+[내 코드 붙여 넣기]
+
+1. 이 오류가 무슨 뜻인지 쉬운 말로 설명해 주세요.
+2. 내 코드에서 어느 부분을 확인하면 원인을 찾을 수 있는지 알려 주세요.
+3. 고친 코드는 바로 주지 말고 힌트부터 주세요. 내가 다시 물어보면 그때 고친 코드를 보여 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 수업 예제 말고 내 주제로 표를 직접 만들어 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 내 주제로 DataFrame 만들기 연습 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas DataFrame 만들기를 연습하고 싶습니다.
+[내가 관심 있는 주제, 예: 우리 반 친구들이 좋아하는 음식 / 편의점 하루 판매량]로
+3개 열, 5개 행짜리 표를 만드는 문제를 내 주세요.
+
+규칙:
+1. 열 이름과 들어갈 값만 알려 주고, 코드는 내가 직접 쓰게 해 주세요.
+2. 내가 코드를 보내면 맞았는지 먼저 알려 주고, 틀린 곳이 있으면 어느 줄인지 짚어 주세요.
+3. 딕셔너리와 pd.DataFrame()만 사용하게 해 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- STEP 4 -->
@@ -231,6 +402,49 @@ df.<span class="fn">describe</span>()
 <span class="cmt"># dtypes - 각 열의 데이터 타입</span>
 <span class="fn">print</span>(df.dtypes)</code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 탐색 결과 읽는 법</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>info()</code>와 <code>describe()</code> 결과가 숫자와 영어로 가득해서 무엇을 봐야 할지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① info()·describe() 결과 해석받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래는 학생 성적표(이름, 학년, 국어, 수학, 영어)에서
+df.info()와 df.describe()를 실행한 결과입니다. 초보자 눈높이로 풀어 설명해 주세요.
+
+[df.info() 실행 결과 붙여 넣기]
+
+[df.describe() 실행 결과 붙여 넣기]
+
+1. info()에서 RangeIndex, Non-Null Count, Dtype(int64, object)이 각각 무엇을 뜻하는지 알려 주세요.
+2. describe()의 count, mean, std, min, 25%, 50%, 75%, max를 '시험 점수' 예로 하나씩 설명해 주세요.
+3. '이름' 열은 왜 describe() 결과에 나오지 않는지 알려 주세요.
+4. 이 결과만 보고 알 수 있는 사실 2가지를 쉬운 문장으로 정리해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 어떤 건 괄호 <code>()</code>를 붙이고 어떤 건 안 붙이는지, 셀을 실행했는데 일부 결과만 보이는 이유가 궁금할 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 괄호 유무와 Jupyter 출력 규칙 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas를 배우다가 두 가지가 헷갈립니다. 초보자 눈높이로 설명해 주세요.
+
+1. df.head(3)처럼 괄호가 있는 것과 df.shape, df.columns처럼 괄호가 없는 것은 무엇이 다른가요?
+   '메서드'와 '속성'의 차이를 쉬운 비유로 설명하고,
+   df.shape()처럼 괄호를 잘못 붙이면 어떤 오류가 나는지도 알려 주세요.
+
+2. Jupyter 셀 하나에 아래처럼 쓰고 실행하면 왜 tail(3) 결과만 보이나요?
+   df.head(3)
+   df.tail(3)
+   둘 다 보려면 어떻게 해야 하는지 방법 2가지를 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 
     <table class="api-table">
       <tr><th>함수/속성</th><th>설명</th><th>사용 예</th></tr>
@@ -286,6 +500,68 @@ df.loc[<span class="num">0</span>]              <span class="cmt"># 인덱스가
 df.loc[<span class="num">0</span>:<span class="num">2</span>, [<span class="str">'이름'</span>, <span class="str">'수학'</span>]]  <span class="cmt"># loc은 끝 번호 포함!</span></code></pre>
     </div>
 
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 데이터 선택(대괄호·loc·iloc) 이해하기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 대괄호를 한 겹 쓸 때와 두 겹 쓸 때 결과가 왜 다른지 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 대괄호 한 겹 vs 두 겹 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 두 코드의 차이를 설명해 주세요.
+
+df['수학']
+df[['이름', '수학', '영어']]
+
+1. 대괄호가 한 겹일 때는 Series, 두 겹일 때는 DataFrame이 나오는 이유를 설명해 주세요.
+   (안쪽 대괄호가 '열 이름 리스트'라는 점을 중심으로 설명해 주세요.)
+2. type()으로 결과의 종류를 직접 확인하는 코드를 보여 주세요.
+3. df['이름', '수학']처럼 대괄호를 한 겹만 쓰거나 열 이름 철자를 틀리면
+   어떤 오류(KeyError)가 나는지, 오류 메시지를 보고 어떻게 고치면 되는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>loc</code>은 이름, <code>iloc</code>은 번호라는데 예제에서는 둘 다 숫자를 써서 차이가 안 보일 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② loc과 iloc 차이 확실히 알기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas의 loc과 iloc 차이가 헷갈립니다. 아래 표로 설명해 주세요.
+
+df = pd.DataFrame({
+    '이름': ['김민준', '이서연', '박지호', '최예린', '정도윤'],
+    '수학': [92, 78, 95, 88, 72]
+})
+
+1. df.iloc[1:4]와 df.loc[1:3]이 왜 같은 행을 가져오는지 '끝 번호 포함 여부'로 설명해 주세요.
+2. 지금 표에서는 인덱스가 0, 1, 2...라서 loc도 숫자를 씁니다.
+   인덱스를 이름으로 바꾸면(df.set_index('이름')) loc과 iloc을 각각 어떻게 쓰는지 예시를 2개씩 보여 주세요.
+3. 마지막에 아래 모양의 표로 정리해 주세요.
+   | 구분 | 무엇으로 찾나 | 끝 번호 포함? | 예시 |</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 코드를 실행하기 전에 결과를 머릿속으로 맞혀 보며 연습하고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 선택 결과 예측 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 pandas에서 df[...], loc, iloc으로 데이터를 고르는 방법을 배웠습니다.
+아래 표를 사용해서 '실행 결과 예측하기' 문제를 4개 내 주세요.
+
+[03_dataframe.py의 data = {...} 부분과 df = pd.DataFrame(data) 코드 붙여 넣기]
+
+규칙:
+1. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요.
+2. 열 선택, iloc 슬라이싱, loc 슬라이싱을 골고루 섞어 주세요.
+3. 내가 틀리면 정답을 바로 주지 말고 힌트를 한 번 먼저 주세요.
+4. 4문제가 끝나면 내가 자주 틀린 부분을 한 줄로 정리해 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
+
     <div class="tip-box info">
       <span class="tip-icon">ℹ️</span>
       <p><strong>iloc vs loc의 슬라이싱 차이:</strong><br>
@@ -328,6 +604,12 @@ df.loc[<span class="num">0</span>:<span class="num">2</span>, [<span class="str"
       <li><span class="obj-check">✓</span>조건 필터링으로 원하는 데이터를 추출할 수 있다</li>
       <li><span class="obj-check">✓</span>groupby로 그룹별 통계를 집계할 수 있다</li>
     </ul>
+  </div>
+
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
   </div>
 
   <div class="concept-box highlight">
@@ -392,6 +674,80 @@ df_filled = df.<span class="fn">copy</span>()  <span class="cmt"># 원본 보존
 df.<span class="fn">fillna</span>(<span class="num">0</span>)        <span class="cmt"># 0으로 채우기</span>
 df.<span class="fn">fillna</span>(<span class="str">'없음'</span>)   <span class="cmt"># 문자로 채우기</span></code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 결측값 찾고 처리하기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>isnull()</code>, <code>sum()</code>, 결측값 비율을 계산하는 줄이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 결측값 확인 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬과 pandas 초보자입니다. 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+data = {
+    '이름': ['김민준', '이서연', '박지호', '최예린', '정도윤'],
+    '국어': [85, 92, 78, None, 88],
+    '수학': [92, 78, None, 88, 72],
+    '영어': [88, None, 82, 91, 85]
+}
+df = pd.DataFrame(data)
+
+df.isnull()
+print(df.isnull().sum())
+
+missing_ratio = (df.isnull().sum() / len(df) * 100).round(1)
+print(missing_ratio)
+
+1. 코드에는 None이라고 썼는데 표를 출력하면 NaN으로 보이는 이유를 알려 주세요.
+2. df.isnull()의 결과(True/False 표)를 보여 주고, True가 무엇을 뜻하는지 설명해 주세요.
+3. True/False에 sum()을 하면 왜 '개수'가 나오는지 쉬운 비유로 설명해 주세요.
+4. missing_ratio 줄을 안쪽 괄호부터 순서대로 쪼개서, 각 단계에서 어떤 값이 나오는지 보여 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 결측값을 지우는 <code>dropna()</code>와 채우는 <code>fillna()</code> 중 언제 무엇을 써야 할지 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② dropna()와 fillna() 비교하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas에서 결측값을 처리하는 두 방법이 헷갈립니다. 초보자 눈높이로 비교해 주세요.
+
+df_dropped = df.dropna()
+
+df_filled = df.copy()
+for col in ['국어', '수학', '영어']:
+    col_mean = df_filled[col].mean()
+    df_filled[col] = df_filled[col].fillna(col_mean).round(1)
+
+df.fillna(0)
+
+1. dropna()를 실행하면 5명 중 몇 명이 남는지, 왜 그런지 설명해 주세요.
+2. for 문이 한 바퀴 돌 때마다 무슨 일이 일어나는지 '국어' 열을 예로 들어 순서대로 보여 주세요.
+3. df.copy()를 왜 먼저 하는지, 하지 않으면 어떤 문제가 생길 수 있는지 알려 주세요.
+4. df.fillna(0)만 실행하고 print(df)를 하면 여전히 NaN이 보이는 이유를 알려 주세요.
+   (결과를 변수에 다시 저장해야 하는 이유를 중심으로 설명해 주세요.)
+5. 시험 점수 데이터에서 '행 삭제'와 '평균으로 채우기'는 각각 어떤 상황에 알맞은지 장단점을 표로 정리해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 결측값 처리를 제대로 이해했는지 스스로 확인해 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 결측값 처리 결과 예측 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 pandas에서 결측값을 확인하고 처리하는 방법을 배웠습니다. 실행 결과를 예측해 보는 문제를 3개 내 주세요.
+
+규칙:
+1. 결측값이 1~2개 들어 있는 3행짜리 작은 표를 문제마다 새로 만들어 주세요.
+2. isnull().sum(), dropna(), fillna()만 사용해 주세요.
+3. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요.
+4. 내가 틀리면 정답을 바로 주지 말고 힌트를 한 번 먼저 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- STEP 2: 중복 -->
@@ -427,6 +783,49 @@ df_clean = df.<span class="fn">drop_duplicates</span>()
 <span class="cmt"># 인덱스를 0부터 새로 정렬 (중복 제거 후 인덱스가 비어있을 수 있어서)</span>
 df_clean = df_clean.<span class="fn">reset_index</span>(drop=<span class="kw">True</span>)</code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 중복 데이터 찾고 지우기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>duplicated()</code>의 True/False, <code>df[df.duplicated()]</code>, <code>reset_index(drop=True)</code>가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 중복 처리 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 중복 처리 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+print(df.duplicated())
+print(f"중복 행 수: {df.duplicated().sum()}개")
+df[df.duplicated()]
+df_clean = df.drop_duplicates()
+df_clean = df_clean.reset_index(drop=True)
+
+1. 수업 예제 표에는 중복이 없어서 결과가 0개로 나옵니다.
+   똑같은 행이 한 번 더 들어 있는 4~5행짜리 학생 성적표를 만들어서 위 코드를 실행한 결과를 보여 주세요.
+2. duplicated()는 똑같은 두 행 중 어느 쪽을 True로 표시하는지 알려 주세요.
+3. df[df.duplicated()]처럼 대괄호 안에 True/False를 넣으면 왜 True인 행만 남는지 설명해 주세요.
+4. 중복을 지우고 나면 인덱스가 0, 1, 3처럼 건너뛰는 이유와,
+   reset_index(drop=True)에서 drop=True를 빼면 어떻게 달라지는지 보여 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 어떤 행이 중복으로 잡히는지 제대로 이해했는지 스스로 확인해 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 중복 처리 결과 예측 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 pandas에서 duplicated()와 drop_duplicates()를 배웠습니다. 실행 결과를 예측해 보는 문제를 3개 내 주세요.
+
+규칙:
+1. 각 문제는 5행 이하의 작은 표로 만들어 주세요.
+2. '모든 값이 같은 행'과 '이름만 같고 점수는 다른 행'을 섞어서, 어떤 것이 중복으로 잡히는지 생각해 보게 해 주세요.
+3. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요.
+4. 내가 틀리면 정답을 바로 주지 말고 힌트를 한 번 먼저 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- STEP 3: 새 열 + 조건 필터 -->
@@ -477,6 +876,80 @@ top = df[df[<span class="str">'등급'</span>].<span class="fn">isin</span>([<sp
 <span class="cmt"># 평균 내림차순 정렬</span>
 df.<span class="fn">sort_values</span>(<span class="str">'평균'</span>, ascending=<span class="kw">False</span>)</code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 새 열 추가와 조건 필터링</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 새 열을 만드는 코드와 <code>def</code>, <code>apply()</code>가 어떻게 함께 동작하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 새 열 추가와 apply() 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬과 pandas 초보자입니다. 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+df['총점'] = df['국어'] + df['수학'] + df['영어']
+df['평균'] = (df['총점'] / 3).round(1)
+df['학년'] = [1, 1, 2, 2, 3]
+
+def get_grade(score):
+    if   score &gt;= 90: return 'A'
+    elif score &gt;= 80: return 'B'
+    elif score &gt;= 70: return 'C'
+    else:             return 'D'
+
+df['등급'] = df['평균'].apply(get_grade)
+
+1. df['총점'] = ...처럼 없는 열 이름에 값을 넣으면 새 열이 생기는 원리를 엑셀에 비유해 설명해 주세요.
+2. 열끼리 더하기(+) 한 줄로 5명 모두의 총점이 계산되는 이유를 알려 주세요.
+3. def, if/elif/else, return이 무엇인지 설명하고, 평균 85.0이 들어가면 어떤 순서로 'B'가 나오는지 따라가 보여 주세요.
+4. apply(get_grade)에서 get_grade 뒤에 괄호()를 붙이지 않는 이유를 알려 주세요.
+5. 이 표에는 결측값(NaN)이 있습니다. 결측값이 있는 학생의 총점·평균·등급이 어떻게 나오는지, 왜 그런지 알려 주세요.
+6. df['학년'] = [1, 1, 2]처럼 값의 개수가 행 수와 다르면 어떤 오류(ValueError)가 나는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 조건을 두 개 이상 쓸 때 <code>&amp;</code>와 <code>and</code>의 차이, 조건마다 괄호를 꼭 써야 하는 이유가 궁금할 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② &amp;와 and, 조건 괄호 이해하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas 조건 필터링이 헷갈립니다. 초보자 눈높이로 설명해 주세요.
+
+high = df[df['평균'] &gt;= 85]
+
+cond = (df['학년'] == 1) &amp; (df['평균'] &gt;= 80)
+result = df[cond]
+
+top = df[df['등급'].isin(['A', 'B'])]
+
+df.sort_values('평균', ascending=False)
+
+1. df['평균'] &gt;= 85만 따로 실행하면 무엇이 나오는지 보여 주고, 그것을 df[ ] 안에 넣으면 왜 행이 걸러지는지 설명해 주세요.
+2. 파이썬의 and 대신 &amp;를 써야 하는 이유를 쉬운 비유로 설명하고,
+   and를 쓰면 나는 오류(ValueError: The truth value of a Series is ambiguous)가 무슨 뜻인지 알려 주세요.
+3. 각 조건을 괄호 ( )로 감싸지 않으면 어떤 일이 생기는지 알려 주세요.
+4. isin(['A', 'B'])를 | (또는)를 사용한 조건으로 바꿔 쓰면 어떻게 되는지 보여 주세요.
+5. sort_values()를 실행해도 df 자체의 순서는 바뀌지 않는 이유와, 정렬된 결과를 계속 쓰려면 어떻게 해야 하는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 필터링 결과를 머릿속으로 맞혀 보며 연습하고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 조건 필터링 결과 예측 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 pandas에서 조건 필터링과 정렬을 배웠습니다. 실행 결과를 예측해 보는 문제를 4개 내 주세요.
+
+규칙:
+1. 이름, 학년, 평균, 등급 열이 있는 5행짜리 작은 표 하나를 먼저 보여 주고, 모든 문제에서 그 표를 사용해 주세요.
+2. 비교 조건 하나, &amp; 조건, | 조건, isin(), sort_values()를 골고루 섞어 주세요.
+3. "결과는 몇 행이고, 누구누구인가요?"처럼 답하기 쉬운 형태로 물어봐 주세요.
+4. 한 번에 한 문제씩 내고, 내가 틀리면 정답을 바로 주지 말고 힌트를 한 번 먼저 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- STEP 4: groupby -->
@@ -515,6 +988,68 @@ grade_stats.columns = [<span class="str">'인원수'</span>, <span class="str">'
 
 <span class="fn">print</span>(grade_stats.<span class="fn">round</span>(<span class="num">1</span>))</code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · groupby로 그룹별 집계하기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>groupby()</code> 뒤에 대괄호와 <code>mean()</code>, <code>size()</code>, <code>agg()</code>가 줄줄이 이어지는 코드가 어떻게 동작하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① groupby 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 groupby 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+grade_avg = df.groupby('학년')[['국어', '수학', '영어']].mean().round(1)
+student_count = df.groupby('학년').size()
+
+grade_stats = df.groupby('등급')['평균'].agg(['count', 'mean', 'min', 'max'])
+grade_stats.columns = ['인원수', '평균', '최저', '최고']
+print(grade_stats.round(1))
+
+1. groupby가 하는 일을 '같은 학년끼리 모아 앉히고 → 모둠마다 계산하고 → 결과를 한 표로 합친다'처럼 3단계로 설명해 주세요.
+2. 첫 줄을 점(.) 단위로 쪼개서, 각 단계에서 어떤 모양의 결과가 나오는지 순서대로 보여 주세요.
+3. 결과 표에서 '학년'이 일반 열이 아니라 맨 왼쪽(인덱스)에 오는 이유를 알려 주세요.
+4. agg(['count', 'mean', 'min', 'max'])가 무엇을 하는지, columns = [...]로 열 이름을 바꾸는 줄은 왜 필요한지 알려 주세요.
+5. 엑셀의 피벗 테이블로 같은 결과를 만들려면 어떻게 하는지 간단히 비교해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>size()</code>와 <code>count</code>가 둘 다 개수를 세는 것 같은데 결과가 다르게 나올 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② size()와 count 차이 알기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas groupby에서 size()와 count()가 둘 다 '개수'를 세는 것 같아 헷갈립니다.
+
+1. 결측값(NaN)이 하나 들어 있는 4행짜리 작은 표를 만들어서,
+   df.groupby('학년').size()와 df.groupby('학년').count()의 결과를 나란히 보여 주세요.
+2. 두 결과가 다른 이유를 쉬운 말로 설명해 주세요.
+3. 그룹별 평균 mean()을 구할 때 결측값은 어떻게 처리되는지도 알려 주세요.
+각 코드는 5줄 이내로 짧게 써 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 내가 실행한 groupby 결과를 어떻게 읽어야 할지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 집계 결과 해석받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas groupby를 실행했더니 아래 결과가 나왔습니다. 초보자 눈높이로 읽는 법을 알려 주세요.
+
+내 코드:
+[내 groupby 코드 붙여 넣기]
+
+실행 결과:
+[실행 결과 붙여 넣기]
+
+1. 결과 표의 행과 열이 각각 무엇을 뜻하는지 알려 주세요.
+2. 이 결과만 보고 알 수 있는 사실 2가지를 쉬운 문장으로 정리해 주세요.
+3. 결과가 예상과 다르다면 어떤 부분(묶는 기준 열, 계산할 열, 결측값)을 확인하면 되는지 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   
@@ -553,6 +1088,12 @@ grade_stats.columns = [<span class="str">'인원수'</span>, <span class="str">'
     </ul>
   </div>
 
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 그래프도 직접 그려 보면 AI의 설명보다 훨씬 잘 보입니다.</p>
+  </div>
+
   <!-- ════════════════ 준비 ════════════════ -->
   <div class="content-section">
     <div class="section-label">
@@ -588,6 +1129,54 @@ plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="kw">F
 영어  = [<span class="num">80</span>, <span class="num">88</span>, <span class="num">72</span>, <span class="num">90</span>, <span class="num">85</span>]
 <span class="fn">print</span>(<span class="str">"준비 완료!"</span>)</code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 그래프 준비 코드 이해하기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>import matplotlib.pyplot as plt</code>, <code>rcParams</code>, <code>fontprop</code>가 무엇을 하는 줄인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 준비 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 초보자이고, matplotlib으로 그래프를 처음 그려 봅니다. 아래 준비 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+fontprop = fm.FontProperties(family='Malgun Gothic')
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] = False
+
+이름 = ['철수', '영희', '민준', '지아', '현우']
+수학 = [85, 92, 78, 95, 88]
+영어 = [80, 88, 72, 90, 85]
+
+1. matplotlib과 matplotlib.pyplot은 어떤 관계인지, 왜 plt라는 별명을 쓰는지 알려 주세요.
+2. 한글 글꼴을 따로 지정해야 하는 이유와, rcParams가 '기본 설정'이라는 뜻을 비유로 설명해 주세요.
+3. axes.unicode_minus = False는 무엇을 막아 주는지 알려 주세요.
+4. fontprop은 어떤 곳에서 따로 쓰이는지 알려 주세요. (범례, 파이 차트 글자 등)
+5. 이름, 수학처럼 변수 이름을 한글로 써도 괜찮은지, 주의할 점이 있는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 그래프의 한글이 <code>□□□</code>처럼 네모로 깨지거나 <code>Glyph ... missing from font</code> 같은 경고가 날 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 한글 깨짐 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>matplotlib으로 그래프를 그렸더니 한글이 네모(□□□)로 깨져 보입니다.
+나는 [Windows / Mac / Google Colab 중 사용하는 것]에서 [Jupyter Notebook / VS Code / Colab 중 사용하는 것]을(를) 쓰고 있습니다.
+
+나타난 경고 메시지(있다면):
+[경고 메시지 붙여 넣기]
+
+1. 한글이 깨지는 이유를 쉬운 말로 설명해 주세요.
+2. 내 환경에서 한글을 제대로 보이게 하는 방법을 순서대로 알려 주세요.
+3. 설정을 바꾼 뒤에도 그대로라면 확인해야 할 것(셀 다시 실행, 커널 재시작 등)을 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- ════════════════ 1. 산점도 ════════════════ -->
@@ -683,6 +1272,76 @@ plt.<span class="fn">show</span>()</code></pre>
         <text x="180" y="13" font-size="11" fill="#1E293B" text-anchor="middle" font-weight="600">수학 점수 vs 영어 점수</text>
       </svg>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 산점도 그리기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>scatter()</code>의 <code>color=</code>, <code>s=</code>와 이름을 붙이는 <code>for</code> 문·<code>annotate()</code>가 어떻게 동작하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 산점도 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 초보자입니다. 아래 산점도 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+이름 = ['철수', '영희', '민준', '지아', '현우']
+수학 = [85, 92, 78, 95, 88]
+영어 = [80, 88, 72, 90, 85]
+
+plt.scatter(수학, 영어, color='steelblue', s=100)
+
+for i in range(len(이름)):
+    plt.annotate(이름[i], (수학[i], 영어[i]),
+                textcoords='offset points', xytext=(5, 5))
+
+plt.title('수학 점수 vs 영어 점수')
+plt.xlabel('수학 점수')
+plt.ylabel('영어 점수')
+plt.grid(True)
+plt.show()
+
+1. scatter(수학, 영어)에서 첫 번째 값과 두 번째 값이 각각 x축, y축 중 어디로 가는지, 철수의 점은 어디에 찍히는지 알려 주세요.
+2. color='steelblue', s=100을 바꾸면 그래프가 어떻게 달라지는지 알려 주세요.
+3. range(len(이름))이 만들어 내는 숫자를 보여 주고, for 문이 한 바퀴 돌 때마다 annotate()가 무엇을 하는지 i=0, i=1을 예로 따라가 보여 주세요.
+4. textcoords='offset points', xytext=(5, 5)가 무슨 뜻인지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 산점도에 찍힌 점들의 모양을 보고 무엇을 알 수 있는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 산점도 해석하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>수학 점수(x축)와 영어 점수(y축)로 산점도를 그렸더니 점들이 왼쪽 아래에서 오른쪽 위로 모여 있습니다.
+
+수학 = [85, 92, 78, 95, 88]
+영어 = [80, 88, 72, 90, 85]
+
+1. 이 점들의 모양이 무엇을 뜻하는지 쉬운 말로 설명해 주세요.
+2. 점들이 오른쪽 아래로 모일 때, 아무 모양 없이 흩어져 있을 때는 각각 무슨 뜻인지 텍스트 그림으로 비교해 주세요.
+3. '수학을 잘해서 영어도 잘한다'라고 말할 수 있는지, 관계(상관)와 원인(인과)의 차이를 초보자 눈높이로 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 내 데이터로 그렸더니 <code>ValueError: x and y must be the same size</code> 같은 오류가 났을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 그래프 오류 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>matplotlib으로 그래프를 그리다가 아래 오류가 났습니다. 나는 초보자입니다.
+
+[오류 메시지 전체 붙여 넣기]
+
+내 코드:
+[내 코드 붙여 넣기]
+
+1. 이 오류가 무슨 뜻인지 한두 문장으로 설명해 주세요.
+2. 내 코드에서 어느 부분을 확인하면 원인을 찾을 수 있는지 알려 주세요. (예: x와 y 리스트의 개수)
+3. 고친 코드는 바로 주지 말고 힌트부터 주세요. 내가 다시 물어보면 그때 고친 코드를 보여 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- ════════════════ 2. 선 그래프 ════════════════ -->
@@ -783,6 +1442,66 @@ plt.<span class="fn">show</span>()</code></pre>
         <text x="180" y="13" font-size="11" fill="#1E293B" text-anchor="middle" font-weight="600">학생별 수학 vs 영어 점수</text>
       </svg>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 선 그래프 그리기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>marker=</code>, <code>label=</code>, <code>plt.legend()</code>가 무슨 뜻인지, 선 두 개가 어떻게 한 그림에 그려지는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 선 그래프 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 초보자입니다. 아래 두 선 그래프 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+월 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+기온 = [-2, 1, 8, 15, 20, 25, 29, 28, 23, 16, 8, 0]
+plt.plot(월, 기온, marker='o', color='tomato')
+plt.show()
+
+plt.plot(이름, 수학, marker='o', label='수학', color='steelblue')
+plt.plot(이름, 영어, marker='s', label='영어', color='tomato')
+plt.legend(prop=fontprop)
+plt.show()
+
+1. plot()은 점들을 어떤 순서로 선으로 잇는지 알려 주세요.
+2. marker='o'와 marker='s'는 각각 어떤 모양인지, 다른 모양은 무엇이 있는지 3가지만 알려 주세요.
+3. plot()을 두 번 쓰면 왜 한 그림에 선 두 개가 그려지는지, plt.show()가 '여기까지 그린 것을 보여 줘'라는 뜻이라는 점과 연결해 설명해 주세요.
+4. label=과 plt.legend()의 관계를 알려 주고, legend()를 빼면 어떻게 되는지 알려 주세요.
+5. legend(prop=fontprop)에서 prop=fontprop을 넣는 이유를 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 같은 데이터인데 선 그래프와 산점도 중 무엇을 써야 할지 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 선 그래프와 산점도 비교하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>matplotlib의 plt.plot()(선 그래프)과 plt.scatter()(산점도)가 헷갈립니다. 초보자 눈높이로 비교해 주세요.
+
+1. 두 그래프가 각각 어떤 질문에 답하는 그래프인지 한 문장씩 알려 주세요.
+2. '월별 기온'과 '학생별 키와 몸무게'는 각각 어떤 그래프가 알맞은지, 이유와 함께 알려 주세요.
+3. 수업 코드에서는 학생 이름을 x축으로 선 그래프를 그렸습니다.
+   학생 이름처럼 순서가 없는 항목을 선으로 잇는 것이 괜찮은지, 더 알맞은 그래프가 있는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 코드만 보고 그래프 모양을 떠올리는 연습을 하고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 그래프 모양 예측 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 matplotlib으로 선 그래프를 배웠습니다. 코드만 보고 그래프 모양을 예측하는 문제를 3개 내 주세요.
+
+규칙:
+1. 각 문제는 데이터 5개 이하, 코드 6줄 이하로 짧게 만들어 주세요.
+2. "선이 올라가나요, 내려가나요?", "가장 높은 점은 어디인가요?", "선은 몇 개인가요?"처럼 답하기 쉬운 형태로 물어봐 주세요.
+3. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요.
+4. 정답을 알려 줄 때는 그래프 모양을 텍스트 그림으로 간단히 보여 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- ════════════════ 3. 막대 그래프 ════════════════ -->
@@ -869,6 +1588,75 @@ plt.<span class="fn">show</span>()</code></pre>
         <text x="180" y="13" font-size="11" fill="#1E293B" text-anchor="middle" font-weight="600">학생별 수학 점수</text>
       </svg>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 막대 그래프 그리기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>bar()</code>와 <code>barh()</code>의 차이, <code>ylim()</code>, 가로 막대에서 축 이름이 서로 바뀌는 이유를 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 세로·가로 막대 코드 비교 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 초보자입니다. 아래 세로·가로 막대 그래프 코드를 비교하며 쉬운 말로 설명해 주세요.
+
+plt.bar(이름, 수학, color='steelblue')
+plt.title('학생별 수학 점수')
+plt.xlabel('이름')
+plt.ylabel('점수')
+plt.ylim(0, 100)
+plt.show()
+
+plt.barh(이름, 수학, color='steelblue')
+plt.title('학생별 수학 점수')
+plt.xlabel('점수')
+plt.ylabel('이름')
+plt.show()
+
+1. bar(이름, 수학)에서 이름과 수학이 각각 그래프의 어디에 쓰이는지 알려 주세요.
+2. ylim(0, 100)을 빼면 y축이 어떻게 달라지는지, 그러면 막대 차이가 어떻게 보이는지 알려 주세요.
+3. barh()에서는 왜 xlabel과 ylabel의 내용을 서로 바꿔 썼는지 알려 주세요.
+4. 가로 막대가 세로 막대보다 보기 좋은 경우를 예를 들어 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 위의 그래프 모양 그림처럼 막대 위에 점수 숫자를 표시하고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 막대 위에 숫자 표시하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>matplotlib 세로 막대 그래프의 각 막대 위에 점수 숫자를 표시하고 싶습니다.
+
+이름 = ['철수', '영희', '민준', '지아', '현우']
+수학 = [85, 92, 78, 95, 88]
+plt.bar(이름, 수학, color='steelblue')
+plt.ylim(0, 100)
+plt.show()
+
+1. 위 코드에 숫자를 표시하는 줄을 추가하는 가장 쉬운 방법을 보여 주세요.
+2. 추가한 줄이 무슨 뜻인지 한 줄씩 쉬운 말로 설명해 주세요.
+3. 방법이 여러 가지라면 초보자에게 가장 쉬운 방법 하나만 먼저 보여 주고, 다른 방법은 이름만 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 막대 그래프와 선 그래프 중 무엇을 써야 할지 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 막대 그래프와 선 그래프 고르기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>막대 그래프와 선 그래프 중 무엇을 써야 할지 헷갈립니다. 초보자 눈높이로 알려 주세요.
+
+1. 막대 그래프와 선 그래프가 각각 어떤 데이터에 알맞은지 한 문장씩 알려 주세요.
+2. 아래 4가지 상황에 어떤 그래프가 알맞을지 내가 먼저 골라 볼게요.
+   - 과목별 평균 점수
+   - 1월부터 12월까지 월별 판매량
+   - 반별 학생 수
+   - 하루 동안 시간별 기온
+3. 내가 답을 보내면 맞았는지 알려 주고, 각 상황의 정답과 이유를 한 줄씩 설명해 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- ════════════════ 4. 파이 차트 ════════════════ -->
@@ -960,6 +1748,52 @@ plt.<span class="fn">show</span>()</code></pre>
         <text x="246" y="135" font-size="11" fill="#475569">겨울</text>
       </svg>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 파이 차트 그리기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>autopct='%1.1f%%'</code>, <code>explode</code>, <code>textprops</code>가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 파이 차트 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 초보자입니다. 아래 파이 차트 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+계절 = ['봄', '여름', '가을', '겨울']
+투표 = [8, 14, 10, 6]
+분리 = [0, 0.1, 0, 0]
+
+plt.pie(투표, labels=계절,
+       autopct='%1.1f%%',
+       explode=분리,
+       textprops={'fontproperties': fontprop})
+plt.title('좋아하는 계절 비율')
+plt.show()
+
+1. 투표 값 [8, 14, 10, 6]이 어떻게 21.1%, 36.8% 같은 비율로 바뀌는지 계산 과정을 보여 주세요.
+2. '%1.1f%%'를 기호 하나하나로 쪼개서 설명해 주세요. (특히 마지막 %%가 왜 두 개인지)
+3. explode=[0, 0.1, 0, 0]에서 각 숫자가 어느 조각에 해당하는지, 숫자를 크게 하면 어떻게 되는지 알려 주세요.
+4. explode 리스트의 개수를 3개로 잘못 쓰면 어떤 오류(ValueError)가 나는지 알려 주세요.
+5. textprops={'fontproperties': fontprop}는 왜 넣는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 같은 데이터를 파이 차트와 막대 그래프 중 무엇으로 보여 줄지 고민될 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 파이 차트가 알맞은 경우 알기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>파이 차트는 언제 쓰고, 언제 쓰지 않는 것이 좋은지 초보자 눈높이로 알려 주세요.
+
+1. 파이 차트가 잘 어울리는 데이터의 조건을 2~3가지 알려 주세요. (예: 전체를 더한 값이 의미가 있을 때)
+2. 조각이 8개 이상이거나 비율이 비슷비슷할 때 파이 차트가 읽기 어려운 이유를 알려 주세요.
+3. 같은 '좋아하는 계절 투표' 데이터(봄 8, 여름 14, 가을 10, 겨울 6)를 막대 그래프로 그리면
+   무엇이 더 잘 보이고, 무엇이 덜 보이는지 비교해 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- ════════════════ 5. 박스 플롯 ════════════════ -->
@@ -1098,6 +1932,61 @@ plt.<span class="fn">show</span>()</code></pre>
         <text x="175" y="13" font-size="11" fill="#1E293B" text-anchor="middle" font-weight="600">과목별 점수 분포</text>
       </svg>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 박스 플롯 그리기와 읽기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 리스트를 <code>[국어, 수학, 영어]</code>로 한 번 더 묶는 이유와 <code>tick_labels</code>, <code>patch_artist</code>, <code>zip()</code>이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 박스 플롯 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 초보자입니다. 아래 박스 플롯 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+국어 = [72, 80, 85, 88, 90, 92, 78, 65]
+수학 = [60, 75, 82, 88, 95, 70, 55, 90]
+영어 = [78, 82, 79, 85, 88, 91, 76, 84]
+
+bp = plt.boxplot([국어, 수학, 영어],
+                  tick_labels=['국어', '수학', '영어'],
+                  patch_artist=True)
+
+색목록 = ['lightblue', 'lightyellow', 'lightgreen']
+for 상자, 색 in zip(bp['boxes'], 색목록):
+    상자.set_facecolor(색)
+
+plt.title('과목별 점수 분포')
+plt.show()
+
+1. [국어, 수학, 영어]처럼 리스트를 다시 리스트로 묶으면 왜 상자가 3개 그려지는지 알려 주세요.
+2. tick_labels와 patch_artist=True가 각각 무엇을 하는지 알려 주세요.
+3. bp = ...처럼 결과를 변수에 저장하는 이유와, bp['boxes'] 안에 무엇이 들어 있는지 알려 주세요.
+4. zip()이 두 리스트를 어떻게 짝지어 주는지, for 문이 도는 순서대로 보여 주세요.
+5. tick_labels 부분에서 TypeError(unexpected keyword argument)가 나면 무엇이 원인이고 어떻게 고치는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 그려진 박스 플롯에서 무엇을 읽어야 할지, 어느 과목 점수가 더 고른지 판단하는 법을 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 박스 플롯 해석하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>세 과목 점수로 박스 플롯을 그렸습니다. 초보자 눈높이로 읽는 법을 알려 주세요.
+
+국어 = [72, 80, 85, 88, 90, 92, 78, 65]
+수학 = [60, 75, 82, 88, 95, 70, 55, 90]
+영어 = [78, 82, 79, 85, 88, 91, 76, 84]
+
+1. 상자 안의 선(중앙값), 상자의 아래·위 끝(25%, 75%), 수염이 각각 무엇을 뜻하는지 '키 순서로 줄 선 학생들'에 비유해 설명해 주세요.
+2. 국어 점수를 작은 순서로 정렬해서 중앙값을 직접 구하는 과정을 보여 주세요.
+3. 세 과목 중 점수가 가장 고르게 모여 있는 과목과 가장 넓게 퍼진 과목은 무엇인지, 상자 길이로 판단하는 법을 알려 주세요.
+4. 박스 플롯에 따로 떨어진 동그라미 점이 보이면 무슨 뜻인지(이상값) 알려 주세요.
+5. 1차시에 배운 df.describe()의 25%, 50%, 75%와 어떤 관계인지 한 문장으로 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- ════════════════ 핵심 정리 ════════════════ -->
@@ -1160,6 +2049,48 @@ plt.<span class="fn">show</span>()</code></pre>
 
 <span class="fn">print</span>(<span class="str">'그래프 명령어 요약: scatter, plot, bar, pie, boxplot'</span>)</code></pre>
     </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 그래프 고르기와 자주 겪는 문제</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 내 데이터에는 5가지 그래프 중 어떤 것을 골라야 할지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 알맞은 그래프 고르기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 matplotlib으로 그래프를 처음 배우는 초보자입니다.
+수업에서 산점도(scatter), 선 그래프(plot), 막대 그래프(bar), 파이 차트(pie), 박스 플롯(boxplot)을 배웠습니다.
+
+내 데이터: [예: 우리 반 학생 20명의 키와 몸무게 / 한 달 동안의 매일 판매량]
+알고 싶은 것: [예: 키가 크면 몸무게도 많이 나가는지 / 판매량이 어떻게 변했는지]
+
+1. 5가지 중 어떤 그래프가 가장 알맞은지, 이유를 두 문장 이내로 알려 주세요.
+2. 제목, x축·y축 이름, plt.show()까지 들어간 10줄 이내의 예시 코드를 보여 주세요.
+3. 두 번째로 괜찮은 그래프가 있다면 하나만 더 알려 주고, 어떤 점이 다른지 한 줄로 설명해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 그래프가 아예 안 보이거나, 앞의 그래프와 한 그림에 겹쳐 그려지거나, 한글이 깨질 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 그래프가 이상하게 나올 때 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>matplotlib으로 그래프를 그렸는데 결과가 이상합니다.
+나는 초보자이고 [Jupyter Notebook / Google Colab / VS Code 중 사용하는 것]을(를) 쓰고 있습니다.
+
+생긴 문제: [예: 그래프가 안 보여요 / 앞의 그래프와 겹쳐서 그려져요 / 한글이 네모로 깨져요]
+
+내 코드:
+[내 코드 붙여 넣기]
+
+1. 이 문제가 생기는 이유를 쉬운 말로 설명해 주세요.
+2. plt.show()가 하는 일과, 빠뜨리면 어떤 일이 생길 수 있는지 알려 주세요.
+3. 내 코드에서 고칠 곳을 줄 번호와 함께 짚어 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
   </div>
 
   <!-- ════════════════ 연습 문제 ════════════════ -->
@@ -1253,6 +2184,12 @@ plt.<span class="fn">show</span>()</code></pre>
     </ul>
   </div>
 
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 준비 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. ChatGPT·Gemini·Claude 같은 AI에게 그대로 붙여 넣으세요.<br>
+    실습 문제는 AI에게 묻기 전에 <strong>먼저 직접 작성</strong>해 보세요. AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요.</p>
+  </div>
+
   <div class="content-section">
     <div class="section-label">
       <div class="section-num" style="background:#64748B;">준비</div>
@@ -1292,6 +2229,85 @@ process_df</code></pre>
 3   L004  세정  299.8  100.5  101.1     1
 4   L005  증착  305.2   98.9  104.8    -1
 5   L005  증착  305.2   98.9  104.8    -1</div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 공정 데이터 준비 코드 이해하기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 준비 코드가 길어서 어디서부터 읽어야 할지, 마지막 줄에 <code>process_df</code>만 쓰면 왜 표가 나오는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 준비 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬과 pandas 초보자입니다. 아래 공정 데이터 준비 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] = False
+
+process_data = {
+    'lot_id': ['L001', 'L002', 'L003', 'L004', 'L005', 'L005'],
+    '공정': ['식각', '증착', '식각', '세정', '증착', '증착'],
+    '온도_섭씨': [298.5, 302.1, None, 299.8, 305.2, 305.2],
+    '압력_Pa': [101.2, 99.8, 103.1, 100.5, 98.9, 98.9],
+    '두께_nm': [100.4, 102.3, 98.7, 101.1, 104.8, 104.8],
+    '합격여부': [1, 1, -1, 1, -1, -1]
+}
+
+process_df = pd.DataFrame(process_data)
+process_df
+
+1. 이 코드를 '도구 준비 → 그래프 한글 설정 → 데이터 적기 → 표 만들기 → 표 보기' 단계로 나누어 설명해 주세요.
+2. 딕셔너리의 각 줄이 표의 어느 열이 되는지 알려 주세요.
+3. 마지막 줄에 print() 없이 process_df만 써도 Jupyter에서 표가 보이는 이유를 알려 주세요.
+4. 1~2차시에 배운 학생 성적표 예제와 비교해서 같은 점과 달라진 점을 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 실행 결과 표의 <code>NaN</code>, 똑같은 두 줄, <code>-1</code>이 무엇을 뜻하는지, 분석 전에 무엇을 확인해야 할지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 실행 결과 표 읽기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas로 공정 데이터 표를 만들었더니 아래 결과가 나왔습니다. 초보자 눈높이로 읽는 법을 알려 주세요.
+
+  lot_id  공정  온도_섭씨  압력_Pa  두께_nm  합격여부
+0   L001  식각  298.5  101.2  100.4     1
+1   L002  증착  302.1   99.8  102.3     1
+2   L003  식각    NaN  103.1   98.7    -1
+3   L004  세정  299.8  100.5  101.1     1
+4   L005  증착  305.2   98.9  104.8    -1
+5   L005  증착  305.2   98.9  104.8    -1
+
+1. 코드에는 None이라고 썼는데 표에는 NaN으로 보이는 이유를 알려 주세요.
+2. 4번과 5번 행이 똑같은 것은 무엇을 뜻하고, 실제 분석에서 왜 문제가 되는지 알려 주세요.
+3. 합격여부 열의 1과 -1(1 = 합격, -1 = 불합격)을 보고 알 수 있는 것을 알려 주세요.
+4. 이 표를 분석하기 전에 먼저 확인해야 할 것 3가지를 2차시 EDA에서 배운 함수 이름과 함께 알려 주세요.
+   단, 실습 문제는 내가 직접 풀 것이니 코드는 보여 주지 말고 함수 이름과 이유만 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 식각·증착·세정, Pa, nm 같은 공정 용어가 처음 보는 말이라 표가 낯설 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 공정 용어 쉽게 이해하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 반도체를 전공하지 않은 초보자입니다. 데이터 분석 실습 표에 나오는 용어를 쉽게 설명해 주세요.
+
+열 이름: lot_id, 공정, 온도_섭씨, 압력_Pa, 두께_nm, 합격여부
+공정 값: 식각, 증착, 세정
+
+1. lot(로트)가 무엇인지, 왜 lot마다 번호(lot_id)를 붙이는지 일상생활 비유로 알려 주세요.
+2. 식각, 증착, 세정이 각각 무슨 작업인지 요리나 그림 그리기에 비유해서 한 문장씩 알려 주세요.
+3. Pa(파스칼)와 nm(나노미터)가 어느 정도 크기의 단위인지 쉬운 예로 알려 주세요.
+4. 두께나 온도가 기준에서 벗어나면 왜 불합격이 될 수 있는지 간단히 알려 주세요.
+어려운 전문 용어는 되도록 쓰지 말고, 쓰게 되면 괄호 안에 쉬운 말로 풀어 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
     <div class="tip-box info">
       <span class="tip-icon">ℹ️</span>
       <p><code>None</code>은 측정값이 없다는 뜻입니다(결측값). <code>합격여부</code>는 <strong>1 = 합격, -1 = 불합격</strong>입니다.</p>

@@ -64,6 +64,12 @@
     </div>
   </div>
 
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요. 회사의 실제 공정 데이터는 붙여 넣지 말고, 수업용 fab.csv 코드와 결과만 사용하세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
+  </div>
+
   <div class="part-header" id="intro">
     <div class="part-icon">📊</div>
     <div>
@@ -181,6 +187,58 @@ plt.rcParams[<span class="str">'font.family'</span>] = <span class="str">'Malgun
 plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="kw">False</span></code></pre>
 </div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 라이브러리 불러오기 이해하기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>import</code>와 <code>from ... import</code>의 차이, 각 라이브러리가 무슨 일을 하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬과 pandas를 처음 배우는 초보자이고, 반도체 공정 센서 데이터(fab.csv)로 불량을 예측하는 수업을 듣고 있습니다.
+아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
+
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] = False
+
+1. 'import 라이브러리 as 별명'과 'from 라이브러리 import 이름'이 어떻게 다른지 공구함 비유로 설명해 주세요.
+2. pandas, numpy, matplotlib, seaborn, sklearn이 이 수업에서 각각 어떤 역할을 하는지 한 줄씩 표로 정리해 주세요.
+3. 마지막 두 줄(plt.rcParams)은 왜 필요한지, 빼면 그래프가 어떻게 보이는지 알려 주세요.
+아직 배우지 않은 함수(train_test_split, SelectKBest 등)는 "나중에 이런 일을 한다" 정도로만 짧게 소개해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>ModuleNotFoundError: No module named 'sklearn'</code> 오류가 나거나, 그래프의 한글이 네모(□)로 깨질 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 설치·한글 깨짐 문제 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>라이브러리를 불러오는 코드를 실행했더니 문제가 생겼습니다.
+나는 초보자이고 [Jupyter Notebook / Google Colab / VS Code 중 사용하는 것]을(를) [Windows / Mac 중 사용하는 것]에서 쓰고 있습니다.
+
+[오류 메시지 전체를 붙여 넣거나, "그래프의 한글이 네모로 깨져요"처럼 증상을 적기]
+
+1. 이 문제가 왜 생겼는지 한두 문장으로 설명해 주세요.
+2. 내 환경에서 해결하는 방법을 순서대로 알려 주세요. (예: 라이브러리 설치 명령, 한글 글꼴 이름 바꾸기)
+3. 불러올 때는 sklearn인데 설치할 때는 scikit-learn이라고 쓰는 것처럼, 초보자가 헷갈리기 쉬운 점이 있으면 함께 알려 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
   <div class="part-header" id="step2">
     <div class="part-icon">🔍</div>
     <div>
@@ -258,6 +316,74 @@ Pass_Fail
 -1    1463
  1     104</div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 데이터 불러오기 · 큰 테이블 읽기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>shape</code>, <code>iloc[:, :6]</code>, <code>info(verbose=False)</code>, <code>describe()</code> 결과가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드와 실행 결과 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 반도체 센서 데이터 fab.csv를 불러와 살펴보는 아래 코드를 이해하고 싶습니다.
+
+df = pd.read_csv('fab.csv')
+print(f"📊 데이터 크기: {df.shape[0]}행 × {df.shape[1]}열")
+print(f"📋 첫 5컬럼: {df.columns[:5].tolist()}")
+print(f"📋 마지막 컬럼: {df.columns[-3:].tolist()}")
+display(df.iloc[:, :6].head())
+df.info(verbose=False)
+display(df[['Sensor0', 'Sensor1', 'Sensor2']].describe().round(2))
+df['Pass_Fail'].value_counts()
+
+1. 각 줄이 무엇을 하는지 한 줄씩 쉬운 말로 설명해 주세요.
+2. df.shape[0], df.columns[:5], df.columns[-3:], df.iloc[:, :6]에서 대괄호 안의 숫자와 콜론(:)이 무슨 뜻인지 작은 예시로 보여 주세요.
+3. info(verbose=False)를 쓰는 이유를, 컬럼이 592개나 되는 상황과 연결해 설명해 주세요.
+4. describe() 결과의 count, mean, std, min, 25%, 50%, 75%, max가 각각 무슨 뜻인지 알려 주세요.
+   Sensor0의 count가 1561인데 전체 행은 1567개입니다. 이 차이는 무엇을 뜻하나요?</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 라벨 분포가 정상 1463개, 불량 104개라는 결과가 왜 중요한지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 불균형 데이터와 정확도의 함정 이해하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>반도체 공정 데이터에서 라벨 분포가 아래와 같이 나왔습니다. (-1 = 정상, +1 = 불량)
+
+Pass_Fail
+-1    1463
+ 1     104
+
+1. 불량 비율이 약 6.6%라는 것이 머신러닝에서 왜 문제가 되는지 쉬운 말로 설명해 주세요.
+2. "모든 제품을 정상이라고만 답해도 정확도가 93.4%"라는 말이 무슨 뜻인지 계산 과정과 함께 보여 주세요.
+3. 이것을 '시험 채점'이나 '공항 보안 검색' 같은 일상 비유로 설명해 주세요.
+4. 이 데이터에서는 +1이 불량, -1이 정상입니다. 찾고 싶은 사건(불량)을 +1로 두는 이유를 초보자 눈높이로 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>FileNotFoundError</code>, <code>KeyError: 'Pass_Fail'</code>, <code>NameError: name 'display' is not defined</code> 같은 오류가 났을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 데이터 불러오기 오류 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>fab.csv를 불러오는 코드를 실행했더니 오류가 났습니다.
+나는 초보자이고 [Jupyter Notebook / Google Colab / VS Code 중 사용하는 것]을(를) 쓰고 있습니다.
+
+실행한 코드:
+[오류가 난 코드를 여기에 붙여 넣기]
+
+오류 메시지:
+[오류 메시지 전체를 여기에 붙여 넣기]
+
+1. 이 오류가 무슨 뜻인지 한두 문장으로 설명해 주세요.
+2. 가장 흔한 원인 2~3가지와 각각 확인하는 방법을 알려 주세요. (예: fab.csv가 노트북과 같은 폴더에 있는지, 컬럼 이름의 철자와 대소문자)
+3. 바로 정답 코드를 주지 말고 먼저 힌트를 주세요. 내가 다시 시도해도 안 되면 그때 고친 코드를 보여 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
   <div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>불량률 6.6% — 심한 불균형!</strong><br/>
           모든 샘플을 "정상"이라고만 답해도 정확도 93.4% 입니다. 정확도(Accuracy)에 속지 마세요.</p></div>
 
@@ -275,6 +401,12 @@ Pass_Fail
       <p>결측이 많은 열을 지우고 중앙값으로 채운 뒤, 값이 변하지 않는 센서를 제거합니다.</p>
       <a class="notebook-link" href="./실습/02_데이터_정제.ipynb" download>📓 실습 노트북 받기 · 02_데이터_정제.ipynb</a>
     </div>
+  </div>
+
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요. 회사의 실제 공정 데이터는 붙여 넣지 말고, 수업용 fab.csv 코드와 결과만 사용하세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
   </div>
 
   <div class="part-header" id="step3">
@@ -334,6 +466,70 @@ dtype: float64
 🗑️ 제거할 컬럼: 28개
 ✅ 결측 처리 완료. 남은 결측: 0</div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 결측값 처리 이해하기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 결측률 계산, 조건으로 컬럼 고르기, <code>fillna(median())</code>가 어떻게 동작하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드와 실행 결과 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 반도체 센서 데이터의 결측값(빈칸)을 처리하는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+miss_pct = (df.isnull().sum() / len(df) * 100).round(2)
+print(miss_pct.sort_values(ascending=False).head(10))
+
+THRESHOLD = 50.0
+cols_to_drop = miss_pct[miss_pct &gt; THRESHOLD].index.tolist()
+df = df.drop(columns=cols_to_drop)
+
+numeric_cols = df.select_dtypes(include='number').columns.tolist()
+numeric_cols.remove('Pass_Fail')
+df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].median())
+print(f"✅ 결측 처리 완료. 남은 결측: {df.isnull().sum().sum()}")
+
+1. df.isnull().sum() / len(df) * 100이 '결측률(%)'이 되는 과정을 3행짜리 작은 표 예시로 단계별로 보여 주세요.
+2. miss_pct[miss_pct &gt; THRESHOLD]처럼 대괄호 안에 조건을 넣어 고르는 방법(불리언 인덱싱)을 쉬운 비유로 설명해 주세요.
+3. 실행 결과의 "Sensor293    91.19"는 무슨 뜻인지, 왜 이런 컬럼은 채우지 않고 지우는지 알려 주세요.
+4. isnull().sum().sum()처럼 sum()을 두 번 쓰는 이유를 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 빈칸을 평균으로 채울지, 중앙값으로 채울지, 행을 지울지 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 결측값 처리 방법 비교하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>결측값(빈칸)을 처리하는 방법이 헷갈립니다. 초보자 눈높이로 비교해 주세요.
+
+1. 아래 세 가지 방법을 표로 비교해 주세요. (장점, 단점, 언제 쓰는지)
+   - 결측이 있는 행을 지우기 (dropna)
+   - 평균으로 채우기 (fillna(mean()))
+   - 중앙값으로 채우기 (fillna(median()))
+2. 값이 [10, 11, 12, 13, 100]인 센서가 있을 때 평균과 중앙값을 각각 계산해 보여 주고, 이상치(100)가 있으면 왜 중앙값이 더 안전한지 설명해 주세요.
+3. 결측률이 91%인 컬럼을 중앙값으로 채우면 어떤 문제가 생기는지 '대부분이 빈칸인 설문지' 같은 비유로 설명해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 제대로 이해했는지, 특히 <code>Pass_Fail</code>을 왜 채우기 대상에서 빼는지 스스로 확인해 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 내 말로 설명하고 점검받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 결측값 처리를 배웠습니다. 내가 이해한 내용을 내 말로 설명해 볼 테니 점검해 주세요.
+
+내 설명:
+[예: 먼저 컬럼마다 빈칸 비율을 구하고, ... 처럼 3~4문장으로 직접 써 보기]
+
+1. 내 설명에서 맞는 부분과 틀리거나 빠진 부분을 알려 주세요.
+2. 특히 numeric_cols.remove('Pass_Fail')로 타겟(정답 라벨)을 채우기 대상에서 빼는 이유를 내가 제대로 설명했는지 확인해 주세요.
+3. 정답을 바로 알려 주지 말고, 빠진 부분은 힌트 질문으로 먼저 물어봐 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
   <div class="part-header" id="step4">
     <div class="part-icon">🚮</div>
     <div>
@@ -371,6 +567,65 @@ numeric_cols = [c <span class="kw">for</span> c <span class="kw">in</span> numer
 분산 ≈0 컬럼: 10개
 ✅ 사용 가능한 센서: 436개</div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 분산 0 컬럼 제거 이해하기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>var()</code>, <code>1e-6</code>, 조건 두 개를 묶는 <code>&amp;</code>, 마지막 줄의 리스트 컴프리헨션이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 값이 거의 변하지 않는 센서를 지우는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+variances = df[numeric_cols].var()
+
+constant_cols = variances[variances == 0].index.tolist()
+near_constant = variances[(variances &gt; 0) &amp; (variances &lt; 1e-6)].index.tolist()
+
+to_drop_var = constant_cols + near_constant
+df = df.drop(columns=to_drop_var)
+numeric_cols = [c for c in numeric_cols if c not in to_drop_var]
+
+print(f"✅ 사용 가능한 센서: {len(numeric_cols)}개")
+
+1. var()(분산)이 무엇인지, [5, 5, 5, 5]와 [1, 5, 9, 13]의 분산을 비교하는 예시로 설명해 주세요.
+2. 1e-6이 어떤 숫자인지, 조건 두 개를 &amp;로 묶을 때 왜 각각 괄호로 감싸야 하는지 알려 주세요.
+3. 마지막 줄 [c for c in numeric_cols if c not in to_drop_var](리스트 컴프리헨션)을 for 반복문으로 풀어 쓴 코드와 나란히 보여 주세요.
+4. 실행 결과 "분산 0 컬럼: 116개 / 분산 ≈0 컬럼: 10개 / 사용 가능한 센서: 436개"를 어떻게 읽으면 되는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 값이 변하지 않는 센서가 왜 쓸모없는지 감이 오지 않을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 왜 지우는지 비유로 이해하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>"분산이 0인 센서는 정상/불량을 구분하는 데 쓸모가 없다"는 말이 잘 이해되지 않습니다.
+
+1. '모든 학생이 100점을 받은 시험 문제로는 실력을 구분할 수 없다' 같은 일상 비유로 설명해 주세요.
+2. 정상 제품 3개와 불량 제품 3개의 센서값을 예로 들어, 값이 항상 같은 센서와 정상/불량에서 값이 달라지는 센서를 비교하는 작은 표를 만들어 주세요.
+3. 쓸모없는 컬럼을 미리 지우면 이후 분석(특성 선택, 모델 학습)에 어떤 점이 좋은지 2~3가지로 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 제대로 이해했는지 스스로 확인해 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 실행 결과 예측 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 분산(var)으로 의미 없는 컬럼을 지우는 방법을 배웠습니다. 실행 결과를 예측해 보는 문제를 3개 내 주세요.
+
+규칙:
+1. 각 문제는 3~4개 컬럼짜리 작은 DataFrame과 5줄 이하의 코드로 만들어 주세요.
+2. var(), 비교 조건(==, &gt;, &lt;), &amp;, index.tolist()만 사용해 주세요.
+3. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요.
+4. 내가 틀리면 바로 정답을 말하지 말고 힌트를 먼저 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
 </section>
 
 <!-- ═══════════════════════════════════════════
@@ -385,6 +640,12 @@ numeric_cols = [c <span class="kw">for</span> c <span class="kw">in</span> numer
       <p>ANOVA F-검정으로 상위 20개 센서를 고르고, 박스플롯·히트맵으로 살펴봅니다.</p>
       <a class="notebook-link" href="./실습/03_특성선택_EDA.ipynb" download>📓 실습 노트북 받기 · 03_특성선택_EDA.ipynb</a>
     </div>
+  </div>
+
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요. 그래프는 AI에게 보이지 않으므로, 내가 본 모양을 글로 적어 함께 물어보세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
   </div>
 
   <div class="part-header" id="step5">
@@ -456,6 +717,81 @@ top_k_cols = f_scores.<span class="fn">sort_values</span>(ascending=<span class=
   19. Sensor160  F=  12.6
   20. Sensor164  F=  12.0</div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 상위 K개 센서 선택 이해하기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>y</code>를 0/1로 바꾸는 줄, <code>SelectKBest</code>, <code>scores_</code>, <code>enumerate</code>가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬과 머신러닝 초보자입니다. 수백 개 센서 중 불량 예측에 유용한 상위 20개를 고르는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+y = (df['Pass_Fail'] == 1).astype(int)
+X_all = df[numeric_cols].copy()
+
+K = 20
+selector = SelectKBest(score_func=f_classif, k=K)
+selector.fit(X_all, y)
+
+f_scores = pd.Series(selector.scores_, index=numeric_cols)\
+             .replace([np.inf, -np.inf], np.nan).dropna()
+top_k_cols = f_scores.sort_values(ascending=False).head(K).index.tolist()
+
+for i, col in enumerate(top_k_cols, 1):
+    print(f"  {i:2d}. {col}  F={f_scores[col]:6.1f}")
+
+1. (df['Pass_Fail'] == 1).astype(int)가 -1/+1 라벨을 0/1로 바꾸는 과정을 5행짜리 예시로 보여 주세요.
+2. X(입력 특성)와 y(정답 라벨)가 각각 무엇인지 '문제지와 답안지' 비유로 설명해 주세요.
+3. SelectKBest를 만들고, fit()하고, scores_를 꺼내는 과정이 각각 무슨 일을 하는지 순서대로 알려 주세요.
+4. replace([np.inf, -np.inf], np.nan).dropna()는 왜 필요한지, 줄 끝의 역슬래시(\)는 무슨 뜻인지 알려 주세요.
+5. enumerate(top_k_cols, 1)과 {i:2d}, {f_scores[col]:6.1f}의 뜻을 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> F-값이 무엇이고, 실행 결과 <code>Sensor59  F=  39.0</code>을 어떻게 읽어야 할지 모를 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② F-값 쉽게 이해하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>ANOVA F-검정의 F-값이 무엇인지 수학 공식 없이 이해하고 싶습니다.
+
+수업 실행 결과 일부:
+   1. Sensor59  F=  39.0
+   2. Sensor103  F=  36.6
+   ...
+  20. Sensor164  F=  12.0
+
+1. F-값을 '두 반(정상 그룹, 불량 그룹)의 시험 점수 평균 차이' 같은 비유로 설명해 주세요.
+2. F-값이 큰 경우와 작은 경우를, 두 그룹의 값 목록을 예로 들어 글로 보여 주세요.
+3. Sensor59(F=39.0)와 Sensor164(F=12.0)를 비교해서 어떤 센서가 불량을 구분하는 데 더 유용한지 설명해 주세요.
+4. F-값이 높다고 해서 그 센서가 불량의 '원인'이라고 말할 수 있는지도 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>ValueError: Input X contains NaN</code>이나 <code>NameError: name 'numeric_cols' is not defined</code> 같은 오류가 났을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 특성 선택 오류 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>특성 선택 코드를 실행했더니 아래 오류가 났습니다. 나는 초보자입니다.
+
+실행한 코드:
+selector = SelectKBest(score_func=f_classif, k=K)
+selector.fit(X_all, y)
+
+오류 메시지:
+[오류 메시지 전체를 여기에 붙여 넣기]
+
+1. 이 오류가 무슨 뜻인지 한두 문장으로 설명해 주세요.
+2. 이 수업은 데이터 불러오기 → 결측 처리 → 분산 0 컬럼 제거 → 특성 선택 순서로 진행됩니다. 앞 단계 중 무엇을 빠뜨리면 이런 오류가 나는지 알려 주세요.
+3. 바로 정답 코드를 주지 말고, 먼저 내가 확인해 볼 것을 체크리스트로 알려 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
   <div class="code-wrap">
 <div class="code-header">
 <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
@@ -470,6 +806,48 @@ plt.<span class="fn">title</span>(<span class="str">'상위 K개 센서 F-점수
 plt.<span class="fn">tight_layout</span>()
 plt.<span class="fn">show</span>()</code></pre>
 </div>
+
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · F-점수 막대그래프 읽기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>figsize</code>, <code>barh</code>, <code>[::-1]</code>이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 그래프 코드 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 matplotlib 초보자입니다. 센서별 F-점수를 가로 막대그래프로 그리는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+top = f_scores.sort_values(ascending=False).head(K)
+plt.figure(figsize=(10, 7))
+plt.barh(top.index[::-1], top.values[::-1], color='#3498db')
+plt.xlabel('F-값 (클수록 유용)')
+plt.title('상위 K개 센서 F-점수')
+plt.tight_layout()
+plt.show()
+
+1. figsize=(10, 7)의 두 숫자는 무엇을 뜻하나요?
+2. barh(가로 막대)와 bar(세로 막대)는 어떻게 다르고, 센서 이름이 길 때 왜 가로 막대가 더 보기 좋은지 알려 주세요.
+3. [::-1]이 무엇을 하는지 [1, 2, 3, 4]로 예시를 보여 주고, 이걸 빼면 그래프에서 1등 센서가 위와 아래 중 어디에 그려지는지 알려 주세요.
+4. tight_layout()과 show()는 각각 왜 쓰는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 그래프를 그렸는데 무엇을 봐야 할지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 막대그래프 해석하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>센서별 F-점수 가로 막대그래프를 보고 있습니다.
+가장 위 막대가 Sensor59(F=39.0), 그다음이 Sensor103(F=36.6), 세 번째가 Sensor510(F=27.6)이고, 가장 아래는 Sensor164(F=12.0)입니다.
+
+1. 이 그래프에서 무엇을 먼저 보면 되는지 읽는 순서를 3단계로 알려 주세요.
+2. 1~2위 다음에 점수가 크게 줄어들고, 그 뒤로는 비슷하게 조금씩 줄어드는 모양이라면 무엇을 알 수 있는지 설명해 주세요.
+3. 상위 20개가 아니라 10개나 30개를 고르면 어떤 장단점이 있는지 초보자 눈높이로 알려 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
 
   <div class="part-header" id="step6">
     <div class="part-icon">📊</div>
@@ -513,6 +891,68 @@ plt.<span class="fn">tight_layout</span>()
 plt.<span class="fn">show</span>()</code></pre>
 </div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 박스플롯 코드와 그래프 읽기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>subplots(2, 3)</code>, <code>flatten()</code>, <code>hue</code>·<code>palette</code>·<code>ax</code> 옵션이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 그래프 여러 개 그리는 코드 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 시각화 초보자입니다. 상위 6개 센서를 정상/불량으로 나눠 박스플롯 6개를 그리는 아래 코드를 쉬운 말로 설명해 주세요.
+
+top6 = top_k_cols[:6]
+fig, axes = plt.subplots(2, 3, figsize=(15, 9))
+axes = axes.flatten()
+
+for i, col in enumerate(top6):
+    sns.boxplot(x='Pass_Fail', y=col, data=df,
+                hue='Pass_Fail',
+                palette={-1: '#2ecc71', 1: '#e74c3c'},
+                legend=False, ax=axes[i], width=0.5)
+    axes[i].set_title(f'{col}  (F={f_scores[col]:.1f})')
+    axes[i].set_xticks([0, 1], ['정상(-1)', '불량(+1)'])
+
+1. plt.subplots(2, 3)이 무엇을 만드는지, fig와 axes는 각각 무엇인지 '도화지와 칸' 비유로 설명해 주세요.
+2. axes.flatten()을 하는 이유를, 2행 3열 표를 한 줄로 펴는 모습을 글로 그려서 보여 주세요.
+3. for 반복문이 6번 돌면서 axes[i]에 그래프를 하나씩 그리는 과정을 설명해 주세요.
+4. x, y, data, hue, palette, ax 옵션이 각각 무엇을 정하는지 표로 정리해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 박스플롯의 상자·선·점이 무엇을 뜻하는지, 정상과 불량을 어떻게 비교하는지 모를 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 박스플롯 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>박스플롯(상자 그림)을 처음 봅니다. 정상(-1, 초록)과 불량(+1, 빨강) 두 상자가 나란히 있는 그래프를 읽는 법을 알려 주세요.
+
+1. 상자 안의 가로선, 상자의 위·아래 끝, 위아래로 뻗은 선(수염), 따로 찍힌 점이 각각 무엇을 뜻하는지 설명해 주세요.
+2. 값 [1, 2, 3, 4, 5, 6, 7, 8, 30]으로 박스플롯을 그린다면 중앙값, 상자 범위, 이상치가 어떻게 되는지 계산해서 보여 주세요.
+3. 정상과 불량의 상자 위치가 많이 다르면 무엇을 뜻하고, 거의 겹치면 무엇을 뜻하는지 '불량 검사' 상황으로 설명해 주세요.
+4. F-값이 큰 센서일수록 두 상자가 어떻게 보일 가능성이 높은지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 내가 그래프를 제대로 해석했는지 확인받고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 내 해석 점검받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>상위 6개 센서의 박스플롯을 직접 보고 해석해 보았습니다. 내 해석을 점검해 주세요.
+
+내가 본 그래프: [예: "Sensor59 그래프에서 불량(빨강) 상자가 정상(초록) 상자보다 위에 있다"처럼 본 모습을 글로 적기]
+내 해석: [예: "그래서 이 센서값이 높으면 불량일 가능성이 크다"처럼 2~3문장으로 적기]
+
+1. 내 해석에서 맞는 부분과 지나치게 확신한 부분을 알려 주세요.
+2. 불량 제품이 104개로 적다는 점이 박스플롯 해석에 어떤 영향을 주는지 알려 주세요.
+3. 정답을 바로 말하지 말고, 내가 더 생각해 볼 질문을 1~2개 먼저 던져 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
   <div class="code-wrap">
 <div class="code-header">
 <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
@@ -530,6 +970,64 @@ plt.<span class="fn">title</span>(<span class="str">'상위 센서 간 상관관
 plt.<span class="fn">show</span>()</code></pre>
 </div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 상관관계 히트맵 읽기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>corr()</code>, <code>np.triu</code>로 만든 <code>mask</code>, <code>heatmap</code> 옵션들이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 히트맵 코드 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 시각화 초보자입니다. 상위 센서끼리의 상관관계 히트맵을 그리는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+corr_top = df[top_k_cols + ['Pass_Fail']].corr().round(2)
+
+plt.figure(figsize=(13, 10))
+mask = np.triu(np.ones_like(corr_top, dtype=bool))
+sns.heatmap(corr_top, annot=True, fmt='.2f',
+            cmap='RdYlGn', center=0, mask=mask,
+            linewidths=0.5)
+plt.title('상위 센서 간 상관관계 + Pass_Fail')
+plt.show()
+
+1. top_k_cols + ['Pass_Fail']처럼 리스트끼리 더하면 어떻게 되는지 작은 예시로 보여 주세요.
+2. corr()이 만드는 표(상관행렬)가 어떤 모양인지 3개 컬럼짜리 예시로 보여 주세요.
+3. np.triu와 mask로 히트맵의 절반을 가리는 이유를 알려 주세요.
+4. annot, fmt='.2f', cmap='RdYlGn', center=0 옵션이 각각 무엇을 정하는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 칸마다 적힌 -1~1 숫자와 색깔을 어떻게 읽어야 할지 모를 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 상관계수와 히트맵 해석하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>상관관계 히트맵을 처음 봅니다. 칸마다 -1에서 1 사이 숫자가 적혀 있고, 빨강·노랑·초록으로 색칠되어 있습니다.
+
+1. 상관계수가 1, 0, -1에 가까울 때 각각 무슨 뜻인지 '키와 몸무게', '키와 시험 점수' 같은 일상 예시로 설명해 주세요.
+2. 센서끼리 상관계수가 0.95처럼 매우 높으면 왜 '중복 센서'라고 부르는지, 둘 다 모델에 넣으면 어떤 점이 아쉬운지 알려 주세요.
+3. Pass_Fail 줄의 숫자는 어떻게 읽어야 하나요? Pass_Fail이 -1(정상)/+1(불량)인 점을 고려해서, 양수와 음수가 각각 무엇을 뜻하는지 설명해 주세요.
+4. "상관관계가 높다 = 원인이다"가 아닌 이유를 쉬운 예시로 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 제대로 이해했는지 스스로 확인해 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 상관관계 확인 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 상관관계와 히트맵을 배웠습니다. 이해했는지 확인하는 문제를 3개 내 주세요.
+
+규칙:
+1. 두 센서의 짧은 값 목록(5개 정도)을 주고 "상관계수가 양수일까, 음수일까, 0에 가까울까?"를 예측하는 문제로 만들어 주세요.
+2. 마지막 문제는 히트맵의 Pass_Fail 줄을 해석하는 문제로 만들어 주세요.
+3. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요. 틀리면 힌트를 먼저 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
 </section>
 
 <!-- ═══════════════════════════════════════════
@@ -544,6 +1042,12 @@ plt.<span class="fn">show</span>()</code></pre>
       <p>학습/테스트로 나누고 두 모델을 학습해 혼동행렬·ROC·특성 중요도로 평가한 뒤 오늘 내용을 정리합니다.</p>
       <a class="notebook-link" href="./실습/04_모델_학습_평가.ipynb" download>📓 실습 노트북 받기 · 04_모델_학습_평가.ipynb</a>
     </div>
+  </div>
+
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요. 혼동행렬·ROC 커브처럼 처음 보는 결과는 숫자를 그대로 적어 읽는 법을 물어보세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
   </div>
 
   <div class="part-header" id="step7">
@@ -587,6 +1091,74 @@ X_test_scaled  = scaler.<span class="fn">transform</span>(X_test)
   <div class="output-block"><div class="output-label">📤 실행 결과</div>학습: (1253, 20), 그 중 불량 83건
 테스트: (314, 20), 그 중 불량 21건</div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 데이터 분리 · 스케일링 이해하기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>train_test_split</code>이 돌려주는 4개 변수, <code>test_size</code>, <code>random_state</code>, <code>StandardScaler</code>가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드와 실행 결과 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 머신러닝 초보자입니다. 데이터를 학습용/테스트용으로 나누고 스케일링하는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+X = df[top_k_cols].copy()
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled  = scaler.transform(X_test)
+
+print(f"학습: {X_train.shape}, 그 중 불량 {y_train.sum()}건")
+print(f"테스트: {X_test.shape}, 그 중 불량 {y_test.sum()}건")
+
+1. train_test_split이 돌려주는 X_train, X_test, y_train, y_test가 각각 무엇인지 '문제집과 모의고사' 비유로 설명해 주세요.
+2. test_size=0.2와 random_state=42는 각각 무슨 뜻인지 알려 주세요.
+3. 실행 결과 "학습: (1253, 20), 그 중 불량 83건 / 테스트: (314, 20), 그 중 불량 21건"을 읽는 법과, y_train.sum()이 왜 불량 개수가 되는지 알려 주세요.
+4. StandardScaler가 숫자를 어떻게 바꾸는지 값 [10, 20, 30]을 예로 계산해 보여 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>stratify=y</code>, 스케일링, <code>fit_transform()</code>과 <code>transform()</code>의 구분이 왜 필요한지 궁금할 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 왜 이렇게 나누고 맞추는지 이해하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>데이터 분리와 스케일링에서 아래 세 가지가 왜 필요한지 초보자 눈높이로 설명해 주세요. 불량률은 약 6.6%입니다.
+
+1. stratify=y: 이 옵션을 빼면 테스트 데이터의 불량 개수가 어떻게 될 수 있는지 '제비뽑기' 비유와 함께 알려 주세요.
+2. 스케일링(StandardScaler): 센서마다 값의 크기가 다를 때(예: 3000 근처인 센서와 1 근처인 센서) 왜 크기를 맞춰야 하는지 알려 주세요. 로지스틱 회귀와 랜덤 포레스트 중 어느 쪽에 더 중요한지도 알려 주세요.
+3. 학습 데이터에는 fit_transform(), 테스트 데이터에는 transform()만 쓰는 이유를 '시험 문제를 미리 보면 안 된다'는 비유로 설명해 주세요. 이것이 '데이터 누수'와 어떤 관계인지도 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>ValueError: Found input variables with inconsistent numbers of samples</code>나 <code>NameError: name 'top_k_cols' is not defined</code> 같은 오류가 났을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 데이터 분리 오류 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>데이터 분리 코드를 실행했더니 아래 오류가 났습니다. 나는 초보자입니다.
+
+실행한 코드:
+[오류가 난 코드를 여기에 붙여 넣기]
+
+오류 메시지:
+[오류 메시지 전체를 여기에 붙여 넣기]
+
+1. 이 오류가 무슨 뜻인지 한두 문장으로 설명해 주세요.
+2. X와 y의 행 개수가 같은지, 앞 단계(특성 선택에서 만든 y와 top_k_cols)를 실행했는지 확인하는 방법을 알려 주세요. (예: print(X.shape, y.shape))
+3. 바로 정답 코드를 주기 전에 힌트를 먼저 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
   <div class="part-header" id="step8">
     <div class="part-icon">🤖</div>
     <div>
@@ -624,6 +1196,71 @@ rf_model.<span class="fn">fit</span>(X_train_scaled, y_train)
 y_pred_lr = lr_model.<span class="fn">predict</span>(X_test_scaled)
 y_pred_rf = rf_model.<span class="fn">predict</span>(X_test_scaled)</code></pre>
 </div>
+
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 모델 학습 · class_weight 이해하기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 모델 만들기 → <code>fit()</code> → <code>predict()</code> 흐름과 <code>max_iter</code>, <code>n_estimators</code>, <code>max_depth</code>가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 머신러닝 초보자입니다. 두 가지 모델을 학습하고 예측하는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+lr_model = LogisticRegression(
+    random_state=42, max_iter=1000,
+    class_weight='balanced'
+)
+lr_model.fit(X_train_scaled, y_train)
+
+rf_model = RandomForestClassifier(
+    n_estimators=200,
+    max_depth=8,
+    random_state=42,
+    class_weight='balanced'
+)
+rf_model.fit(X_train_scaled, y_train)
+
+y_pred_lr = lr_model.predict(X_test_scaled)
+y_pred_rf = rf_model.predict(X_test_scaled)
+
+1. 모델 만들기 → fit(학습) → predict(예측)의 3단계를 '학생이 문제집으로 공부하고 모의고사를 푸는 과정'에 비유해 설명해 주세요.
+2. max_iter=1000, n_estimators=200, max_depth=8이 각각 무슨 뜻인지 쉬운 말로 알려 주세요.
+3. fit()에는 y_train을 넣는데 predict()에는 y_test를 넣지 않는 이유를 알려 주세요.
+4. y_pred_lr에는 어떤 값들이 들어 있는지(0과 1로 된 배열) 예시로 보여 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>class_weight='balanced'</code>가 왜 필요한지, balanced를 썼는데도 랜덤 포레스트가 불량을 하나도 못 잡은 이유가 궁금할 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② class_weight='balanced' 이해하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>불량이 약 6.6%뿐인 반도체 데이터로 모델을 학습하고 있습니다. class_weight='balanced'를 이해하고 싶습니다.
+
+1. class_weight='balanced'가 없으면 모델이 왜 "모두 정상"이라고만 답하기 쉬운지 설명해 주세요.
+2. balanced가 하는 일을 '드물게 나오는 문제를 틀리면 감점을 더 크게 주는 채점 방식' 같은 비유로 설명해 주세요.
+   학습 데이터(정상 1170건, 불량 83건)에서 각 클래스의 가중치가 대략 얼마가 되는지 계산해 보여 주세요.
+3. 수업에서 로지스틱 회귀는 테스트 불량 21건 중 15건을 잡았지만, 랜덤 포레스트는 기본 임계값 0.5에서 한 건도 잡지 못했습니다.
+   balanced를 썼는데도 이런 일이 생길 수 있는 이유를 초보자 눈높이로 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 로지스틱 회귀와 랜덤 포레스트가 어떻게 다른지, 학습 중 나온 경고가 무엇인지 궁금할 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 두 모델 비교하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>로지스틱 회귀와 랜덤 포레스트의 차이가 헷갈립니다.
+
+1. 두 모델이 불량/정상을 판단하는 방식을 각각 일상 비유로 설명해 주세요. (예: 점수를 더해 기준선을 넘는지 보기 / 여러 심사위원이 투표하기)
+2. 장점과 단점을 초보자 눈높이의 표로 비교해 주세요.
+3. 모델 학습 중 ConvergenceWarning 같은 경고가 나오면 무슨 뜻인지, 오류(Error)와 경고(Warning)는 어떻게 다른지 알려 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
 
   <div class="tip-box info"><span class="tip-icon">🔎</span><p><strong>balanced를 썼는데도 불량을 못 잡는다면?</strong><br/>
           실행해 보면 로지스틱 회귀는 테스트 불량 21건 중 15건을 잡지만(Recall 0.714), 랜덤 포레스트는 기본 임계값 0.5에서 <strong>한 건도 잡지 못합니다</strong>(Recall 0.000). 가중치만으로는 부족할 수 있으니 9단계의 혼동행렬과 보강 실습 3의 <strong>임계값 조정</strong>으로 꼭 확인하세요.</p></div>
@@ -682,6 +1319,79 @@ plt.<span class="fn">show</span>()
    macro avg       0.57      0.73      0.56       314
 weighted avg       0.92      0.75      0.81       314</div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 혼동행렬 · 분류 리포트 읽기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>zip</code>으로 두 모델을 번갈아 그리는 방법, <code>confusion_matrix</code>와 <code>heatmap</code> 옵션이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 평가 코드 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 머신러닝 초보자입니다. 두 모델의 혼동행렬을 나란히 그리고 분류 리포트를 출력하는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+for ax, (name, model) in zip(axes,
+        [('로지스틱 회귀', lr_model), ('랜덤 포레스트', rf_model)]):
+    cm = confusion_matrix(y_test, model.predict(X_test_scaled))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax,
+                xticklabels=['정상(0)', '불량(1)'],
+                yticklabels=['정상(0)', '불량(1)'])
+    ax.set_title(name)
+plt.show()
+
+print(classification_report(y_test, lr_model.predict(X_test_scaled),
+      target_names=['정상(0)', '불량(1)']))
+
+1. zip(axes, [...])과 for ax, (name, model) in ...이 어떻게 두 모델을 하나씩 꺼내는지 작은 예시로 보여 주세요.
+2. confusion_matrix(y_test, 예측)에서 두 값의 순서(정답, 예측)가 왜 중요한지 알려 주세요.
+3. heatmap의 fmt='d', xticklabels, yticklabels가 무엇을 정하는지 알려 주세요. 그래프의 세로축과 가로축은 각각 정답과 예측 중 무엇인가요?</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 혼동행렬의 네 칸(TN, FP, FN, TP)이 각각 무슨 뜻인지 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 혼동행렬 네 칸 읽기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>혼동행렬을 처음 봅니다. 로지스틱 회귀의 혼동행렬이 아래와 같이 나왔습니다. (세로 = 실제 정답, 가로 = 모델의 예측)
+
+              예측 정상(0)  예측 불량(1)
+실제 정상(0)      221           72
+실제 불량(1)        6           15
+
+1. 네 칸(TN, FP, FN, TP)이 각각 무슨 뜻인지 '불량 검사원이 제품을 판정하는 상황'으로 설명해 주세요.
+2. 반도체 공정에서 FN(불량을 정상으로 놓침)과 FP(정상을 불량으로 잘못 경보) 중 어느 쪽이 더 큰 손해인지 이유와 함께 알려 주세요.
+3. 이 표의 숫자로 정확도(Accuracy), 불량 Recall, 불량 Precision을 직접 계산하는 과정을 보여 주세요.
+4. 랜덤 포레스트는 불량 21건을 하나도 잡지 못했습니다. 그렇다면 랜덤 포레스트 혼동행렬의 '실제 불량' 줄은 어떤 모양일지 먼저 힌트만 주고, 내가 답한 뒤에 정답을 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 분류 리포트의 precision, recall, f1-score, support와 아래 두 줄(macro avg, weighted avg)을 어떻게 읽는지 모를 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 분류 리포트 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>분류 리포트(classification_report)를 읽는 법을 알고 싶습니다. 로지스틱 회귀 결과는 아래와 같습니다.
+
+              precision    recall  f1-score   support
+
+       정상(0)       0.97      0.75      0.85       293
+       불량(1)       0.17      0.71      0.28        21
+
+    accuracy                           0.75       314
+   macro avg       0.57      0.73      0.56       314
+weighted avg       0.92      0.75      0.81       314
+
+1. precision, recall, f1-score, support가 각각 무슨 뜻인지 '불량 검사' 비유로 한 줄씩 설명해 주세요.
+2. 불량(1) 줄의 precision 0.17과 recall 0.71을 쉬운 문장으로 바꿔 주세요. (예: "모델이 불량이라고 한 것 중 ...")
+3. 정확도 0.75보다 불량 recall 0.71을 더 중요하게 보는 이유를 알려 주세요.
+4. macro avg와 weighted avg의 차이를 알려 주고, 불균형 데이터에서 weighted avg가 좋아 보이는 이유를 설명해 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
   <div class="code-wrap">
 <div class="code-header">
 <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
@@ -702,6 +1412,68 @@ ax.<span class="fn">set_xlabel</span>(<span class="str">'FPR'</span>); ax.<span 
 ax.<span class="fn">legend</span>(); plt.<span class="fn">show</span>()</code></pre>
 </div>
 
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · ROC 커브 · AUC 읽기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>predict_proba(...)[:, 1]</code>, <code>roc_curve</code>, <code>auc</code>, 대각선 점선이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① ROC 코드 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 머신러닝 초보자입니다. 두 모델의 ROC 커브를 그리는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+fig, ax = plt.subplots(figsize=(8, 7))
+for name, model, color in [
+        ('로지스틱 회귀', lr_model, '#3498db'),
+        ('랜덤 포레스트', rf_model, '#e74c3c')]:
+    y_prob = model.predict_proba(X_test_scaled)[:, 1]
+    fpr, tpr, _ = roc_curve(y_test, y_prob)
+    roc_auc = auc(fpr, tpr)
+    ax.plot(fpr, tpr, color=color, linewidth=2.5,
+            label=f'{name} (AUC={roc_auc:.3f})')
+ax.plot([0,1], [0,1], 'k--', alpha=0.5)
+ax.set_xlabel('FPR'); ax.set_ylabel('TPR (= 불량 Recall)')
+ax.legend(); plt.show()
+
+1. predict()와 predict_proba()의 차이를 알려 주고, [:, 1]이 왜 '불량일 확률'만 꺼내는지 3행짜리 예시 표로 보여 주세요.
+2. roc_curve가 돌려주는 fpr, tpr, _ 세 가지가 무엇인지, 밑줄(_)은 왜 쓰는지 알려 주세요.
+3. ax.plot([0,1], [0,1], 'k--')로 그린 대각선 점선은 무엇을 뜻하나요?</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> ROC 커브 모양과 AUC 숫자를 어떻게 해석하는지, 임계값이 무엇인지 모를 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② ROC 커브와 AUC 해석하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>ROC 커브와 AUC를 처음 봅니다. 수학 공식 없이 이해하고 싶습니다.
+
+1. 모델은 제품마다 '불량일 확률'을 내고, 그 확률이 기준(임계값, 기본 0.5) 이상이면 불량으로 판정합니다.
+   기준을 낮추거나 높이면 불량을 잡는 비율(TPR)과 정상을 잘못 경보하는 비율(FPR)이 어떻게 바뀌는지 '화재 경보기 민감도' 비유로 설명해 주세요.
+2. ROC 커브가 왼쪽 위로 붙을수록 좋은 이유와, 대각선에 가까우면 '동전 던지기' 수준이라는 뜻을 설명해 주세요.
+3. AUC가 1.0, 0.8, 0.5일 때 각각 어떤 모델인지 한 줄씩 설명해 주세요.
+4. 수업에서 랜덤 포레스트는 기본 임계값 0.5에서 불량을 하나도 잡지 못했습니다. 그런데도 AUC는 0.5보다 높게 나올 수 있는 이유를 알려 주세요.
+   임계값을 바꾸면 무엇이 달라지는지도 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 제대로 이해했는지 스스로 확인해 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 임계값·AUC 확인 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 ROC 커브, AUC, 임계값을 배웠습니다. 이해했는지 확인하는 문제를 3개 내 주세요.
+
+규칙:
+1. 제품 5~6개의 '불량일 확률'과 실제 정답을 표로 주고, 임계값을 0.5나 0.3으로 정했을 때 불량으로 판정되는 제품 수와 Recall을 예측하는 문제를 포함해 주세요.
+2. 두 모델의 AUC(예: 0.62와 0.78)를 비교하는 문제를 1개 포함해 주세요.
+3. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요. 틀리면 힌트를 먼저 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
+
   <div class="code-wrap">
 <div class="code-header">
 <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
@@ -717,6 +1489,65 @@ plt.<span class="fn">xlabel</span>(<span class="str">'Feature Importance'</span>
 plt.<span class="fn">title</span>(<span class="str">'랜덤 포레스트 특성 중요도'</span>)
 plt.<span class="fn">show</span>()</code></pre>
 </div>
+
+  <details class="practice-toggle">
+    <summary>🤖 AI에게 물어보기 · 특성 중요도 읽기</summary>
+    <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>feature_importances_</code>가 어디서 오는 값인지, 코드가 그래프를 어떻게 만드는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 특성 중요도 코드 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 머신러닝 초보자입니다. 랜덤 포레스트의 특성 중요도를 그래프로 그리는 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+imp = pd.Series(rf_model.feature_importances_,
+                index=top_k_cols).sort_values()
+
+plt.figure(figsize=(10, 7))
+plt.barh(imp.index, imp.values, color='#e74c3c')
+plt.xlabel('Feature Importance')
+plt.title('랜덤 포레스트 특성 중요도')
+plt.show()
+
+1. feature_importances_는 어디서 오는 값인지, 이름 끝의 밑줄(_)은 무슨 뜻인지 알려 주세요. (힌트: fit()을 한 뒤에 생기는 값)
+2. pd.Series(값, index=센서 이름)로 묶는 이유와 sort_values()를 하는 이유를 알려 주세요.
+3. 5단계 F-점수 그래프에서는 [::-1]을 썼는데 여기서는 쓰지 않았습니다. 두 그래프에서 막대가 어떤 순서로 그려지는지 비교해 설명해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 특성 중요도 그래프를 어떻게 읽고, 어디까지 믿어도 되는지 궁금할 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 특성 중요도 해석하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>랜덤 포레스트의 특성 중요도(Feature Importance) 가로 막대그래프를 보고 있습니다. 센서 20개의 중요도가 막대 길이로 표시되어 있습니다.
+
+1. 특성 중요도가 무엇을 뜻하는지 '요리의 맛을 좌우하는 재료의 비중' 같은 비유로 설명해 주세요.
+2. 중요도 값을 모두 더하면 얼마가 되는지, 그래서 막대 하나의 값을 어떻게 읽으면 되는지 알려 주세요.
+3. 중요도가 높다는 것이 "이 센서값이 높으면 불량"이라는 '방향'이나 '원인'까지 알려 주는지 설명해 주세요.
+4. 이 랜덤 포레스트는 기본 임계값 0.5에서 불량을 하나도 잡지 못했습니다. 이런 모델의 특성 중요도를 해석할 때 주의할 점을 알려 주세요.
+5. 5단계의 F-점수 순위와 특성 중요도 순위가 다를 수 있는 이유를 쉬운 말로 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 오늘 배운 1~9단계 전체 흐름을 제대로 이해했는지 확인하고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 전체 흐름 내 말로 설명하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>오늘 반도체 공정 데이터 분석의 전체 흐름(1~9단계)을 내 말로 정리해 보았습니다. 점검해 주세요.
+
+내 정리:
+[예: 1) 라이브러리를 불러온다 2) fab.csv를 불러와 크기와 불량 비율을 본다 3) ... 처럼 단계마다 한 줄씩 직접 써 보기]
+
+1. 순서가 틀렸거나 빠진 단계가 있으면 알려 주세요.
+2. 각 단계를 '왜' 하는지 내가 제대로 적었는지 확인해 주세요. 특히 결측 처리, 분산 0 제거, 특성 선택, stratify, 스케일링, class_weight, Recall 중심 평가의 이유를 봐 주세요.
+3. 바로 고쳐 주지 말고, 부족한 부분은 힌트 질문으로 먼저 물어봐 주세요.</code></pre>
+    </div>
+    </div>
+  </details>
 
   <div class="part-header" id="insights">
     <div class="part-icon">🔬</div>

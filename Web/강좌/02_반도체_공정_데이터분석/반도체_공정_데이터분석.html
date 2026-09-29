@@ -253,6 +253,12 @@
 </ul>
 </div>
 
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
+  </div>
+
   <div class="content-section">
 <div class="section-label">
 <div class="section-num">1</div>
@@ -333,6 +339,73 @@ plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="kw">F
 
 <span class="fn">print</span>(<span class="str">"✅ 라이브러리 준비 완료!"</span>)</code></pre>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 라이브러리 불러오기 코드 이해하기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>import</code>, <code>as</code>, <code>plt.rcParams</code>가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬과 pandas를 오늘 처음 배우는 초보자입니다.
+아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] = False
+
+print("✅ 라이브러리 준비 완료!")
+
+1. '라이브러리'와 'import'가 무엇인지 일상생활 비유로 설명해 주세요.
+2. pandas, numpy, matplotlib, seaborn이 각각 어떤 일을 하는지 한 줄씩 알려 주세요.
+3. 'as pd', 'as np'처럼 별명을 붙이는 이유와, 붙이지 않으면 코드가 어떻게 달라지는지 예시로 보여 주세요.
+4. matplotlib.pyplot에서 가운데 점(.)이 무슨 뜻인지 알려 주세요.
+5. plt.rcParams 두 줄이 없으면 그래프가 어떻게 보이는지 설명해 주세요.
+어려운 용어를 쓸 때는 괄호 안에 쉬운 말로 풀어 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 실행했더니 <code>ModuleNotFoundError: No module named 'seaborn'</code>이나 <code>NameError: name 'pd' is not defined</code> 같은 오류가 났을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 첫 오류 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>파이썬 코드를 실행했더니 아래 오류가 났습니다.
+나는 초보자이고 [Jupyter Notebook / Google Colab / VS Code 중 사용하는 것]을(를) 쓰고 있습니다.
+
+[오류 메시지 전체를 여기에 붙여 넣기]
+
+1. 이 오류가 무슨 뜻인지 한두 문장으로 설명해 주세요.
+2. 내 환경에서 해결하는 방법을 순서대로 알려 주세요.
+   (예: ModuleNotFoundError라면 라이브러리 설치 방법, NameError라면 어떤 셀을 먼저 실행해야 하는지)
+3. 다음에 같은 오류가 나지 않으려면 무엇을 기억하면 되는지 한 줄로 정리해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 나중에 그래프를 그렸더니 한글 제목·축 이름이 □□□처럼 네모로 깨져 보일 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 그래프 한글 깨짐 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>matplotlib으로 그래프를 그렸더니 한글 제목·축 이름이 네모(□□□)로 깨져 보입니다.
+나는 [Windows / Mac / Google Colab 중 사용하는 것]을(를) 쓰고 있고, 아래 설정 코드를 이미 실행했습니다.
+
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.rcParams['axes.unicode_minus'] = False
+
+1. 한글이 깨지는 이유를 초보자 눈높이에서 한두 문장으로 설명해 주세요.
+2. 내 환경에서 한글 글꼴을 설정하는 방법을 순서대로 알려 주세요.
+3. 'axes.unicode_minus'를 False로 두는 이유(음수 기호 깨짐)도 짧게 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 </div>
 
   <div class="quiz-section">
@@ -372,6 +445,12 @@ plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="kw">F
 </ul>
 </div>
 
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
+  </div>
+
   <div class="content-section">
 <div class="section-label">
 <div class="section-num">1</div>
@@ -402,6 +481,69 @@ df = pd.<span class="fn">read_csv</span>(<span class="str">'반도체_공정_샘
 <span class="fn">print</span>(<span class="str">f"데이터 크기: {df.shape[0]}행 × {df.shape[1]}열"</span>)</code></pre>
 </div>
 <div class="output-block"><div class="output-label">📤 실행 결과</div>데이터 크기: 200행 × 12열</div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · CSV 읽기와 데이터 크기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>pd.read_csv()</code>, <code>df.shape</code>, <code>shape[0]</code>이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드와 실행 결과 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬과 pandas 초보자입니다. 아래 코드를 이해하고 싶습니다.
+
+df = pd.read_csv('반도체_공정_샘플.csv')
+print(f"데이터 크기: {df.shape[0]}행 × {df.shape[1]}열")
+
+실행 결과: 데이터 크기: 200행 × 12열
+
+1. pd.read_csv()가 하는 일을 일상생활 비유로 설명해 주세요.
+2. 'df ='처럼 결과를 변수에 담는 이유를 알려 주세요.
+3. df.shape가 무엇이고, shape[0]과 shape[1]이 각각 무엇을 뜻하는지 알려 주세요. 번호를 왜 0부터 세는지도 설명해 주세요.
+4. f"...{ }..."(f-문자열)에서 중괄호 { } 안에는 무엇을 넣는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>FileNotFoundError</code>나 <code>UnicodeDecodeError</code>가 나거나, 한글 컬럼 이름이 깨져 보일 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 파일 읽기 오류 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas로 CSV 파일을 읽으려는데 문제가 생겼습니다.
+나는 초보자이고 [Jupyter Notebook / Google Colab / VS Code 중 사용하는 것]을(를) 쓰고 있습니다.
+
+실행한 코드:
+df = pd.read_csv('반도체_공정_샘플.csv')
+
+나온 오류 또는 증상:
+[오류 메시지 전체 또는 '한글이 깨져 보여요' 같은 증상]
+
+1. FileNotFoundError와 UnicodeDecodeError가 각각 무슨 뜻인지 쉬운 말로 비교해 주세요.
+2. 내 증상의 원인을 가능성이 높은 것부터 순서대로, 확인 방법과 함께 알려 주세요.
+3. CSV 파일이 노트북과 같은 폴더에 있는지 확인하는 방법과, encoding='utf-8-sig' / encoding='cp949' 옵션을 언제 쓰는지 알려 주세요.
+4. 고친 코드는 설명이 끝난 뒤 마지막에 보여 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 온도·압력·진공도 같은 컬럼이 공정에서 무슨 뜻인지 감이 오지 않을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">③ 공정 데이터 컬럼 뜻 알아보기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 반도체를 전공하지 않은 데이터 분석 초보자입니다.
+수업에서 쓰는 반도체 공정 실습용 샘플 데이터에는 아래 컬럼이 있습니다.
+
+측정시간, 온도_섭씨, 압력_Pa, 가스유량_slm, 전력_W, 진공도_mTorr,
+두께_nm, 습도_pct, 진동_mm_s, 처리시간_sec, 냉각수온도_섭씨, 합격여부(1=합격, -1=불합격)
+
+1. 각 컬럼이 공정에서 무엇을 뜻하는지 한 줄씩, 중학생도 알 수 있는 말로 설명해 주세요.
+2. Pa, slm, mTorr, nm 같은 단위가 어느 정도 크기인지 일상생활에 비유해 감을 잡게 해 주세요.
+3. 이 중 어떤 값이 평소와 다르면 박막 두께나 합격여부에 영향을 줄 것 같은지, '추측'이라고 밝히고 2~3가지만 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>FileNotFoundError가 뜬다면?</strong><br/>
             CSV 파일이 노트북과 <strong>같은 폴더</strong>에 있는지 확인하세요. 다른 폴더에 있다면 <code>pd.read_csv('C:/경로/반도체_공정_샘플.csv')</code>처럼 전체 경로를 적어주면 됩니다. 한글이 깨져 보일 때는 <code>encoding='utf-8-sig'</code> 또는 <code>encoding='cp949'</code> 옵션을 추가해 보세요.</p></div>
 </div>
@@ -448,6 +590,48 @@ df.<span class="fn">info</span>()
 <span class="cmt"># ④ 숫자 열의 기술 통계</span>
 df.<span class="fn">describe</span>().<span class="fn">round</span>(<span class="num">2</span>)   <span class="cmt"># 보기 좋게 소수점 2자리 반올림</span></code></pre>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · head · info · describe 결과 읽기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 다섯 가지 명령이 각각 무엇을 보여 주는지, 왜 <code>shape</code>에만 괄호가 없는지 궁금할 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 탐색 명령 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 새 데이터를 받으면 실행하는 아래 명령을 이해하고 싶습니다.
+
+df.head()
+print("크기:", df.shape)
+df.info()
+df.describe().round(2)
+
+1. 각 명령이 무엇을 보여 주는지 '건강 검진' 비유로 한 줄씩 설명해 주세요.
+2. df.head()와 df.tail()의 차이, 괄호 안에 숫자를 넣으면 어떻게 되는지 알려 주세요.
+3. df.shape에는 괄호()가 없고 df.info()에는 괄호가 있는 이유를 쉽게 설명해 주세요.
+4. 끝에 붙은 .round(2)가 무엇을 하는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>info()</code>의 Non-Null Count·Dtype이나 <code>describe()</code>의 count·std·25%·50%·75%가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② info · describe 결과 해석하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas의 df.info()와 df.describe() 결과를 읽는 법을 배우고 싶습니다.
+아래는 수업 샘플 데이터(반도체 공정, 200행)로 실행한 내 결과입니다.
+
+[내 info() 또는 describe() 실행 결과를 여기에 붙여 넣기]
+
+1. info()에서 Non-Null Count와 Dtype(float64, int64, object 또는 str)이 무슨 뜻인지 알려 주세요.
+2. describe()의 count, mean, std, min, 25%, 50%, 75%, max를 각각 한 줄씩 쉬운 말로 설명해 주세요.
+3. 내 결과에서 count가 200보다 작은 컬럼이 있다면 그게 무슨 뜻인지 짚어 주세요.
+4. 평균(mean)과 중앙값(50%)이 크게 다르면 무엇을 의심해 봐야 하는지 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box success"><span class="tip-icon">🔍</span><p><strong>describe()에서 count가 200보다 작으면?</strong><br/>
             해당 열에 <strong>결측값(빈 칸)</strong>이 있다는 신호입니다! 예를 들어 온도_섭씨가 195라면 5개가 비어 있다는 뜻이에요. 결측값은 평균·표준편차 계산에서 자동으로 빠지기 때문에, count 숫자만 봐도 결측이 어디에 얼마나 있는지 알 수 있습니다. 3단계에서 본격적으로 처리할 거예요.</p></div>
 <div class="tip-box info"><span class="tip-icon">📌</span><p><strong>info()의 출력을 읽는 법</strong><br/>
@@ -484,6 +668,50 @@ df[[<span class="str">'온도_섭씨'</span>, <span class="str">'압력_Pa'</spa
 <span class="fn">print</span>(<span class="str">f"평균 온도: {df['온도_섭씨'].mean():.2f}°C"</span>)
 <span class="fn">print</span>(<span class="str">f"최고 온도: {df['온도_섭씨'].max():.2f}°C"</span>)</code></pre>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 열 선택과 대괄호 한 겹 · 두 겹</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>df['열']</code>과 <code>df[['열', '열']]</code>의 차이, Series와 DataFrame이 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 대괄호 한 겹 · 두 겹 비교하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 두 줄의 차이가 헷갈립니다.
+
+df['온도_섭씨']
+df[['온도_섭씨', '압력_Pa', '합격여부']]
+
+1. 대괄호 한 겹과 두 겹이 각각 어떤 모양의 결과(Series / DataFrame)를 만드는지 작은 표 그림으로 보여 주세요.
+2. 두 겹일 때 안쪽 대괄호와 바깥쪽 대괄호가 각각 무슨 역할인지 설명해 주세요.
+3. df[['온도_섭씨']]처럼 열 하나를 두 겹으로 감싸면 결과가 어떻게 달라지는지 알려 주세요.
+4. 아래 코드에서 .mean()과 :.2f가 각각 무슨 뜻인지 알려 주세요.
+   print(f"평균 온도: {df['온도_섭씨'].mean():.2f}°C")</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 열을 고르다가 <code>KeyError</code>가 났을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② KeyError 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas에서 열을 선택하다가 KeyError가 났습니다. 나는 초보자입니다.
+
+실행한 코드:
+[내가 실행한 코드]
+
+오류 메시지:
+[오류 메시지 전체]
+
+1. KeyError가 무슨 뜻인지 한두 문장으로 설명해 주세요.
+2. 열 이름 오타, 띄어쓰기, 밑줄(_) 빠짐, 대괄호 한 겹 안에 여러 열을 넣은 경우 중 무엇이 원인인지 찾는 방법을 알려 주세요.
+3. df.columns로 정확한 열 이름을 확인하는 방법을 보여 주세요.
+4. 고친 코드를 바로 주기 전에 힌트를 먼저 한 번 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box warning"><span class="tip-icon">❗</span><p><strong>대괄호 한 겹 vs 두 겹의 차이</strong><br/>
             • <code>df['온도_섭씨']</code> → 1차원 Series (한 줄)<br/>
             • <code>df[['온도_섭씨']]</code> → 2차원 DataFrame (한 열 짜리 표)<br/>
@@ -521,6 +749,46 @@ df.iloc[<span class="num">1</span>:<span class="num">5</span>]       <span class
 df.loc[<span class="num">0</span>]              <span class="cmt"># 인덱스가 0인 행</span>
 df.loc[<span class="num">0</span>:<span class="num">4</span>, [<span class="str">'온도_섭씨'</span>, <span class="str">'합격여부'</span>]]  <span class="cmt"># 행+열 동시 지정</span></code></pre>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · loc vs iloc</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>loc</code>과 <code>iloc</code>이 헷갈리고, 슬라이싱 끝 번호가 왜 다르게 동작하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① loc과 iloc 비교하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas의 loc과 iloc이 헷갈리는 초보자입니다. 아래 수업 코드로 설명해 주세요.
+
+df.iloc[0]
+df.iloc[1:5]
+df.loc[0]
+df.loc[0:4, ['온도_섭씨', '합격여부']]
+
+1. loc(이름으로 찾기)과 iloc(번호로 찾기)의 차이를 교실 좌석이나 사물함 같은 비유로 설명해 주세요.
+2. df.iloc[1:5]와 df.loc[1:5]가 각각 몇 번 행부터 몇 번 행까지 가져오는지, 왜 다른지 알려 주세요.
+3. df.loc[0:4, ['온도_섭씨', '합격여부']]에서 쉼표(,) 앞과 뒤가 각각 무엇을 뜻하는지 알려 주세요.
+4. 지금 데이터는 인덱스가 0, 1, 2...라서 loc[0]과 iloc[0]이 같아 보이는데, 인덱스가 번호가 아니면 어떻게 달라지는지 5줄 이내의 짧은 예시로 보여 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 제대로 이해했는지 스스로 확인해 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 실행 결과 예측 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 pandas의 loc과 iloc을 배웠습니다. 실행 결과를 예측해 보는 문제를 3개 내 주세요.
+
+규칙:
+1. 인덱스가 0~9인 10행짜리 작은 DataFrame을 먼저 만들어 보여 주세요. (열은 '온도', '두께', '합격여부' 정도로)
+2. 각 문제는 loc 또는 iloc을 쓴 한 줄 코드로 만들고, "몇 개의 행이 나오는지" 또는 "어떤 값이 나오는지" 물어봐 주세요.
+3. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요.
+4. 내가 틀리면 정답을 바로 주지 말고 힌트를 한 번 먼저 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>iloc과 loc의 슬라이싱 차이 — 이걸 자주 헷갈립니다!</strong><br/>
             • <code>df.iloc[1:5]</code> → 1, 2, 3, 4번 (5번 <strong>미포함</strong>, 파이썬 일반 규칙)<br/>
             • <code>df.loc[1:5]</code> → 1, 2, 3, 4, 5번 (5번 <strong>포함</strong>! loc은 양쪽 다 포함)<br/>
@@ -558,6 +826,54 @@ Name: count, dtype: int64
  1    90.0
 -1    10.0
 Name: proportion, dtype: float64</div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · value_counts와 불균형 데이터</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 실행 결과의 숫자와 <code>normalize=True</code>, <code>Name: count</code>가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드와 실행 결과 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 코드와 실행 결과를 이해하고 싶습니다.
+
+print(df['합격여부'].value_counts())
+print(df['합격여부'].value_counts(normalize=True) * 100)
+
+실행 결과:
+합격여부
+ 1    180
+-1     20
+Name: count, dtype: int64
+합격여부
+ 1    90.0
+-1    10.0
+Name: proportion, dtype: float64
+
+1. value_counts()가 하는 일을 투표 개표에 비유해 설명해 주세요.
+2. 결과의 왼쪽 값(1, -1)과 오른쪽 숫자(180, 20)가 각각 무엇인지 알려 주세요.
+3. normalize=True가 무엇을 바꾸는지, 왜 * 100을 곱하는지 알려 주세요.
+4. 'Name: count', 'Name: proportion', 'dtype'이 무슨 뜻인지 짧게 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> "불균형 데이터"가 왜 문제인지 감이 오지 않을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 불균형 데이터 이해하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>반도체 공정 샘플 데이터에서 합격이 180건(90%), 불합격이 20건(10%)입니다.
+데이터 분석 초보자인 나에게 '불균형 데이터'를 설명해 주세요.
+
+1. "전부 합격이라고 찍어도 정확도 90%"라는 말이 왜 함정인지 쉬운 예시로 설명해 주세요.
+2. 불량 찾기처럼 드문 쪽이 더 중요한 상황을 일상 비유(예: 화재 경보기) 하나로 설명해 주세요.
+3. 앞으로 합격/불합격을 비교할 때 초보자가 꼭 기억할 점을 3가지만 알려 주세요.
+어려운 용어는 괄호 안에 쉬운 말로 풀어 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box info"><span class="tip-icon">📊</span><p><strong>한눈에 보이는 사실</strong><br/>
             합격이 180건 (90%), 불합격이 20건 (10%). <strong>합격이 9배나 많습니다.</strong>
             이렇게 한쪽으로 치우친 데이터를 <strong>"불균형 데이터(imbalanced data)"</strong>라고 부르고, 나중에 분석할 때 이 비율을 항상 머릿속에 두어야 합니다. "전부 합격이라고 찍어도 정확도 90%"라는 함정이 여기서 생기거든요.</p></div>
@@ -613,6 +929,12 @@ Name: proportion, dtype: float64</div>
 <li><span class="obj-check">✓</span><code>duplicated()</code>로 중복 행을 찾고 <code>drop_duplicates()</code>로 제거할 수 있다</li>
 </ul>
 </div>
+
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
+  </div>
 
   <div class="content-section">
 <div class="section-label">
@@ -674,6 +996,47 @@ Name: proportion, dtype: float64</div>
 합격여부          0
 dtype: int64
 전체 결측값 개수: 92개</div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 결측값 개수 세기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>NaN</code>이 무엇인지, <code>isnull().sum()</code>이 왜 개수를 알려 주는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 결측값 세는 원리 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 코드가 결측값(NaN)을 세는 원리를 이해하고 싶습니다.
+
+print(df.isnull().sum())
+print(f"전체 결측값 개수: {df.isnull().sum().sum()}개")
+
+1. NaN이 무엇인지, 숫자 0이나 빈 문자열('')과 어떻게 다른지 설명해 주세요.
+2. df.isnull()의 결과가 어떤 모양인지 3행 × 3열짜리 작은 예시 표로 보여 주세요.
+3. True/False 목록에 sum()을 하면 왜 개수가 나오는지 알려 주세요.
+4. .sum()을 한 번 할 때와 .sum().sum()처럼 두 번 할 때 결과가 어떻게 다른지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 실행 결과를 보고 무엇을 판단해야 하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 결측값 결과 해석하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>반도체 공정 샘플 데이터(200행)에서 열별 결측값 개수를 세었더니 아래와 같이 나왔습니다.
+
+측정시간 0, 온도_섭씨 12, 압력_Pa 9, 가스유량_slm 7, 전력_W 10, 진공도_mTorr 9,
+두께_nm 8, 습도_pct 13, 진동_mm_s 8, 처리시간_sec 10, 냉각수온도_섭씨 6, 합격여부 0
+전체 결측값 개수: 92개
+
+1. 결측값이 가장 많은 열은 무엇이고, 전체 200행 중 몇 %인지 계산 방법과 함께 알려 주세요.
+2. 열별 결측 비율(%)을 한 번에 보는 pandas 코드를 한 줄로 알려 주세요.
+3. 합격여부(정답 열)에 결측이 0인 것이 왜 다행인지 쉽게 설명해 주세요.
+4. 센서 데이터에서 결측값이 생기는 현실적인 이유를 2~3가지만 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box success"><span class="tip-icon">📌</span><p><strong>합격여부에 결측이 0이라 다행!</strong><br/>
             예측 대상(타겟) 컬럼인 합격여부에 빈 값이 있으면 골치 아픕니다. 정답이 빠진 행은 그 행 자체를 학습에 쓸 수 없으니까요. 다행히 이 데이터는 합격여부가 모두 채워져 있어요.</p></div>
 </div>
@@ -723,6 +1086,56 @@ numeric_cols = [<span class="str">'온도_섭씨'</span>, <span class="str">'압
 <span class="cmt"># 처리 후 결측 확인</span>
 <span class="fn">print</span>(<span class="str">f"처리 후 남은 결측값: {df_filled.isnull().sum().sum()}개"</span>)</code></pre>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 평균으로 결측값 채우기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>copy()</code>, <code>for</code> 반복문, <code>fillna()</code>가 한 줄씩 무슨 일을 하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 초보자입니다. 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+df_filled = df.copy()
+
+numeric_cols = ['온도_섭씨', '압력_Pa', '가스유량_slm', '전력_W',
+                '진공도_mTorr', '두께_nm', '습도_pct', '진동_mm_s',
+                '처리시간_sec', '냉각수온도_섭씨']
+
+for col in numeric_cols:
+    mean_val = df_filled[col].mean()
+    df_filled[col] = df_filled[col].fillna(mean_val)
+
+print(f"처리 후 남은 결측값: {df_filled.isnull().sum().sum()}개")
+
+1. df.copy()로 복사본을 만들어 작업하는 이유를 비유로 설명해 주세요.
+2. for 반복문이 어떻게 한 열씩 돌아가는지, 첫 번째와 두 번째 반복에서 col에 무엇이 들어가는지 보여 주세요.
+3. 'df_filled[col] = ...'처럼 결과를 다시 담지 않으면 어떻게 되는지 알려 주세요.
+4. for 문 아랫줄을 들여쓰기(띄어쓰기 4칸)하는 이유와, 안 하면 나는 IndentationError도 짧게 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 평균으로 채우기·중앙값으로 채우기·행 삭제(<code>dropna</code>) 중 언제 무엇을 써야 할지 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② fillna vs dropna, 평균 vs 중앙값 비교하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>결측값 처리 방법이 헷갈리는 초보자입니다. 아래 세 가지를 비교해 주세요.
+
+df['온도_섭씨'].fillna(df['온도_섭씨'].mean())    # 평균으로 채우기
+df['온도_섭씨'].fillna(df['온도_섭씨'].median())  # 중앙값으로 채우기
+df.dropna()                                      # 결측이 있는 행 삭제
+
+1. 세 방법의 장점과 단점을 표로 정리해 주세요.
+2. 숫자 [10, 11, 12, 13, 100, NaN]에서 NaN을 평균과 중앙값으로 각각 채우면 얼마가 되는지 계산해 보여 주고, 튀는 값(이상치)이 있을 때 왜 중앙값이 더 안전한지 설명해 주세요.
+3. 200행에 결측 칸이 92개 흩어져 있는 데이터에서 dropna()를 쓰면 행이 얼마나 줄어들 수 있는지, 왜 조심해야 하는지 알려 주세요.
+4. 정답 열(합격여부)에는 fillna()를 쓰면 안 되는 이유를 한두 문장으로 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>합격여부(타겟)에는 절대 fillna()하지 마세요!</strong><br/>
             예측해야 할 정답을 임의로 채우면 분석 결과 자체가 오염됩니다. 다행히 이 데이터는 합격여부에 결측이 없으니 안심하세요. 일반적으로 결측값 처리는 "입력 변수에만, 정답 변수는 손대지 않는다"가 원칙입니다.</p></div>
 </div>
@@ -756,6 +1169,47 @@ df_clean = df_clean.<span class="fn">reset_index</span>(drop=<span class="kw">Tr
 
 <span class="fn">print</span>(<span class="str">f"정리 전: {len(df_filled)}행 → 정리 후: {len(df_clean)}행"</span>)</code></pre>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 중복 행 찾기와 인덱스 다시 매기기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>duplicated()</code>가 어떤 행을 중복으로 보는지, <code>reset_index(drop=True)</code>가 왜 필요한지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+print(f"중복 행 수: {df_filled.duplicated().sum()}개")
+df_clean = df_filled.drop_duplicates()
+df_clean = df_clean.reset_index(drop=True)
+print(f"정리 전: {len(df_filled)}행 → 정리 후: {len(df_clean)}행")
+
+1. duplicated()가 어떤 행을 True로 표시하는지(처음 나온 행은 남기고 두 번째부터인지) 5행짜리 작은 예시로 보여 주세요.
+2. drop_duplicates()가 무엇을 지우고 무엇을 남기는지 알려 주세요.
+3. reset_index(drop=True)를 하기 전과 후의 인덱스 번호를 예시로 비교해 주세요. drop=True를 빼면 무엇이 생기는지도 알려 주세요.
+4. len()이 무엇을 세는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 제대로 이해했는지 스스로 확인해 보고 싶을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 실행 결과 예측 퀴즈 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>방금 pandas의 duplicated(), drop_duplicates(), reset_index()를 배웠습니다.
+실행 결과를 예측해 보는 문제를 3개 내 주세요.
+
+규칙:
+1. 중복 행이 1~2개 들어 있는 5~6행짜리 작은 DataFrame을 먼저 보여 주세요.
+2. "중복 행 수는?", "정리 후 몇 행?", "reset_index 후 마지막 인덱스 번호는?" 같은 문제를 내 주세요.
+3. 한 번에 한 문제씩 내고, 내가 답할 때까지 정답을 보여 주지 마세요.
+4. 내가 틀리면 정답을 바로 주지 말고 힌트를 한 번 먼저 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box info"><span class="tip-icon">💡</span><p><strong>reset_index(drop=True)는 왜 필요해요?</strong><br/>
             중복 행을 지우면 인덱스 번호가 (0, 1, 2, 4, 5, 7...) 처럼 빠진 자리가 생겨요. <code>reset_index(drop=True)</code>로 다시 0부터 차곡차곡 매겨주면 보기 좋고 다루기도 편합니다. 옵션 <code>drop=True</code>는 "이전 인덱스를 컬럼으로 남기지 말고 그냥 버려라"라는 뜻입니다.</p></div>
 </div>
@@ -812,6 +1266,12 @@ df_clean = df_clean.<span class="fn">reset_index</span>(drop=<span class="kw">Tr
 </ul>
 </div>
 
+  <div class="tip-box info">
+    <span class="tip-icon">🤖</span>
+    <p><strong>AI와 함께 이해하기:</strong> 코드 아래의 <strong>「🤖 AI에게 물어보기」</strong>를 열면 복사해서 바로 쓸 수 있는 프롬프트가 있습니다. <code>[대괄호]</code> 부분만 내 상황에 맞게 바꿔 ChatGPT·Gemini·Claude 같은 AI에게 붙여 넣으세요.<br>
+    AI가 보여 준 코드와 결과는 <strong>반드시 노트북에서 직접 실행해 비교</strong>하세요. 실행 결과가 AI의 말보다 정확합니다.</p>
+  </div>
+
   <div class="tip-box info"><span class="tip-icon">🧭</span><p><strong>EDA(Exploratory Data Analysis)란?</strong><br/>
           "탐색적 데이터 분석"이라고 부르고, 데이터를 <strong>이리저리 들여다보면서 패턴·이상 징후·의외의 사실</strong>을 발견하는 과정입니다.
           요리에 비유하면, 본격 요리 전에 재료를 만져보고 맛보고 냄새 맡아보는 단계예요. EDA를 잘하면 그 뒤에 따라오는 모델링·예측 작업도 훨씬 수월해집니다.</p></div>
@@ -845,6 +1305,48 @@ df_clean[<span class="str">'result'</span>] = df_clean[<span class="str">'합격
 <span class="cmt"># 결과 확인</span>
 df_clean[[<span class="str">'온도_섭씨'</span>, <span class="str">'두께_nm'</span>, <span class="str">'합격여부'</span>, <span class="str">'result'</span>]].<span class="fn">head</span>()</code></pre>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · map()으로 새 컬럼 만들기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> 새 열이 어떻게 생기는지, 딕셔너리 <code>{1: '합격', -1: '불합격'}</code>과 <code>map()</code>이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 코드와 실행 결과 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 코드를 이해하고 싶습니다.
+
+df_clean['result'] = df_clean['합격여부'].map({1: '합격', -1: '불합격'})
+df_clean[['온도_섭씨', '두께_nm', '합격여부', 'result']].head()
+
+1. df_clean['result'] = ...처럼 아직 없는 열 이름에 값을 넣으면 무슨 일이 일어나는지 알려 주세요.
+2. {1: '합격', -1: '불합격'} 같은 딕셔너리가 무엇인지, map()이 이것을 어떻게 사용하는지 '번역 사전' 비유로 설명해 주세요.
+3. 합격여부 값이 1, -1, 1, 1, -1일 때 result 열이 어떻게 되는지 표로 보여 주세요.
+4. 마지막 줄에서 대괄호 두 겹과 .head()가 각각 무슨 역할인지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> <code>map()</code>을 했더니 result 열에 <code>NaN</code>이 생겼을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② map() 결과가 NaN일 때 원인 찾기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas에서 map()으로 새 열을 만들었는데 일부(또는 전부) 값이 NaN으로 나왔습니다. 나는 초보자입니다.
+
+실행한 코드:
+df_clean['result'] = df_clean['합격여부'].map({1: '합격', -1: '불합격'})
+
+내가 확인한 결과:
+[df_clean['합격여부'].unique() 또는 df_clean['result'].head()의 실행 결과]
+
+1. map()에서 NaN이 생기는 이유를 쉬운 말로 설명해 주세요. (사전에 없는 값을 만났을 때 어떻게 되는지)
+2. 숫자 1과 문자 '1'이 서로 다른 값으로 취급되는지 알려 주세요.
+3. 원인을 찾는 확인 코드를 먼저 알려 주고, 고친 코드는 그다음에 보여 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box success"><span class="tip-icon">💡</span><p><strong>map()이라는 함수</strong><br/>
 <code>map({1: '합격', -1: '불합격'})</code>는 "1을 만나면 '합격'으로, -1을 만나면 '불합격'으로 바꿔라"라는 뜻입니다. 숫자 라벨을 사람이 알아보기 쉬운 글자로 바꿀 때 유용해요. 나중에 그래프에서 범례(legend)가 자동으로 한글로 나오니 보기에도 좋습니다.</p></div>
 </div>
@@ -880,6 +1382,50 @@ condition = (df_clean[<span class="str">'온도_섭씨'</span>] &gt; <span class
 risk_df = df_clean[condition]
 <span class="fn">print</span>(<span class="str">f"고온+두꺼움 공정: {len(risk_df)}건"</span>)</code></pre>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 조건으로 행 골라내기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>df[df['열'] == 값]</code> 모양이 왜 조건에 맞는 행만 남기는지, <code>&amp;</code>와 <code>|</code>가 무엇인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 불리언 인덱싱 원리 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 코드가 조건에 맞는 행만 골라내는 원리를 이해하고 싶습니다.
+
+fail_df = df_clean[df_clean['합격여부'] == -1]
+high_temp_df = df_clean[df_clean['온도_섭씨'] &gt; 305]
+condition = (df_clean['온도_섭씨'] &gt; 305) &amp; (df_clean['두께_nm'] &gt; 103)
+risk_df = df_clean[condition]
+
+1. df_clean['합격여부'] == -1 부분만 따로 실행하면 어떤 결과(True/False 목록)가 나오는지 5행짜리 예시로 보여 주세요.
+2. 그 True/False 목록을 다시 df_clean[ ] 안에 넣으면 왜 True인 행만 남는지 '체로 거르기' 비유로 설명해 주세요.
+3. =(값 넣기)와 ==(같은지 비교)의 차이를 알려 주세요.
+4. &amp;(그리고)와 |(또는)의 차이를 예시로 알려 주고, 각 조건을 괄호로 감싸야 하는 이유를 설명해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 조건을 두 개 이상 쓰다가 <code>ValueError: The truth value of a Series is ambiguous</code> 같은 오류가 났을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 여러 조건 오류 해결하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>pandas에서 여러 조건으로 행을 고르다가 오류가 났습니다. 나는 초보자입니다.
+
+실행한 코드:
+[내가 실행한 코드]
+
+오류 메시지:
+[오류 메시지 전체]
+
+1. 이 오류가 무슨 뜻인지 한두 문장으로 설명해 주세요.
+2. and / or 대신 &amp; / |를 써야 하는 이유와 조건마다 괄호가 필요한 이유 중, 무엇이 내 경우에 해당하는지 짚어 주세요.
+3. 고친 코드를 바로 주기 전에 어느 부분을 보면 되는지 힌트를 먼저 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box warning"><span class="tip-icon">❗</span><p><strong>여러 조건은 반드시 괄호로 묶으세요</strong><br/>
 <code>(A) &amp; (B)</code> 처럼 각 조건을 괄호로 감싸야 합니다. 안 그러면 우선순위 때문에 에러가 나거나 엉뚱한 결과가 나와요.
             그리고 <strong>AND는 <code>&amp;</code>, OR은 <code>|</code></strong>를 씁니다 (파이썬 기본 and/or가 아님!). pandas는 시리즈 전체에 한 번에 적용해야 하기 때문에 비트 연산자를 쓰는 거예요.</p></div>
@@ -926,6 +1472,54 @@ group_mean = df_clean.<span class="fn">groupby</span>(<span class="str">'result'
 진동_mm_s       0.50     0.50
 처리시간_sec    118.00   120.35
 냉각수온도_섭씨     19.90    20.17</div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · groupby로 그룹별 평균 비교</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>groupby('result')[numeric_cols].mean()</code>처럼 길게 이어진 코드가 어떤 순서로 동작하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① groupby 단계별로 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas 초보자입니다. 아래 코드를 한 단계씩 쉬운 말로 설명해 주세요.
+
+group_mean = df_clean.groupby('result')[numeric_cols].mean().round(2)
+print(group_mean.T)
+
+(numeric_cols는 온도_섭씨, 압력_Pa, 두께_nm 등 숫자 열 10개의 이름 목록입니다.
+ result 열에는 '합격' 또는 '불합격'이 들어 있습니다.)
+
+1. groupby('result') → [numeric_cols] → .mean() → .round(2)를 '나누기 → 고르기 → 계산하기' 순서로 풀어서 설명해 주세요.
+2. 엑셀의 피벗 테이블과 어떤 점이 비슷한지 알려 주세요.
+3. 합격 3행, 불합격 2행짜리 작은 예시 표로 groupby 결과가 어떻게 나오는지 보여 주세요.
+4. .T가 무엇을 하는지, 붙이기 전과 후의 표 모양을 비교해 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 실행 결과 표에서 무엇을 읽어 내야 하는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 그룹별 평균 결과 해석하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>반도체 공정 샘플 데이터를 합격/불합격으로 나눠 평균을 냈더니 아래 결과가 나왔습니다. (일부만 옮김)
+
+result         불합격       합격
+온도_섭씨       303.82   300.37
+압력_Pa      1010.49  1013.26
+전력_W       2029.46  2001.25
+진공도_mTorr     5.50     5.03
+두께_nm       104.42    99.97
+진동_mm_s       0.50     0.50
+
+1. 이 표를 읽는 방법(행, 열, 칸 안의 숫자가 각각 무엇인지)을 알려 주세요.
+2. 두 그룹의 차이가 커 보이는 열과 거의 같은 열을 골라 주세요. 단위가 다른 열끼리는 차이의 크기를 바로 비교하기 어렵다는 점도 설명해 주세요.
+3. "불합격은 온도가 높다"는 발견이 곧 "온도가 불합격의 원인이다"라는 뜻인지, 초보자 눈높이에서 설명해 주세요.
+4. 평균만 보면 놓칠 수 있는 것이 무엇인지 한두 가지 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box success"><span class="tip-icon">🔍</span><p><strong>여기서 발견할 수 있는 사실!</strong><br/>
             • 불합격 공정은 평균 온도가 <strong>약 3.4°C 더 높음</strong> (303.8 vs 300.4)<br/>
             • 두께도 <strong>약 4.4nm 더 두꺼움</strong> (104.4 vs 100.0)<br/>
@@ -1006,6 +1600,49 @@ plt.<span class="fn">show</span>()</code></pre>
 <text fill="#64748B" font-size="11" text-anchor="middle" x="200" y="195">온도 (°C)</text>
 </svg>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 히스토그램 그리고 읽기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>figsize</code>, <code>bins</code>, <code>edgecolor</code>, <code>alpha</code> 같은 인자가 무엇을 바꾸는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 그래프 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 파이썬 그래프를 처음 그려 보는 초보자입니다. 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+plt.figure(figsize=(8, 4))
+plt.hist(df_clean['온도_섭씨'], bins=20, color='steelblue', edgecolor='white')
+plt.title('온도 분포')
+plt.xlabel('온도 (°C)')
+plt.ylabel('빈도 (개수)')
+plt.grid(True, alpha=0.3)
+plt.show()
+
+1. figsize=(8, 4)의 두 숫자가 각각 무엇인지 알려 주세요.
+2. plt.hist() 안의 bins, color, edgecolor가 각각 무엇을 바꾸는지 알려 주세요.
+3. bins를 5, 20, 100으로 바꾸면 그래프 모양이 어떻게 달라지는지 말로 설명해 주세요.
+4. grid(True, alpha=0.3)에서 alpha가 무슨 뜻인지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 그려진 히스토그램을 보고 무엇을 알 수 있는지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 히스토그램 모양 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>반도체 공정 샘플 데이터의 온도(°C) 히스토그램을 그렸습니다.
+가로축은 온도, 세로축은 빈도(개수)이고, 막대는 300°C 근처가 가장 높고 양쪽으로 갈수록 낮아지는 산 모양입니다.
+
+1. 히스토그램에서 막대 하나가 무엇을 뜻하는지 알려 주세요.
+2. 가운데가 높은 산 모양, 한쪽으로 치우친 모양, 봉우리가 두 개인 모양이 각각 무엇을 의미할 수 있는지 설명해 주세요.
+3. 막대그래프(bar chart)와 히스토그램의 차이를 쉽게 알려 주세요.
+4. 다른 막대들과 동떨어진 막대가 보이면 무엇을 확인해 봐야 하는지 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box info"><span class="tip-icon">💡</span><p><strong>bins가 뭐예요?</strong><br/>
             막대를 몇 칸으로 나눌지 정하는 숫자입니다. <code>bins=20</code>이면 데이터 범위를 20등분해서 그립니다. 너무 적으면 뭉뚱그려지고, 너무 많으면 들쭉날쭉해요. 보통 10~30 정도가 적당합니다. 데이터 양이 많을수록 bins를 크게 잡아도 됩니다.</p></div>
 </div>
@@ -1069,6 +1706,48 @@ plt.<span class="fn">show</span>()</code></pre>
 <text fill="#64748B" font-size="11" text-anchor="middle" transform="rotate(-90,20,100)" x="20" y="100">온도(°C)</text>
 </svg>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 박스플롯으로 두 그룹 비교</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>sns.boxplot()</code> 안의 <code>data</code>, <code>x</code>, <code>y</code>, <code>hue</code>, <code>palette</code>가 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 박스플롯 코드 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 seaborn을 처음 쓰는 초보자입니다. 아래 코드를 쉬운 말로 설명해 주세요.
+
+plt.figure(figsize=(7, 5))
+sns.boxplot(data=df_clean, x='result', y='온도_섭씨',
+            hue='result', legend=False,
+            palette=['#52B788', '#E76F51'])
+plt.title('판정별 온도 분포 비교')
+plt.ylabel('온도 (°C)')
+plt.show()
+
+1. data, x, y에 각각 무엇을 넣은 것인지, x='result'로 하면 왜 상자가 두 개 생기는지 알려 주세요.
+2. hue='result'와 legend=False를 함께 쓰는 이유를 알려 주세요.
+3. palette에 들어간 '#52B788' 같은 값이 무엇인지 알려 주세요.
+4. y를 '두께_nm'로 바꾸면 무엇을 비교하게 되는지 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 상자·가운데 선·수염·점이 무슨 뜻인지, 히스토그램과 무엇이 다른지 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 박스플롯 읽기 · 히스토그램과 비교하기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>박스플롯을 읽는 법을 초보자 눈높이에서 배우고 싶습니다.
+
+1. 숫자 [1, 2, 3, 4, 5, 6, 7, 8, 30]으로 박스플롯을 그린다고 할 때, 중앙값·Q1·Q3·수염·이상치가 각각 어디에 해당하는지 계산 과정과 함께 보여 주세요.
+2. 상자 가운데 선이 평균이 아니라 중앙값이라는 점이 왜 중요한지 알려 주세요.
+3. 히스토그램과 박스플롯을 비교해, 각각 언제 쓰면 좋은지 표로 정리해 주세요.
+4. 합격 그룹보다 불합격 그룹의 상자가 전체적으로 위쪽에 있다면 무엇을 뜻하는지 알려 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box success"><span class="tip-icon">🔍</span><p><strong>한눈에 보이는 차이</strong><br/>
             불합격 그룹의 상자 전체가 <strong>합격 그룹보다 위쪽</strong>에 있죠? 이것이 "불합격은 평균 온도가 높다"는 사실의 시각적 증거입니다. 숫자로 "303 vs 300"이라고 들으면 별 차이 없어 보여도, 박스플롯으로 보면 두 그룹의 분포 자체가 다르다는 게 확연합니다.</p></div>
 </div>
@@ -1106,6 +1785,51 @@ sns.<span class="fn">heatmap</span>(corr_matrix,
 plt.<span class="fn">title</span>(<span class="str">'변수 간 상관관계'</span>)
 plt.<span class="fn">show</span>()</code></pre>
 </div>
+
+    <details class="practice-toggle">
+      <summary>🤖 AI에게 물어보기 · 상관관계 히트맵 읽기</summary>
+      <div class="toggle-body">
+    <p><strong>이럴 때:</strong> <code>corr()</code>이 만드는 표와 <code>sns.heatmap()</code>의 인자들이 무슨 뜻인지 모르겠을 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">① 히트맵 코드 한 줄씩 설명받기 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>나는 pandas와 seaborn 초보자입니다. 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
+
+target_cols = numeric_cols + ['합격여부']
+corr_matrix = df_clean[target_cols].corr()
+
+plt.figure(figsize=(11, 9))
+sns.heatmap(corr_matrix, annot=True, fmt='.2f',
+            cmap='RdYlGn', center=0, linewidths=0.5)
+plt.title('변수 간 상관관계')
+plt.show()
+
+1. numeric_cols + ['합격여부']처럼 리스트끼리 +로 더하면 무엇이 되는지 알려 주세요.
+2. .corr()이 만드는 표가 어떤 모양인지 3개 열짜리 작은 예시로 보여 주세요.
+3. annot, fmt, cmap, center, linewidths가 각각 무엇을 바꾸는지 한 줄씩 알려 주세요.
+4. 글자로 된 'result' 열 대신 숫자로 된 '합격여부' 열을 넣은 이유를 알려 주세요.</code></pre>
+    </div>
+    <p><strong>이럴 때:</strong> 상관계수 숫자(−1 ~ +1)를 어떻게 읽어야 하는지, 특히 합격여부 줄을 어떻게 해석하는지 헷갈릴 때</p>
+    <div class="code-wrap prompt-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="code-title">② 상관계수 읽는 법 프롬프트</span>
+        <button class="copy-btn" onclick="copyCode(this)">복사</button>
+      </div>
+      <pre><code>상관계수를 읽는 법을 배우고 싶은 초보자입니다.
+
+1. 상관계수 +0.8, +0.3, 0, -0.3, -0.8이 각각 어떤 관계인지, 점 그래프(산점도)를 말로 그리듯이 설명해 주세요.
+2. 히트맵에서 대각선 칸이 모두 1.0인 이유를 알려 주세요.
+3. 합격여부가 1(합격) / -1(불합격)로 되어 있을 때, 어떤 센서와 합격여부의 상관계수가 -0.3이라면
+   "그 센서 값이 클수록 합격이 많다 / 적다" 중 어느 쪽인지 차근차근 설명해 주세요.
+   내가 먼저 생각해 볼 수 있게 힌트부터 주고, 내가 답하면 정답을 알려 주세요.
+4. "상관관계는 인과관계가 아니다"라는 말을 일상 예시 하나로 설명해 주세요.</code></pre>
+    </div>
+      </div>
+    </details>
 <div class="tip-box info"><span class="tip-icon">📖</span><p><strong>상관계수 읽는 법 (−1 ~ +1)</strong><br/>
             • <strong>+1에 가까움</strong> = 한 값이 커지면 다른 값도 같이 큼 (양의 상관)<br/>
             • <strong>−1에 가까움</strong> = 한 값이 커지면 다른 값은 작아짐 (음의 상관)<br/>
