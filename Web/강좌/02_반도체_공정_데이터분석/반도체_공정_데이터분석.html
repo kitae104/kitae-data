@@ -39,9 +39,6 @@
     <button type="button" class="nav-tab" id="tab-4" role="tab" aria-controls="session-4" aria-selected="false" tabindex="-1" data-session="4" onclick="showSession(4, this)">
       <span class="session-num">4</span>EDA 분석
     </button>
-    <button type="button" class="nav-tab" id="tab-5" role="tab" aria-controls="session-5" aria-selected="false" tabindex="-1" data-session="5" onclick="showSession(5, this)">
-      <span class="session-num">5</span>보강 실습
-    </button>
     <!-- AI 활용 탭: 잠시 숨김. 다시 보이려면 아래 버튼의 hidden 속성을 지우세요. -->
     <button type="button" class="nav-tab" id="tab-6" hidden role="tab" aria-controls="session-6" aria-selected="false" tabindex="-1" data-session="6" onclick="showSession(6, this)">
       <span class="session-num">6</span>AI 활용
@@ -249,7 +246,7 @@
 <ul class="obj-list">
 <li><span class="obj-check">✓</span><code>import</code> 문이 무슨 뜻인지 설명할 수 있다</li>
 <li><span class="obj-check">✓</span><code>as pd</code>처럼 <strong>별명(alias)</strong>을 붙이는 이유를 안다</li>
-<li><span class="obj-check">✓</span>pandas, numpy, matplotlib, seaborn 4가지의 역할을 구분할 수 있다</li>
+<li><span class="obj-check">✓</span>pandas, numpy, matplotlib 3가지의 역할을 구분할 수 있다</li>
 </ul>
 </div>
 
@@ -272,7 +269,7 @@
         </p>
 <p>
           파이썬이 강력한 이유 중 하나가 바로 이 풍부한 라이브러리 생태계예요. 수많은 개발자가 무료로 공개한 라이브러리를
-          <strong>"import 한 줄"</strong>로 불러와 사용할 수 있습니다. 오늘 우리가 쓸 pandas, numpy, matplotlib, seaborn도 모두 그런 라이브러리입니다.
+          <strong>"import 한 줄"</strong>로 불러와 사용할 수 있습니다. 오늘 우리가 쓸 pandas, numpy, matplotlib도 모두 그런 라이브러리입니다.
         </p>
 <div class="analogy">
 <span class="analogy-icon">💡</span>
@@ -284,10 +281,10 @@
 <div class="section-label">
 <div class="section-num">2</div>
 <div>
-<div class="section-title">오늘 사용할 4가지 라이브러리</div>
+<div class="section-title">오늘 사용할 3가지 라이브러리</div>
 </div>
 </div>
-<p>각각 역할이 분명히 나뉘어 있습니다. <strong>표 다루기 → pandas, 숫자 계산 → numpy, 그래프 → matplotlib·seaborn</strong>입니다.</p>
+<p>각각 역할이 분명히 나뉘어 있습니다. <strong>표 다루기 → pandas, 숫자 계산 → numpy, 그래프 → matplotlib</strong>입니다.</p>
 <div class="cards">
 <div class="card">
 <div class="card-icon">🐼</div>
@@ -303,11 +300,6 @@
 <div class="card-icon">📈</div>
 <div class="card-title">matplotlib (plt)</div>
 <div class="card-desc">파이썬에서 가장 기본이 되는 그래프 그리기 도구</div>
-</div>
-<div class="card">
-<div class="card-icon">🎨</div>
-<div class="card-title">seaborn (sns)</div>
-<div class="card-desc">matplotlib을 더 예쁘고 통계적으로 강력하게 만든 도구</div>
 </div>
 </div>
 </div>
@@ -331,7 +323,6 @@
 <span class="kw">import</span> pandas <span class="kw">as</span> pd
 <span class="kw">import</span> numpy <span class="kw">as</span> np
 <span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
-<span class="kw">import</span> seaborn <span class="kw">as</span> sns
 
 <span class="cmt"># 그래프 한글 설정 (Mac은 'AppleGothic')</span>
 plt.rcParams[<span class="str">'font.family'</span>] = <span class="str">'Malgun Gothic'</span>
@@ -356,7 +347,6 @@ plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="kw">F
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 plt.rcParams['font.family'] = 'Malgun Gothic'
 plt.rcParams['axes.unicode_minus'] = False
@@ -364,13 +354,13 @@ plt.rcParams['axes.unicode_minus'] = False
 print("✅ 라이브러리 준비 완료!")
 
 1. '라이브러리'와 'import'가 무엇인지 일상생활 비유로 설명해 주세요.
-2. pandas, numpy, matplotlib, seaborn이 각각 어떤 일을 하는지 한 줄씩 알려 주세요.
+2. pandas, numpy, matplotlib이 각각 어떤 일을 하는지 한 줄씩 알려 주세요.
 3. 'as pd', 'as np'처럼 별명을 붙이는 이유와, 붙이지 않으면 코드가 어떻게 달라지는지 예시로 보여 주세요.
 4. matplotlib.pyplot에서 가운데 점(.)이 무슨 뜻인지 알려 주세요.
 5. plt.rcParams 두 줄이 없으면 그래프가 어떻게 보이는지 설명해 주세요.
 어려운 용어를 쓸 때는 괄호 안에 쉬운 말로 풀어 주세요.</code></pre>
     </div>
-    <p><strong>이럴 때:</strong> 실행했더니 <code>ModuleNotFoundError: No module named 'seaborn'</code>이나 <code>NameError: name 'pd' is not defined</code> 같은 오류가 났을 때</p>
+    <p><strong>이럴 때:</strong> 실행했더니 <code>ModuleNotFoundError: No module named 'matplotlib'</code>이나 <code>NameError: name 'pd' is not defined</code> 같은 오류가 났을 때</p>
     <div class="code-wrap prompt-block">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
@@ -1261,7 +1251,7 @@ print(f"정리 전: {len(df_filled)}행 → 정리 후: {len(df_clean)}행")
 <ul class="obj-list">
 <li><span class="obj-check">✓</span>새 컬럼을 추가하고 조건으로 행을 필터링할 수 있다</li>
 <li><span class="obj-check">✓</span><code>groupby()</code>로 합격/불합격별 평균을 비교할 수 있다</li>
-<li><span class="obj-check">✓</span>히스토그램·박스플롯·히트맵을 그릴 수 있다</li>
+<li><span class="obj-check">✓</span>히스토그램·박스플롯을 그릴 수 있다</li>
 <li><span class="obj-check">✓</span>시각화에서 <strong>인사이트(분석 결론)</strong>를 끌어낼 수 있다</li>
 </ul>
 </div>
@@ -1536,8 +1526,8 @@ result         불합격       합격
 </div>
 <p>
           숫자 표만 봐서는 한계가 있어요. <strong>그래프로 그리면</strong> 패턴이 즉시 보입니다.
-          오늘은 분석에 가장 자주 쓰이는 핵심 3종 그래프 — 히스토그램·박스플롯·히트맵 — 만 다룹니다.
-          이 세 가지만 자유롭게 그릴 수 있어도 EDA의 80%는 해결됩니다.
+          오늘은 분석에 가장 자주 쓰이는 핵심 2종 그래프 — 히스토그램·박스플롯 — 만 다룹니다.
+          이 두 가지만 자유롭게 그릴 수 있어도 EDA의 80%는 해결됩니다.
         </p>
 <div class="tip-box info"><span class="tip-icon">📌</span><p><strong>그래프 그리기 3단계 (꼭 외우기!)</strong><br/>
             ① 그래프 명령어 (예: <code>plt.hist(...)</code>) → ② 제목·축 이름 (<code>plt.title</code>, <code>plt.xlabel</code>, <code>plt.ylabel</code>) → ③ <code>plt.show()</code>로 출력<br/>
@@ -1670,11 +1660,7 @@ plt.show()
 <button class="copy-btn" onclick="copyCode(this)">복사</button>
 </div>
 <pre><code><span class="cmt"># 합격/불합격별 온도 분포를 박스플롯으로</span>
-plt.<span class="fn">figure</span>(figsize=(<span class="num">7</span>, <span class="num">5</span>))
-sns.<span class="fn">boxplot</span>(data=df_clean, x=<span class="str">'result'</span>, y=<span class="str">'온도_섭씨'</span>,
-            hue=<span class="str">'result'</span>, legend=<span class="kw">False</span>,
-            palette=[<span class="str">'#52B788'</span>, <span class="str">'#E76F51'</span>])
-
+df_clean.<span class="fn">boxplot</span>(column=<span class="str">'온도_섭씨'</span>, by=<span class="str">'result'</span>, figsize=(<span class="num">7</span>, <span class="num">5</span>))
 plt.<span class="fn">title</span>(<span class="str">'판정별 온도 분포 비교'</span>)
 plt.<span class="fn">ylabel</span>(<span class="str">'온도 (°C)'</span>)
 plt.<span class="fn">grid</span>(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
@@ -1710,27 +1696,24 @@ plt.<span class="fn">show</span>()</code></pre>
     <details class="practice-toggle">
       <summary>🤖 AI에게 물어보기 · 박스플롯으로 두 그룹 비교</summary>
       <div class="toggle-body">
-    <p><strong>이럴 때:</strong> <code>sns.boxplot()</code> 안의 <code>data</code>, <code>x</code>, <code>y</code>, <code>hue</code>, <code>palette</code>가 무슨 뜻인지 모르겠을 때</p>
+    <p><strong>이럴 때:</strong> <code>df_clean.boxplot()</code> 안의 <code>column</code>, <code>by</code>, <code>figsize</code>가 무슨 뜻인지 모르겠을 때</p>
     <div class="code-wrap prompt-block">
       <div class="code-header">
         <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
         <span class="code-title">① 박스플롯 코드 설명받기 프롬프트</span>
         <button class="copy-btn" onclick="copyCode(this)">복사</button>
       </div>
-      <pre><code>나는 seaborn을 처음 쓰는 초보자입니다. 아래 코드를 쉬운 말로 설명해 주세요.
+      <pre><code>나는 pandas 그래프를 처음 쓰는 초보자입니다. 아래 코드를 쉬운 말로 설명해 주세요.
 
-plt.figure(figsize=(7, 5))
-sns.boxplot(data=df_clean, x='result', y='온도_섭씨',
-            hue='result', legend=False,
-            palette=['#52B788', '#E76F51'])
+df_clean.boxplot(column='온도_섭씨', by='result', figsize=(7, 5))
 plt.title('판정별 온도 분포 비교')
 plt.ylabel('온도 (°C)')
 plt.show()
 
-1. data, x, y에 각각 무엇을 넣은 것인지, x='result'로 하면 왜 상자가 두 개 생기는지 알려 주세요.
-2. hue='result'와 legend=False를 함께 쓰는 이유를 알려 주세요.
-3. palette에 들어간 '#52B788' 같은 값이 무엇인지 알려 주세요.
-4. y를 '두께_nm'로 바꾸면 무엇을 비교하게 되는지 알려 주세요.</code></pre>
+1. column='온도_섭씨'와 by='result'가 각각 무엇을 뜻하는지, by='result'로 하면 왜 상자가 두 개 생기는지 알려 주세요.
+2. figsize=(7, 5)의 두 숫자가 각각 무엇인지 알려 주세요.
+3. column을 '두께_nm'로 바꾸면 무엇을 비교하게 되는지 알려 주세요.
+4. 그래프 위에 자동으로 붙는 제목(Boxplot grouped by result)이 왜 생기는지 알려 주세요.</code></pre>
     </div>
     <p><strong>이럴 때:</strong> 상자·가운데 선·수염·점이 무슨 뜻인지, 히스토그램과 무엇이 다른지 헷갈릴 때</p>
     <div class="code-wrap prompt-block">
@@ -1755,96 +1738,6 @@ plt.show()
   <div class="content-section">
 <div class="section-label">
 <div class="section-num">7</div>
-<div>
-<div class="section-title">상관관계 히트맵 — 변수들 간의 관계</div>
-</div>
-</div>
-<p>
-          12개 변수가 서로 얼마나 관련 있는지 한 번에 보여주는 표입니다.
-          <strong>색이 진할수록 강한 관계</strong>, 빨간색은 음의 관계, 초록색은 양의 관계예요.
-          오늘 분석의 마지막 단계에서, "결국 어떤 센서가 합격여부에 가장 영향을 주는가?"를 한 장의 그림으로 답해줍니다.
-        </p>
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">15_heatmap.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code><span class="cmt"># 숫자 컬럼만 골라 상관관계 계산</span>
-target_cols = numeric_cols + [<span class="str">'합격여부'</span>]
-corr_matrix = df_clean[target_cols].<span class="fn">corr</span>()
-
-<span class="cmt"># 히트맵 그리기</span>
-plt.<span class="fn">figure</span>(figsize=(<span class="num">11</span>, <span class="num">9</span>))
-sns.<span class="fn">heatmap</span>(corr_matrix,
-            annot=<span class="kw">True</span>,         <span class="cmt"># 숫자 표시</span>
-            fmt=<span class="str">'.2f'</span>,          <span class="cmt"># 소수점 2자리</span>
-            cmap=<span class="str">'RdYlGn'</span>,      <span class="cmt"># 빨강-노랑-초록</span>
-            center=<span class="num">0</span>,           <span class="cmt"># 0을 중앙(노란색)으로</span>
-            linewidths=<span class="num">0.5</span>)
-plt.<span class="fn">title</span>(<span class="str">'변수 간 상관관계'</span>)
-plt.<span class="fn">show</span>()</code></pre>
-</div>
-
-    <details class="practice-toggle">
-      <summary>🤖 AI에게 물어보기 · 상관관계 히트맵 읽기</summary>
-      <div class="toggle-body">
-    <p><strong>이럴 때:</strong> <code>corr()</code>이 만드는 표와 <code>sns.heatmap()</code>의 인자들이 무슨 뜻인지 모르겠을 때</p>
-    <div class="code-wrap prompt-block">
-      <div class="code-header">
-        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">① 히트맵 코드 한 줄씩 설명받기 프롬프트</span>
-        <button class="copy-btn" onclick="copyCode(this)">복사</button>
-      </div>
-      <pre><code>나는 pandas와 seaborn 초보자입니다. 아래 코드를 한 줄씩 쉬운 말로 설명해 주세요.
-
-target_cols = numeric_cols + ['합격여부']
-corr_matrix = df_clean[target_cols].corr()
-
-plt.figure(figsize=(11, 9))
-sns.heatmap(corr_matrix, annot=True, fmt='.2f',
-            cmap='RdYlGn', center=0, linewidths=0.5)
-plt.title('변수 간 상관관계')
-plt.show()
-
-1. numeric_cols + ['합격여부']처럼 리스트끼리 +로 더하면 무엇이 되는지 알려 주세요.
-2. .corr()이 만드는 표가 어떤 모양인지 3개 열짜리 작은 예시로 보여 주세요.
-3. annot, fmt, cmap, center, linewidths가 각각 무엇을 바꾸는지 한 줄씩 알려 주세요.
-4. 글자로 된 'result' 열 대신 숫자로 된 '합격여부' 열을 넣은 이유를 알려 주세요.</code></pre>
-    </div>
-    <p><strong>이럴 때:</strong> 상관계수 숫자(−1 ~ +1)를 어떻게 읽어야 하는지, 특히 합격여부 줄을 어떻게 해석하는지 헷갈릴 때</p>
-    <div class="code-wrap prompt-block">
-      <div class="code-header">
-        <div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-        <span class="code-title">② 상관계수 읽는 법 프롬프트</span>
-        <button class="copy-btn" onclick="copyCode(this)">복사</button>
-      </div>
-      <pre><code>상관계수를 읽는 법을 배우고 싶은 초보자입니다.
-
-1. 상관계수 +0.8, +0.3, 0, -0.3, -0.8이 각각 어떤 관계인지, 점 그래프(산점도)를 말로 그리듯이 설명해 주세요.
-2. 히트맵에서 대각선 칸이 모두 1.0인 이유를 알려 주세요.
-3. 합격여부가 1(합격) / -1(불합격)로 되어 있을 때, 어떤 센서와 합격여부의 상관계수가 -0.3이라면
-   "그 센서 값이 클수록 합격이 많다 / 적다" 중 어느 쪽인지 차근차근 설명해 주세요.
-   내가 먼저 생각해 볼 수 있게 힌트부터 주고, 내가 답하면 정답을 알려 주세요.
-4. "상관관계는 인과관계가 아니다"라는 말을 일상 예시 하나로 설명해 주세요.</code></pre>
-    </div>
-      </div>
-    </details>
-<div class="tip-box info"><span class="tip-icon">📖</span><p><strong>상관계수 읽는 법 (−1 ~ +1)</strong><br/>
-            • <strong>+1에 가까움</strong> = 한 값이 커지면 다른 값도 같이 큼 (양의 상관)<br/>
-            • <strong>−1에 가까움</strong> = 한 값이 커지면 다른 값은 작아짐 (음의 상관)<br/>
-            • <strong>0에 가까움</strong> = 거의 관계 없음<br/>
-            • <strong>대각선은 항상 1.0</strong> (자기 자신과의 상관) → 의미 없음, 무시</p></div>
-<div class="tip-box success"><span class="tip-icon">🎯</span><p><strong>특히 "합격여부" 줄에 주목!</strong><br/>
-            오늘 우리가 알고 싶은 건 <strong>"어떤 센서값이 합격여부에 영향을 주는가?"</strong>입니다.
-            히트맵에서 <strong>합격여부 행(또는 열)</strong>을 따라가며 <strong>색이 진한 칸</strong>을 찾으세요. 그게 합격 예측에 중요한 변수들입니다. 합격여부와 상관계수의 절댓값이 큰 변수일수록, 모델링할 때도 강력한 입력 변수가 될 가능성이 높아요.</p></div>
-<div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>상관관계 ≠ 인과관계</strong><br/>
-            "같이 움직인다"는 사실이 "한쪽이 원인이다"라는 뜻은 아닙니다. 숨겨진 다른 요인 때문에 같이 변할 수도 있어요. 예를 들어 "아이스크림 판매량과 익사 사고 수"는 상관이 높지만, 아이스크림이 익사의 원인은 아니죠 — 둘 다 "더운 날씨" 때문에 같이 늘어나는 거예요. 상관관계는 의심 가는 변수를 찾는 출발점일 뿐, 결론은 실험으로 확인해야 합니다.</p></div>
-</div>
-
-  <div class="content-section">
-<div class="section-label">
-<div class="section-num">8</div>
 <div>
 <div class="section-title">분석 인사이트 정리 — 무엇을 발견했나?</div>
 </div>
@@ -1876,14 +1769,8 @@ plt.show()
 <span class="quiz-num">Q2</span>
 <div>
 <p><strong>"두께_nm"</strong>를 판정별 박스플롯으로 그리고, 합격/불합격 그룹의 차이를 관찰하세요.</p>
-<div class="quiz-hint">힌트: sns.boxplot(data=df_clean, x='result', y='두께_nm')</div>
+<div class="quiz-hint">힌트: df_clean.boxplot(column='두께_nm', by='result')</div>
 </div>
-</div>
-<div class="quiz-item">
-<span class="quiz-num">Q3</span>
-<div>
-<p>히트맵에서 합격여부와 가장 강한 상관을 보이는 변수 <strong>TOP 3</strong>를 찾아보세요.</p>
-<div class="quiz-hint">힌트: df_clean[target_cols].corr()['합격여부'].abs().sort_values(ascending=False)</div>
 </div>
 </div>
 </div>
@@ -1929,8 +1816,7 @@ plt.show()
 <div class="card-desc" style="font-family:monospace; font-size:12px; line-height:1.9;">
             df['new'] = ...<br/>
             df[조건]<br/>
-            df.groupby('col').mean()<br/>
-            df.corr()
+            df.groupby('col').mean()
           </div>
 </div>
 <div class="card" style="border-top: 3px solid var(--green);">
@@ -1938,21 +1824,9 @@ plt.show()
 <div class="card-title">시각화</div>
 <div class="card-desc" style="font-family:monospace; font-size:12px; line-height:1.9;">
             plt.hist( )<br/>
-            sns.boxplot( )<br/>
-            sns.heatmap( )<br/>
+            df.boxplot(column, by)<br/>
             plt.title / xlabel / ylabel<br/>
             plt.show( )
-          </div>
-</div>
-<div class="card" style="border-top: 3px solid var(--red);">
-<div class="card-icon">🧪</div>
-<div class="card-title">보강 실습</div>
-<div class="card-desc" style="font-family:monospace; font-size:12px; line-height:1.9;">
-            df.isna().mean()<br/>
-            value_counts(normalize=True)<br/>
-            select_dtypes('number')<br/>
-            df['col'].quantile(0.25)<br/>
-            plt.subplots(1, 2)
           </div>
 </div>
 </div>
@@ -1965,319 +1839,6 @@ plt.show()
 
   <div class="tip-box success"><span class="tip-icon">🎓</span><p><strong>오늘의 핵심 교훈 한 줄</strong><br/>
           "<strong>데이터 분석은 코드를 외우는 게 아니라, 데이터에게 질문하는 법을 익히는 것입니다.</strong>" 함수 이름은 검색하면 나오지만, "이 데이터에 어떤 질문을 던질까?"는 여러분의 몫이에요. 오늘 배운 흐름 — 불러오기 → 보기 → 정리 → 묻기 — 만 익혀두면 어떤 데이터든 두렵지 않습니다. 수고하셨습니다! 🎉</p></div>
-
-</section>
-
-<!-- ═══════════════════════════════════════════
-     TAB 5 - 보강 실습
-═══════════════════════════════════════════ -->
-<section class="session-pane" id="session-5" role="tabpanel" aria-labelledby="tab-5" hidden>
-
-  <div class="session-header">
-    <div class="session-icon blue">🧪</div>
-    <div>
-      <h2>초보자 필수 보강 실습</h2>
-      <p>1~4단계를 스스로 다시 해 보며 분석 흐름을 몸에 익힙니다</p>
-      <a class="notebook-link" href="./실습/05_보강_실습.ipynb" download>📓 실습 노트북 받기 · 05_보강_실습.ipynb</a>
-    </div>
-  </div>
-
-  <div class="objectives">
-<h3>🎯 실습 방법</h3>
-<ul class="obj-list">
-<li><span class="obj-check">✓</span><code>반도체_공정_샘플.csv</code>를 처음 받았다고 가정하고 <strong>점검 → 정리 → 비교 → 이상값 확인 → 보고서 작성</strong> 순서로 반복합니다</li>
-<li><span class="obj-check">✓</span>각 실습은 <strong>직접 작성 → 힌트 → 정답 확인</strong> 순서로 진행합니다</li>
-<li><span class="obj-check">✓</span>숫자가 계산되었다는 사실보다, 그 숫자가 어떤 공정 판단에 필요한지 한 문장으로 설명하는 습관이 중요합니다</li>
-</ul>
-</div>
-
-  <div class="content-section">
-<div class="section-label">
-<div class="section-num">1</div>
-<div>
-<div class="section-title">실습 1 · 1분 데이터 건강검진</div>
-</div>
-</div>
-<p><strong>목표:</strong> 분석 전에 데이터 크기, 결측률, 중복, 판정 비율을 빠르게 확인합니다.</p>
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습1_문제.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code><span class="cmt"># TODO 1: CSV를 practice_raw로 읽으세요.</span>
-<span class="cmt"># TODO 2: 행·열 수, 열별 결측률(%), 중복 행 수를 출력하세요.</span>
-<span class="cmt"># TODO 3: 합격여부의 건수와 비율(%)을 출력하세요.</span></code></pre>
-</div>
-<details class="practice-toggle">
-<summary>💡 힌트 보기</summary>
-<div class="toggle-body"><p>결측률은 <code>isna().mean().mul(100)</code>, 판정 비율은 <code>value_counts(normalize=True)</code>로 구합니다.</p></div>
-</details>
-<details class="practice-toggle">
-<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
-<div class="toggle-body">
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습1_정답.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code>practice_raw = pd.<span class="fn">read_csv</span>(<span class="str">'반도체_공정_샘플.csv'</span>)
-
-<span class="fn">print</span>(<span class="str">f'데이터 크기: {practice_raw.shape[0]}행 x {practice_raw.shape[1]}열'</span>)
-<span class="fn">print</span>(<span class="str">'\n결측률 상위 5개 열(%):'</span>)
-<span class="fn">print</span>(practice_raw.<span class="fn">isna</span>().<span class="fn">mean</span>().<span class="fn">mul</span>(<span class="num">100</span>).<span class="fn">sort_values</span>(ascending=<span class="kw">False</span>).<span class="fn">head</span>().<span class="fn">round</span>(<span class="num">2</span>))
-<span class="fn">print</span>(<span class="str">f'\n중복 행: {practice_raw.duplicated().sum()}개'</span>)
-<span class="fn">print</span>(<span class="str">'\n판정 건수:'</span>)
-<span class="fn">print</span>(practice_raw[<span class="str">'합격여부'</span>].<span class="fn">value_counts</span>(dropna=<span class="kw">False</span>))
-<span class="fn">print</span>(<span class="str">'\n판정 비율(%):'</span>)
-<span class="fn">print</span>(practice_raw[<span class="str">'합격여부'</span>].<span class="fn">value_counts</span>(normalize=<span class="kw">True</span>, dropna=<span class="kw">False</span>).<span class="fn">mul</span>(<span class="num">100</span>).<span class="fn">round</span>(<span class="num">2</span>))</code></pre>
-</div>
-<div class="output-block"><div class="output-label">📤 실행 결과</div>데이터 크기: 200행 x 12열
-
-결측률 상위 5개 열(%):
-습도_pct      6.5
-온도_섭씨       6.0
-전력_W        5.0
-처리시간_sec    5.0
-압력_Pa       4.5
-dtype: float64
-
-중복 행: 0개
-
-판정 건수:
-합격여부
- 1    180
--1     20
-Name: count, dtype: int64
-
-판정 비율(%):
-합격여부
- 1    90.0
--1    10.0
-Name: proportion, dtype: float64</div>
-</div>
-</details>
-</div>
-
-  <div class="content-section">
-<div class="section-label">
-<div class="section-num">2</div>
-<div>
-<div class="section-title">실습 2 · 재현 가능한 데이터 정리</div>
-</div>
-</div>
-<p><strong>목표:</strong> 숫자 결측값을 중앙값으로 채우고 중복을 제거한 분석용 데이터를 만듭니다.</p>
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습2_문제.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code><span class="cmt"># TODO 1: practice_raw를 practice_clean으로 복사하세요.</span>
-<span class="cmt"># TODO 2: 숫자 열을 자동으로 찾으세요.</span>
-<span class="cmt"># TODO 3: 각 숫자 열의 결측값을 중앙값으로 채우세요.</span>
-<span class="cmt"># TODO 4: 중복 행을 제거하고 인덱스를 다시 매기세요.</span></code></pre>
-</div>
-<details class="practice-toggle">
-<summary>💡 힌트 보기</summary>
-<div class="toggle-body"><p><code>select_dtypes(include='number')</code>로 숫자 열을 자동 선택할 수 있습니다.</p></div>
-</details>
-<details class="practice-toggle">
-<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
-<div class="toggle-body">
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습2_정답.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code>practice_clean = practice_raw.<span class="fn">copy</span>()
-practice_numeric = practice_clean.<span class="fn">select_dtypes</span>(include=<span class="str">'number'</span>).columns
-practice_clean[practice_numeric] = practice_clean[practice_numeric].<span class="fn">fillna</span>(
-    practice_clean[practice_numeric].<span class="fn">median</span>()
-)
-practice_clean = practice_clean.<span class="fn">drop_duplicates</span>().<span class="fn">reset_index</span>(drop=<span class="kw">True</span>)
-practice_clean[<span class="str">'판정'</span>] = practice_clean[<span class="str">'합격여부'</span>].<span class="fn">map</span>({<span class="num">1</span>: <span class="str">'합격'</span>, -<span class="num">1</span>: <span class="str">'불합격'</span>})
-
-<span class="fn">print</span>(<span class="str">f'정리 후 크기: {practice_clean.shape}'</span>)
-<span class="fn">print</span>(<span class="str">f'남은 결측값: {practice_clean.isna().sum().sum()}개'</span>)</code></pre>
-</div>
-<div class="output-block"><div class="output-label">📤 실행 결과</div>정리 후 크기: (200, 13)
-남은 결측값: 0개</div>
-</div>
-</details>
-</div>
-
-  <div class="content-section">
-<div class="section-label">
-<div class="section-num">3</div>
-<div>
-<div class="section-title">실습 3 · IQR로 이상값 후보 찾기</div>
-</div>
-</div>
-<p><strong>목표:</strong> 온도 분포에서 일반 범위를 크게 벗어난 측정값을 점검 대상으로 표시합니다.</p>
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습3_문제.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code><span class="cmt"># TODO 1: 온도_섭씨의 Q1(25%)과 Q3(75%)를 구하세요.</span>
-<span class="cmt"># TODO 2: IQR = Q3 - Q1을 계산하세요.</span>
-<span class="cmt"># TODO 3: Q1 - 1.5*IQR 미만 또는 Q3 + 1.5*IQR 초과 행을 찾으세요.</span>
-<span class="cmt"># 주의: 이상값 후보가 반드시 오류나 불량이라는 뜻은 아닙니다.</span></code></pre>
-</div>
-<details class="practice-toggle">
-<summary>💡 힌트 보기</summary>
-<div class="toggle-body"><p><code>quantile(0.25)</code>와 <code>quantile(0.75)</code>를 사용하고 두 조건은 <code>|</code>로 연결합니다.</p></div>
-</details>
-<details class="practice-toggle">
-<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
-<div class="toggle-body">
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습3_정답.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code>q1 = practice_clean[<span class="str">'온도_섭씨'</span>].<span class="fn">quantile</span>(<span class="num">0.25</span>)
-q3 = practice_clean[<span class="str">'온도_섭씨'</span>].<span class="fn">quantile</span>(<span class="num">0.75</span>)
-iqr = q3 - q1
-lower = q1 - <span class="num">1.5</span> * iqr
-upper = q3 + <span class="num">1.5</span> * iqr
-
-temperature_outliers = practice_clean[
-    (practice_clean[<span class="str">'온도_섭씨'</span>] &lt; lower) |
-    (practice_clean[<span class="str">'온도_섭씨'</span>] &gt; upper)
-]
-
-<span class="fn">print</span>(<span class="str">f'온도 일반 범위: {lower:.2f} ~ {upper:.2f} °C'</span>)
-<span class="fn">print</span>(<span class="str">f'이상값 후보: {len(temperature_outliers)}건'</span>)
-temperature_outliers[[<span class="str">'온도_섭씨'</span>, <span class="str">'압력_Pa'</span>, <span class="str">'두께_nm'</span>, <span class="str">'판정'</span>]].<span class="fn">head</span>()</code></pre>
-</div>
-<div class="output-block"><div class="output-label">📤 실행 결과</div>온도 일반 범위: 291.14 ~ 310.57 °C
-이상값 후보: 19건
-          온도_섭씨        압력_Pa       두께_nm  판정
-10   290.406144  1012.734861  100.603095  합격
-22   311.573293   994.327348  102.177901  합격
-74   290.795629  1000.204230   98.548512  합격
-87   312.634662  1007.691312  103.693415  합격
-116  287.502971  1035.909426  104.879505  합격</div>
-</div>
-</details>
-</div>
-
-  <div class="content-section">
-<div class="section-label">
-<div class="section-num">4</div>
-<div>
-<div class="section-title">실습 4 · 합격과 불합격의 평균 차이 찾기</div>
-</div>
-</div>
-<p><strong>목표:</strong> 두 판정 그룹의 평균 차이가 큰 센서를 우선 확인합니다.</p>
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습4_문제.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code><span class="cmt"># TODO 1: 판정별 숫자 열 평균을 계산하세요.</span>
-<span class="cmt"># TODO 2: 합격 평균과 불합격 평균의 차이 절댓값을 계산하세요.</span>
-<span class="cmt"># TODO 3: 평균 차이가 큰 상위 5개 열을 출력하세요.</span></code></pre>
-</div>
-<details class="practice-toggle">
-<summary>💡 힌트 보기</summary>
-<div class="toggle-body"><p>판정별 평균표를 만든 뒤 두 행을 빼고 <code>.abs().sort_values(ascending=False)</code>를 사용합니다.</p></div>
-</details>
-<details class="practice-toggle">
-<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
-<div class="toggle-body">
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습4_정답.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code>compare_cols = [col <span class="kw">for</span> col <span class="kw">in</span> numeric_cols <span class="kw">if</span> col <span class="kw">in</span> practice_clean.columns]
-result_means = practice_clean.<span class="fn">groupby</span>(<span class="str">'판정'</span>)[compare_cols].<span class="fn">mean</span>()
-mean_gap = (
-    result_means.loc[<span class="str">'불합격'</span>] - result_means.loc[<span class="str">'합격'</span>]
-).<span class="fn">abs</span>().<span class="fn">sort_values</span>(ascending=<span class="kw">False</span>)
-
-<span class="fn">print</span>(<span class="str">'합격/불합격 평균 차이 상위 5개 변수:'</span>)
-<span class="fn">print</span>(mean_gap.<span class="fn">head</span>(<span class="num">5</span>).<span class="fn">round</span>(<span class="num">3</span>))</code></pre>
-</div>
-<div class="output-block"><div class="output-label">📤 실행 결과</div>합격/불합격 평균 차이 상위 5개 변수:
-전력_W        28.337
-두께_nm        4.444
-온도_섭씨        3.448
-압력_Pa        2.772
-처리시간_sec     2.344
-dtype: float64</div>
-</div>
-</details>
-</div>
-
-  <div class="content-section">
-<div class="section-label">
-<div class="section-num">5</div>
-<div>
-<div class="section-title">실습 5 · 핵심 그래프와 한 줄 결론 만들기</div>
-</div>
-</div>
-<p><strong>목표:</strong> 판정 건수와 평균 차이가 가장 큰 변수의 분포를 함께 보고 간단히 해석합니다.</p>
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습5_문제.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code><span class="cmt"># TODO 1: 평균 차이가 가장 큰 변수 이름을 top_gap_col에 저장하세요.</span>
-<span class="cmt"># TODO 2: 왼쪽에는 판정별 건수, 오른쪽에는 해당 변수의 박스플롯을 그리세요.</span>
-<span class="cmt"># TODO 3: 합격/불합격 평균과 차이를 한 문장으로 출력하세요.</span></code></pre>
-</div>
-<details class="practice-toggle">
-<summary>💡 힌트 보기</summary>
-<div class="toggle-body"><p><code>mean_gap.index[0]</code>으로 변수명을 얻고 <code>plt.subplots(1, 2)</code>로 그래프 영역을 만듭니다.</p></div>
-</details>
-<details class="practice-toggle">
-<summary>✅ 정답 예제 보기 — 먼저 직접 작성해 본 뒤 열어 보세요</summary>
-<div class="toggle-body">
-<div class="code-wrap">
-<div class="code-header">
-<div class="code-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
-<span class="code-title">실습5_정답.py</span>
-<button class="copy-btn" onclick="copyCode(this)">복사</button>
-</div>
-<pre><code>top_gap_col = mean_gap.index[<span class="num">0</span>]
-fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">12</span>, <span class="num">4</span>))
-
-sns.<span class="fn">countplot</span>(data=practice_clean, x=<span class="str">'판정'</span>, hue=<span class="str">'판정'</span>, legend=<span class="kw">False</span>, ax=axes[<span class="num">0</span>])
-axes[<span class="num">0</span>].<span class="fn">set_title</span>(<span class="str">'판정별 건수'</span>)
-
-sns.<span class="fn">boxplot</span>(data=practice_clean, x=<span class="str">'판정'</span>, y=top_gap_col,
-            hue=<span class="str">'판정'</span>, legend=<span class="kw">False</span>, ax=axes[<span class="num">1</span>])
-axes[<span class="num">1</span>].<span class="fn">set_title</span>(<span class="str">f'판정별 {top_gap_col} 분포'</span>)
-plt.<span class="fn">tight_layout</span>()
-plt.<span class="fn">show</span>()
-
-pass_mean = result_means.loc[<span class="str">'합격'</span>, top_gap_col]
-fail_mean = result_means.loc[<span class="str">'불합격'</span>, top_gap_col]
-<span class="fn">print</span>(
-    <span class="str">f'{top_gap_col}: 합격 평균 {pass_mean:.2f}, '</span>
-    <span class="str">f'불합격 평균 {fail_mean:.2f}, 차이 {abs(fail_mean - pass_mean):.2f}'</span>
-)
-<span class="fn">print</span>(<span class="str">'이 차이는 원인 확정이 아니라 추가 점검이 필요한 단서입니다.'</span>)</code></pre>
-</div>
-<div class="output-block"><div class="output-label">📤 실행 결과</div>전력_W: 합격 평균 2001.12, 불합격 평균 2029.46, 차이 28.34
-이 차이는 원인 확정이 아니라 추가 점검이 필요한 단서입니다.</div>
-</div>
-</details>
-</div>
-
-  <div class="tip-box warning"><span class="tip-icon">⚠️</span><p><strong>IQR 이상값 후보 ≠ 불량</strong><br/>
-            실습 3의 이상값 후보는 “일반 범위를 크게 벗어난 측정값”일 뿐, 반드시 오류나 불량이라는 뜻은 아닙니다. 자동으로 삭제하지 말고 점검 대상으로 표시하세요.</p></div>
 
 </section>
 
@@ -2334,7 +1895,6 @@ fail_mean = result_means.loc[<span class="str">'불합격'</span>, top_gap_col]
       <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
 <span class="kw">import</span> numpy <span class="kw">as</span> np
 <span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
-<span class="kw">import</span> seaborn <span class="kw">as</span> sns
 
 plt.rcParams[<span class="str">'font.family'</span>] = <span class="str">'Malgun Gothic'</span>  <span class="cmt"># 한글 표시 (Mac: 'AppleGothic')</span>
 plt.rcParams[<span class="str">'axes.unicode_minus'</span>] = <span class="kw">False</span>       <span class="cmt"># 음수(-) 기호 깨짐 방지</span>
@@ -2368,11 +1928,10 @@ df_clean[<span class="str">'result'</span>] = df_clean[<span class="str">'합격
     <div class="tbl-wrap">
     <table class="api-table">
       <tr><th>수업</th><th>다시 확인해 볼 함수·개념</th></tr>
-      <tr><td>1 시작하기</td><td>import, pandas·numpy·matplotlib·seaborn의 역할</td></tr>
+      <tr><td>1 시작하기</td><td>import, pandas·numpy·matplotlib의 역할</td></tr>
       <tr><td>2 데이터 탐색</td><td>read_csv(), head(), info(), describe(), loc/iloc, value_counts()</td></tr>
       <tr><td>3 결측·중복</td><td>isnull().sum(), fillna(평균), duplicated(), drop_duplicates(), reset_index()</td></tr>
-      <tr><td>4 EDA 분석</td><td>map(), 조건 필터, groupby(), 히스토그램, 박스플롯, 상관관계 히트맵</td></tr>
-      <tr><td>5 보강 실습</td><td>결측률, 중앙값으로 채우기, IQR 이상값 후보, 합격/불합격 평균 차이</td></tr>
+      <tr><td>4 EDA 분석</td><td>map(), 조건 필터, groupby(), 히스토그램, 박스플롯</td></tr>
     </table>
     </div>
     <div class="code-wrap prompt-block">
@@ -2430,7 +1989,7 @@ df_clean[<span class="str">'result'</span>] = df_clean[<span class="str">'합격
       <li>결측값을 찾고 평균이나 중앙값으로 채울 수 있다</li>
       <li>조건 필터로 불합격 행이나 고온 공정만 골라낼 수 있다</li>
       <li><code>groupby()</code>로 합격/불합격 그룹의 평균을 비교할 수 있다</li>
-      <li>히스토그램·박스플롯·히트맵이 각각 무엇을 보여 주는지 설명할 수 있다</li>
+      <li>히스토그램·박스플롯이 각각 무엇을 보여 주는지 설명할 수 있다</li>
     </ul>
     </div>
     <div class="code-wrap prompt-block">
@@ -2447,7 +2006,7 @@ df_clean[<span class="str">'result'</span>] = df_clean[<span class="str">'합격
 1. 쉬운 문제 → 조금 어려운 문제 순서로 내 주세요.
 2. 한 번에 한 문제씩만 내고, 내가 답을 보낼 때까지 정답을 보여 주지 마세요.
 3. 문제에 필요한 데이터는 5행 이하의 작은 표를 만드는 코드로 함께 주세요. (온도_섭씨, 압력_Pa, 두께_nm, 합격여부(1=합격, -1=불합격) 같은 공정 예시)
-4. pandas(read_csv, 선택, 결측·중복 처리, 조건 필터, groupby)와 matplotlib·seaborn 기본 그래프만 사용하게 해 주세요.
+4. pandas(read_csv, 선택, 결측·중복 처리, 조건 필터, groupby)와 matplotlib 기본 그래프만 사용하게 해 주세요.
 5. 내가 틀리면 정답을 바로 주지 말고 힌트를 한 번 먼저 주세요.</code></pre>
     </div>
     <div class="code-wrap prompt-block">
@@ -2525,7 +2084,7 @@ df_clean[<span class="str">'result'</span>] = df_clean[<span class="str">'합격
       </div>
       <pre><code>[압력_Pa의 분포를 히스토그램으로 보고, 합격/불합격별 압력을 박스플롯과 평균으로 비교합니다.]을 풀고 있습니다. 정답 코드는 주지 말고,
 어떤 순서로 풀면 되는지 단계만 3개 이내로 알려 주세요.
-pandas(read_csv, 선택, 결측·중복 처리, 조건 필터, groupby)와 matplotlib·seaborn 기본 그래프 범위에서 힌트를 주세요.</code></pre>
+pandas(read_csv, 선택, 결측·중복 처리, 조건 필터, groupby)와 matplotlib 기본 그래프 범위에서 힌트를 주세요.</code></pre>
     </div>
       </div>
     </details>
@@ -2545,10 +2104,7 @@ plt.<span class="fn">xlabel</span>(<span class="str">'압력 (Pa)'</span>)
 plt.<span class="fn">ylabel</span>(<span class="str">'빈도 (개수)'</span>)
 plt.<span class="fn">show</span>()
 
-plt.<span class="fn">figure</span>(figsize=(<span class="num">7</span>, <span class="num">5</span>))
-sns.<span class="fn">boxplot</span>(data=df_clean, x=<span class="str">'result'</span>, y=<span class="str">'압력_Pa'</span>,
-            hue=<span class="str">'result'</span>, legend=<span class="kw">False</span>,
-            palette=[<span class="str">'#52B788'</span>, <span class="str">'#E76F51'</span>])
+df_clean.<span class="fn">boxplot</span>(column=<span class="str">'압력_Pa'</span>, by=<span class="str">'result'</span>, figsize=(<span class="num">7</span>, <span class="num">5</span>))
 plt.<span class="fn">title</span>(<span class="str">'판정별 압력 분포 비교'</span>)
 plt.<span class="fn">show</span>()
 
@@ -2562,7 +2118,7 @@ Name: 압력_Pa, dtype: float64</div>
     </details>
     <div class="concept-box highlight">
       <h4>응용 2 · 진동이 큰 공정은 불합격 비율이 더 높을까?</h4>
-      <p>보강 실습의 <strong>quantile()</strong>과 4단계의 <strong>조건 필터</strong>를 함께 사용합니다.<br>🎯 진동_mm_s 상위 10% 공정만 골라, 전체 공정과 불합격 비율(%)을 비교합니다.</p>
+      <p><strong>quantile()</strong>과 4단계의 <strong>조건 필터</strong>를 함께 사용합니다.<br>🎯 진동_mm_s 상위 10% 공정만 골라, 전체 공정과 불합격 비율(%)을 비교합니다.</p>
     </div>
     <div class="code-wrap">
       <div class="code-header">
@@ -2589,7 +2145,7 @@ Name: 압력_Pa, dtype: float64</div>
       </div>
       <pre><code>[진동_mm_s 상위 10% 공정만 골라, 전체 공정과 불합격 비율(%)을 비교합니다.]을 풀고 있습니다. 정답 코드는 주지 말고,
 어떤 순서로 풀면 되는지 단계만 3개 이내로 알려 주세요.
-pandas(read_csv, 선택, 결측·중복 처리, 조건 필터, groupby)와 matplotlib·seaborn 기본 그래프 범위에서 힌트를 주세요.</code></pre>
+pandas(read_csv, 선택, 결측·중복 처리, 조건 필터, groupby)와 matplotlib 기본 그래프 범위에서 힌트를 주세요.</code></pre>
     </div>
       </div>
     </details>
