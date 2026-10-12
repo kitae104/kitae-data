@@ -8,5 +8,23 @@
       "Bash(awk -F',' '{print NF}')",
       "Bash(python -c ' *)"
     ]
+  },
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://127.0.0.1:8787",
+    "ENABLE_TOOL_SEARCH": "true"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "D:/ProgramFiles/Python/311/Scripts/headroom.EXE wrap selfheal --marker headroom-wrap-selfheal",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }
