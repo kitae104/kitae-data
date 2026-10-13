@@ -12,6 +12,21 @@ function formatTitle(filename) {
 // Web/강좌/<번호_강좌명>/*.html 도 목록에 포함 (예: 강좌/01_판다스/판다스_수업자료.html)
 const COURSE_DIR = '강좌';
 
+// 방문자 통계 페이지는 목록 카드에서 제외하고, 나머지 모든 HTML에는 방문 기록 스크립트를 넣는다.
+const STATS_PAGE = 'stats.html';
+const TRACK_TAG = '<script src="/assets/track.js" defer></script>';
+
+async function ensureTracker(file) {
+    const html = await fs.readFile(file, 'utf8');
+    if (html.includes('/assets/track.js')) return;
+    const next = /<\/head>/i.test(html)
+        ? html.replace(/<\/head>/i, `  ${TRACK_TAG}
+</head>`)
+        : `${TRACK_TAG}
+${html}`;
+    await fs.writeFile(file, next, 'utf8');
+}
+
 async function listCourseHtml(webDir) {
     let courses;
     try {
@@ -35,7 +50,7 @@ async function listCourseHtml(webDir) {
         const webDir = path.resolve(__dirname, '..', 'Web');
         const entries = await fs.readdir(webDir, { withFileTypes: true });
         const allHtml = entries
-            .filter(e => e.isFile() && e.name.toLowerCase().endsWith('.html') && e.name.toLowerCase() !== 'index.html')
+            .filter(e => e.isFile() && e.name.toLowerCase().endsWith('.html') && e.name.toLowerCase() !== 'index.html' && e.name !== STATS_PAGE)
             .map(e => e.name)
             .concat(await listCourseHtml(webDir));
 
@@ -55,6 +70,8 @@ async function listCourseHtml(webDir) {
             .filter(name => !ordered.includes(name))
             .sort((a, b) => a.localeCompare(b, 'ko'));
         const htmlFiles = [...ordered, ...remaining];
+
+        for (const f of htmlFiles) await ensureTracker(path.join(webDir, ...f.split('/')));
 
         const missing = orderList.filter(name => !allHtml.includes(name));
         if (missing.length) {
@@ -79,6 +96,7 @@ async function listCourseHtml(webDir) {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>자료 인덱스</title>
+  ${TRACK_TAG}
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap');
 
@@ -343,7 +361,7 @@ async function listCourseHtml(webDir) {
 ${listItems || '      <div class="empty-state">아직 등록된 HTML 파일이 없습니다.</div>'}
     </section>
 
-    <p class="build-note">이 파일은 <strong>npm run build</strong> 또는 Vercel 빌드 과정에서 자동 생성됩니다.</p>
+    <p class="build-note">이 파일은 <strong>npm run build</strong> 또는 Vercel 빌드 과정에서 자동 생성됩니다. · <a href="./stats.html">방문자 통계</a></p>
   </main>
 </body>
 </html>
